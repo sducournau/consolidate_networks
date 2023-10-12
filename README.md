@@ -21,11 +21,6 @@ You can repair topological problems and clean your data.*
 
 ## Consolidate
 
- {
-            'CRS': QgsCoordinateReferenceSystem('EPSG:3857'),
-            'LAYERS': QgsExpression('azdazd').evaluate(),
-            'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
-        }
 #### <ins>**CalculateDbscan()**</ins>
 `Calculate dbscan clusters of lines from a layer source.`<br>
 ##### Processing algorithm<br>
