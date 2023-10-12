@@ -12,7 +12,7 @@ You can repair topological problems and clean your data.*
 
 # Preview :
 
-<img src=".\ressources\comparaison_ban.png" width="1000" height="400">
+<img src=".\ressources\comparaison_ban.png">
 
 
 
@@ -21,9 +21,12 @@ You can repair topological problems and clean your data.*
 ## 1. Consolidate
  
   * **CalculateDbscan() :** 
+  <img src=".\ressources\CalculateDbscan.png">
   Calculate dbscan clusters of lines from a layer source.
+  
 
-  * **ConsolidateWithDbscan() :**  
+  * **ConsolidateWithDbscan() :** 
+  <img src=".\ressources\CalculateDbscan2.png">s
   Snap lines to each other splitting by their clusters from a layer source resulted from CalculateDbscan().
 
   * **MakeIntersectionsVertexes() :**  
@@ -32,12 +35,15 @@ You can repair topological problems and clean your data.*
 ## 2. Snapping layer (from himself)
 
   * **EndpointsStrimmingExtending() :** 
+  ![Alt](/ressources/EndpointsStrimmingExtending.png)
   Cut and extend end lines from a layer source.
 
   * **EndpointsSnapping() :** 
+  <img src=".\ressources\EndpointsSnapping.png">
   Snap lines endpoints' to each other's from a layer source.
 
   * **HubSnapping() :** 
+  <img src=".\ressources\HubSnapping.png">
   Align lines vertices' hubs on top of each other within a buffer.
 
 ## 3. Snapping layer (from another layer)

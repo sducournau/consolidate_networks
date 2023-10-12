@@ -25,7 +25,7 @@ hasProcessingProvider=yes
 # Tags are comma separated with spaces allowed
 tags=python,consolidate,network,library,geometry,lines,vector
 
-homepage=https://github.com/sducournau/consolidate_networks
+homepage=https://sducournau.github.io/consolidate_networks/
 icon=black_icon.png
 # experimental flag
 experimental=False
