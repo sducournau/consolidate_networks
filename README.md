@@ -30,8 +30,8 @@ cn.calculatedbscan
 ##### Paramètres<br>
 ~~~~
 {
-'INPUT': QgsVectorLayer    #vector layer source (line or polygon)
-'POINTS_DBSCAN': 0.1    #a decimal distance in meter between each point, eq to vertices density to do a dbscan (default: 0.1)
+'INPUT': QgsVectorLayer,    #vector layer source (line or polygon)
+'POINTS_DBSCAN': 0.1,    #a decimal distance in meter between each point, eq to vertices density to do a dbscan (default: 0.1)
 'DBSCAN*': False    #consider border points as noise (default: false)
 'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT    #vector layer computed (same type as input)
 }
@@ -51,8 +51,8 @@ cn.consolidatewithdbscan
 ##### Paramètres<br>
 ~~~~
 {
-'INPUT': QgsVectorLayer    #vector layer source (line or polygon)
-'BUFFER_DBSCAN': 5.0    #a decimal buffer radius (default: 5.0)
+'INPUT': QgsVectorLayer,    #vector layer source (line or polygon)
+'BUFFER_DBSCAN': 5.0,    #a decimal buffer radius (default: 5.0)
 'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT    #vector layer computed (same type as input)
 }
 ~~~~
@@ -71,8 +71,8 @@ cn.makeintersectionsvertexes
 ##### Paramètres<br>
 ~~~~
 {
-'INPUT': QgsVectorLayer    #vector layer source (line or polygon)
-'BUFFER_REGION': 0.3    #a decimal buffer radius (default: 0.3)
+'INPUT': QgsVectorLayer,    #vector layer source (line or polygon)
+'BUFFER_REGION': 0.3,   #a decimal buffer radius (default: 0.3)
 'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT    #vector layer computed (same type as input)
 }
 ~~~~
@@ -92,8 +92,8 @@ cn.endpointstrimmingextending
 ##### Paramètres<br>
 ~~~~
 {
-'INPUT': QgsVectorLayer    #vector layer source (line or polygon)
-'BUFFER_TRIM_EXTEND': 4.0    #a decimal buffer radius (default: 4.0)
+'INPUT': QgsVectorLayer,    #vector layer source (line or polygon)
+'BUFFER_TRIM_EXTEND': 4.0,    #a decimal buffer radius (default: 4.0)
 'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT    #vector layer computed (same type as input)
 }
 ~~~~
@@ -112,8 +112,8 @@ cn.endpointssnapping
 ##### Paramètres<br>
 ~~~~
 {
-'INPUT': QgsVectorLayer    #vector layer source (line or polygon)
-'BUFFER_SNAPPING': 2.0    #a decimal buffer radius (default: 2.0)
+'INPUT': QgsVectorLayer,    #vector layer source (line or polygon)
+'BUFFER_SNAPPING': 2.0,    #a decimal buffer radius (default: 2.0)
 'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT    #vector layer computed (same type as input)
 }
 ~~~~
@@ -133,8 +133,8 @@ cn.hubsnapping
 ##### Paramètres<br>
 ~~~~
 {
-'INPUT': QgsVectorLayer    #vector layer source (line or polygon)
-'BUFFER_REGION': 1.0    #a decimal buffer radius (default: 1.0)
+'INPUT': QgsVectorLayer,    #vector layer source (line or polygon)
+'BUFFER_REGION': 1.0,    #a decimal buffer radius (default: 1.0)
 'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT    #vector layer computed (same type as input)
 }
 ~~~~
@@ -157,9 +157,9 @@ cn.snapendpointstoLayer
 ##### Paramètres<br>
 ~~~~
 {
-'INPUT': QgsVectorLayer    #vector layer source (line or polygon)
-'REF_INPUT': QgsVectorLayer    #vector layer source (point prefered)
-'BUFFER_SNAPPING': 2.0    #a decimal buffer radius (default: 2.0)
+'INPUT': QgsVectorLayer,    #vector layer source (line or polygon)
+'REF_INPUT': QgsVectorLayer,    #vector layer source (point prefered)
+'BUFFER_SNAPPING': 2.0,    #a decimal buffer radius (default: 2.0)
 'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT    #vector layer computed (same type as input)
 }
 ~~~~
@@ -178,9 +178,9 @@ cn.snaphubspointstolayer
 ##### Paramètres<br>
 ~~~~
 {
-'INPUT': QgsVectorLayer    #vector layer source (line or polygon)
-'REF_INPUT': QgsVectorLayer    #vector layer source (point prefered)
-'BUFFER_REGION': 2.0    #a decimal buffer radius (default: 2.0)
+'INPUT': QgsVectorLayer,    #vector layer source (line or polygon)
+'REF_INPUT': QgsVectorLayer,    #vector layer source (point prefered)
+'BUFFER_REGION': 2.0,    #a decimal buffer radius (default: 2.0)
 'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT    #vector layer computed (same type as input)
 }
 ~~~~
