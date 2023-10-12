@@ -21,7 +21,11 @@ You can repair topological problems and clean your data.*
 
 ## Consolidate
 
- 
+ {
+            'CRS': QgsCoordinateReferenceSystem('EPSG:3857'),
+            'LAYERS': QgsExpression('azdazd').evaluate(),
+            'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+        }
 #### <ins>**CalculateDbscan()**</ins>
 `Calculate dbscan clusters of lines from a layer source.`<br>
 ##### Processing algorithm<br>
@@ -30,10 +34,12 @@ cn.calculatedbscan
 ~~~~
 ##### Paramètres<br>
 ~~~~
-INPUT : vector layer source (line or polygon)
-POINTS_DBSCAN : a decimal distance in meter between each point, eq to vertices density to do a dbscan (default: 0,1)
-DBSCAN* : consider border points as noise (default: false)
-OUTPUT : vector layer computed (same type as input)
+{
+'INPUT': QgsVectorLayer '''vector layer source (line or polygon)'''
+'POINTS_DBSCAN': 0.1 '''a decimal distance in meter between each point, eq to vertices density to do a dbscan (default: 0.1)'''
+'DBSCAN*': False '''consider border points as noise (default: false)'''
+'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT '''vector layer computed (same type as input)'''
+}
 ~~~~
 <img src="https://raw.githubusercontent.com/sducournau/consolidate_networks/main/ressources/CalculateDbscan.png?raw=true">
 <br>
@@ -49,9 +55,11 @@ cn.consolidatewithdbscan
 ~~~~
 ##### Paramètres<br>
 ~~~~
-INPUT : vector layer source (line or polygon)
-BUFFER_DBSCAN : a decimal buffer radius (default: 5,0)
-OUTPUT : vector layer computed (same type as input)
+{
+'INPUT': QgsVectorLayer '''vector layer source (line or polygon)'''
+'BUFFER_DBSCAN': 5.0 '''a decimal buffer radius (default: 5.0)'''
+'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT '''vector layer computed (same type as input)'''
+}
 ~~~~
 <img src="https://raw.githubusercontent.com/sducournau/consolidate_networks/main/ressources/CalculateDbscan2.png?raw=true">
 <br>
@@ -67,9 +75,11 @@ cn.makeintersectionsvertexes
 ~~~~
 ##### Paramètres<br>
 ~~~~
-INPUT : vector layer source (line or polygon)
-BUFFER_REGION : a decimal buffer radius (default: 0,3)
-OUTPUT : vector layer computed (same type as input)
+{
+'INPUT': QgsVectorLayer '''vector layer source (line or polygon)'''
+'BUFFER_REGION': 0.3 '''a decimal buffer radius (default: 0.3)'''
+'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT '''vector layer computed (same type as input)'''
+}
 ~~~~
 <br>
 <br>
@@ -86,9 +96,11 @@ cn.endpointstrimmingextending
 ~~~~
 ##### Paramètres<br>
 ~~~~
-INPUT : vector layer source (line or polygon)
-BUFFER_TRIM_EXTEND : a decimal buffer radius (default: 4,0)
-OUTPUT : vector layer computed (same type as input)
+{
+'INPUT': QgsVectorLayer '''vector layer source (line or polygon)'''
+'BUFFER_TRIM_EXTEND': 4.0 '''a decimal buffer radius (default: 4.0)'''
+'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT '''vector layer computed (same type as input)'''
+}
 ~~~~
 <img src="https://raw.githubusercontent.com/sducournau/consolidate_networks/main/ressources/EndpointsStrimmingExtending.png?raw=true">
 <br>
@@ -104,9 +116,11 @@ cn.endpointssnapping
 ~~~~
 ##### Paramètres<br>
 ~~~~
-INPUT : vector layer source (line or polygon)
-BUFFER_SNAPPING : a decimal buffer radius (default: 2,0)
-OUTPUT : vector layer computed (same type as input)
+{
+'INPUT': QgsVectorLayer '''vector layer source (line or polygon)'''
+'BUFFER_SNAPPING': 2.0 '''a decimal buffer radius (default: 2.0)'''
+'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT '''vector layer computed (same type as input)'''
+}
 ~~~~
 <img src="https://raw.githubusercontent.com/sducournau/consolidate_networks/main/ressources/EndpointsSnapping.png?raw=true">
 <br>
@@ -123,9 +137,11 @@ cn.hubsnapping
 ~~~~
 ##### Paramètres<br>
 ~~~~
-INPUT : vector layer source (line or polygon)
-BUFFER_REGION : a decimal buffer radius (default: 1,0)
-OUTPUT : vector layer computed (same type as input)
+{
+'INPUT': QgsVectorLayer '''vector layer source (line or polygon)'''
+'BUFFER_REGION': 1.0 '''a decimal buffer radius (default: 1.0)'''
+'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT '''vector layer computed (same type as input)'''
+}
 ~~~~
 <img src="https://raw.githubusercontent.com/sducournau/consolidate_networks/main/ressources/HubSnapping.png?raw=true">
 <br>
@@ -145,10 +161,12 @@ cn.snapendpointstoLayer
 ~~~~
 ##### Paramètres<br>
 ~~~~
-INPUT : vector layer source (line or polygon)
-REF_INPUT : vector layer source (point prefered)
-BUFFER_SNAPPING : a decimal buffer radius (default: 2,0)
-OUTPUT : vector layer computed (same type as input)
+{
+'INPUT': QgsVectorLayer '''vector layer source (line or polygon)'''
+'REF_INPUT': QgsVectorLayer '''vector layer source (point prefered)'''
+'BUFFER_SNAPPING': 2.0 '''a decimal buffer radius (default: 2.0)'''
+'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT '''vector layer computed (same type as input)'''
+}
 ~~~~
 <br>
 <br>
@@ -164,10 +182,12 @@ cn.snaphubspointstolayer
 ~~~~
 ##### Paramètres<br>
 ~~~~
-INPUT : vector layer source (line or polygon)
-REF_INPUT : vector layer source (point prefered)
-BUFFER_REGION : a decimal buffer radius (default: 2,0)
-OUTPUT : vector layer computed (same type as input)
+{
+'INPUT': QgsVectorLayer '''vector layer source (line or polygon)'''
+'REF_INPUT': QgsVectorLayer '''vector layer source (point prefered)'''
+'BUFFER_REGION': 2.0 '''a decimal buffer radius (default: 2.0)'''
+'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT '''vector layer computed (same type as input)'''
+}
 ~~~~
 <br>
 <br>  
