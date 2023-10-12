@@ -141,7 +141,7 @@ OUTPUT : vector layer computed (same type as input)
 `Snap lines endpoints' to each other's from an other layer source.`<br>
 ##### Processing algorithm :<br>
 ~~~~
-cn.snaphubspointstolayer
+cn.snapendpointstoLayer
 ~~~~
 ##### Paramètres<br>
 ~~~~
@@ -160,7 +160,7 @@ OUTPUT : vector layer computed (same type as input)
 `Align lines vertices' hubs on top of a point layer within a buffer`<br>
 ##### Processing algorithm :<br>
 ~~~~
-cn.snapendpointstoLayer
+cn.snaphubspointstolayer
 ~~~~
 ##### Paramètres<br>
 ~~~~
