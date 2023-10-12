@@ -39,7 +39,7 @@ OUTPUT : vector layer computed (same type as input)
 
 ******
 
-### **<ins>ConsolidateWithDbscan()**</ins>
+### <ins>**ConsolidateWithDbscan()**</ins>
 `Processing algorithm`<br>
 `Snap lines to each other splitting by their clusters from a layer source resulted from CalculateDbscan().`<br>
 `Algorithm name : cn.consolidatewithdbscan`<br>
@@ -56,7 +56,7 @@ OUTPUT : vector layer computed (same type as input)
 
 ******
 
-### **<ins>MakeIntersectionsVertexes()**</ins>
+### <ins>**MakeIntersectionsVertexes()**</ins>
 `Processing algorithm`<br>
 `Insert missing vertices from a source layer.`<br>
 `Algorithm name : cn.makeintersectionsvertexes`<br>
@@ -73,7 +73,7 @@ OUTPUT : vector layer computed (same type as input)
 
 ## 2. Snapping layer (from himself)
 
-### **<ins>EndpointsStrimmingExtending()**</ins>
+### <ins>**EndpointsStrimmingExtending()**</ins>
 `Processing algorithm`<br>
 `Cut and extend end lines from a layer source.`<br>
 `Algorithm name : cn.endpointstrimmingextending`<br>
@@ -90,7 +90,7 @@ OUTPUT : vector layer computed (same type as input)
   
 ******
 
-### **<ins>EndpointsSnapping()**</ins>
+### <ins>**EndpointsSnapping()**</ins>
 `Processing algorithm`<br>
 `Snap lines endpoints' to each other's from a layer source.`<br>
 `Algorithm name : cn.endpointssnapping`<br>
@@ -108,7 +108,7 @@ OUTPUT : vector layer computed (same type as input)
 
 ******
 
-### **<ins>HubSnapping()**</ins>
+### <ins>**HubSnapping()**</ins>
 `Processing algorithm`<br>
 `Align lines vertices' hubs on top of each other within a buffer.`<br>
 `Algorithm name : cn.hubsnapping`<br>
@@ -128,7 +128,7 @@ OUTPUT : vector layer computed (same type as input)
 
 ## 3. Snapping layer (from another layer)
 
-### **<ins>SnapEndpointsToLayer()**</ins>
+### <ins>**SnapEndpointsToLayer()**</ins>
 `Processing algorithm`<br>
 `Snap lines endpoints' to each other's from an other layer source.`<br>
 `Algorithm name : cn.snaphubspointstolayer`<br>
@@ -145,7 +145,7 @@ OUTPUT : vector layer computed (same type as input)
 ******
 
 
-### **<ins>SnapHubsPointsToLayer()</ins>**
+### <ins>**SnapHubsPointsToLayer()**</ins>
 `Processing algorithm`<br>
 `Align lines vertices' hubs on top of a point layer within a buffer`<br>
 `Algorithm name : cn.snapendpointstoLayer`<br>
