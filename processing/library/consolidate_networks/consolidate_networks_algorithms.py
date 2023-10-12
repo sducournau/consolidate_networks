@@ -203,7 +203,7 @@ class CalculateDbscan(QgsProcessingAlgorithm):
         Returns the translated algorithm name, which should be used for any
         user-visible display of the algorithm name.
         """
-        return 'Calculate clusters with dbscan'
+        return 'Calculate dbscan clusters of lines from a layer source.'
 
     def group(self):
         """
@@ -1431,8 +1431,8 @@ class SnapHubsPointsToLayer(QgsProcessingAlgorithm):
         self.addParameter(
             QgsProcessingParameterDistance(
 
-                self.tr('BUFFER_REGION'),
-                self.tr('BUFFER REGION'),
+                self.tr('BUFFER_SNAPPING'),
+                self.tr('BUFFER SNAPPING'),
                 0.3
             )
         )
@@ -1466,7 +1466,7 @@ class SnapHubsPointsToLayer(QgsProcessingAlgorithm):
         numfeatures = source.featureCount()
 
 
-        buffer_region = self.parameterAsDouble(parameters, 'BUFFER_REGION',
+        buffer_region = self.parameterAsDouble(parameters, 'BUFFER_SNAPPING',
                                                 context)
 
         def takeLast(elem):
@@ -1649,8 +1649,8 @@ class SnapEndpointsToLayer(QgsProcessingAlgorithm):
         self.addParameter(
             QgsProcessingParameterDistance(
 
-                self.tr('BUFFER_EXTRIMITY'),
-                self.tr('BUFFER EXTRIMITY'),
+                self.tr('BUFFER_REGION'),
+                self.tr('BUFFER REGION'),
                 10
             )
         )
@@ -1684,7 +1684,7 @@ class SnapEndpointsToLayer(QgsProcessingAlgorithm):
         numfeatures = source.featureCount()
 
 
-        buffer_extrimity = self.parameterAsDouble(parameters, 'BUFFER_EXTRIMITY',
+        buffer_extrimity = self.parameterAsDouble(parameters, 'BUFFER_REGION',
                                                 context)
 
         def takeLast(elem):
