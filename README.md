@@ -23,9 +23,12 @@ You can repair topological problems and clean your data.*
 
  
 #### <ins>**CalculateDbscan()**</ins>
-`Processing algorithm`<br>
 `Calculate dbscan clusters of lines from a layer source.`<br>
-`Algorithm name : cn.calculatedbscan`<br>
+##### Processing algorithm<br>
+~~~~
+cn.calculatedbscan
+~~~~
+##### Paramètres<br>
 ~~~~
 INPUT : vector layer source (line or polygon)
 POINTS_DBSCAN : a decimal distance in meter between each point, eq to vertices density to do a dbscan (default: 0,1)
@@ -39,9 +42,12 @@ OUTPUT : vector layer computed (same type as input)
 ******
 
 #### <ins>**ConsolidateWithDbscan()**</ins>
-`Processing algorithm`<br>
 `Snap lines to each other splitting by their clusters from a layer source resulted from CalculateDbscan().`<br>
-`Algorithm name : cn.consolidatewithdbscan`<br>
+##### Processing algorithm :<br>
+~~~~
+cn.consolidatewithdbscan
+~~~~
+##### Paramètres<br>
 ~~~~
 INPUT : vector layer source (line or polygon)
 BUFFER_DBSCAN : a decimal buffer radius (default: 5,0)
@@ -54,9 +60,12 @@ OUTPUT : vector layer computed (same type as input)
 ******
 
 #### <ins>**MakeIntersectionsVertexes()**</ins>
-`Processing algorithm`<br>
 `Insert missing vertices from a source layer.`<br>
-`Algorithm name : cn.makeintersectionsvertexes`<br>
+##### Processing algorithm :<br>
+~~~~
+cn.makeintersectionsvertexes
+~~~~
+##### Paramètres<br>
 ~~~~
 INPUT : vector layer source (line or polygon)
 BUFFER_REGION : a decimal buffer radius (default: 0,3)
@@ -70,9 +79,12 @@ OUTPUT : vector layer computed (same type as input)
 
 
 #### <ins>**EndpointsStrimmingExtending()**</ins>
-`Processing algorithm`<br>
 `Cut and extend end lines from a layer source.`<br>
-`Algorithm name : cn.endpointstrimmingextending`<br>
+##### Processing algorithm :<br>
+~~~~
+cn.endpointstrimmingextending
+~~~~
+##### Paramètres<br>
 ~~~~
 INPUT : vector layer source (line or polygon)
 BUFFER_TRIM_EXTEND : a decimal buffer radius (default: 4,0)
@@ -85,9 +97,12 @@ OUTPUT : vector layer computed (same type as input)
 ******
 
 #### <ins>**EndpointsSnapping()**</ins>
-`Processing algorithm`<br>
 `Snap lines endpoints' to each other's from a layer source.`<br>
-`Algorithm name : cn.endpointssnapping`<br>
+##### Processing algorithm :<br>
+~~~~
+cn.endpointssnapping
+~~~~
+##### Paramètres<br>
 ~~~~
 INPUT : vector layer source (line or polygon)
 BUFFER_SNAPPING : a decimal buffer radius (default: 2,0)
@@ -101,9 +116,12 @@ OUTPUT : vector layer computed (same type as input)
 ******
 
 #### <ins>**HubSnapping()**</ins>
-`Processing algorithm`<br>
 `Align lines vertices' hubs on top of each other within a buffer.`<br>
-`Algorithm name : cn.hubsnapping`<br>
+##### Processing algorithm :<br>
+~~~~
+cn.hubsnapping
+~~~~
+##### Paramètres<br>
 ~~~~
 INPUT : vector layer source (line or polygon)
 BUFFER_REGION : a decimal buffer radius (default: 1,0)
@@ -120,9 +138,12 @@ OUTPUT : vector layer computed (same type as input)
 
 
 #### <ins>**SnapEndpointsToLayer()**</ins>
-`Processing algorithm`<br>
 `Snap lines endpoints' to each other's from an other layer source.`<br>
-`Algorithm name : cn.snaphubspointstolayer`<br>
+##### Processing algorithm :<br>
+~~~~
+cn.snaphubspointstolayer
+~~~~
+##### Paramètres<br>
 ~~~~
 INPUT : vector layer source (line or polygon)
 REF_INPUT : vector layer source (point prefered)
@@ -136,9 +157,12 @@ OUTPUT : vector layer computed (same type as input)
 
 
 #### <ins>**SnapHubsPointsToLayer()**</ins>
-`Processing algorithm`<br>
 `Align lines vertices' hubs on top of a point layer within a buffer`<br>
-`Algorithm name : cn.snapendpointstoLayer`<br>
+##### Processing algorithm :<br>
+~~~~
+cn.snapendpointstoLayer
+~~~~
+##### Paramètres<br>
 ~~~~
 INPUT : vector layer source (line or polygon)
 REF_INPUT : vector layer source (point prefered)
