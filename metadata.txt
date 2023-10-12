@@ -1,0 +1,45 @@
+# This file contains metadata for your plugin.
+
+# This file should be included when you package your plugin.# Mandatory items:
+
+[general]
+name=Consolidate Networks
+qgisMinimumVersion=3.0
+description=A Qgis plugin toolset for consolidate your network data
+version=1.2
+author=imagodata
+email=imagodata+consolidate_networks@skiff.com
+
+about=This plugin provides processing algorithms that allow you to manipulate the vertices of a line layer.You can repair topological problems and clean your data.
+
+tracker=https://github.com/sducournau/consolidate_networks/issues
+repository=https://github.com/sducournau/consolidate_networks
+# End of mandatory metadata
+
+# Recommended items:
+
+hasProcessingProvider=yes
+# Uncomment the following line and add your changelog:
+# changelog=
+
+# Tags are comma separated with spaces allowed
+tags=python,consolidate,network,library,geometry,lines,vector
+
+homepage=https://github.com/sducournau/consolidate_networks
+icon=black_icon.png
+# experimental flag
+experimental=False
+
+# deprecated flag (applies to the whole plugin, not just a single version)
+deprecated=False
+
+# Since QGIS 3.8, a comma separated list of plugins to be installed
+# (or upgraded) can be specified.
+# Check the documentation for more information.
+# plugin_dependencies=
+
+Category of the plugin: Raster, Vector, Database or Web
+category=Vector
+
+# If the plugin can run on QGIS Server.
+server=False
