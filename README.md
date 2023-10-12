@@ -21,7 +21,7 @@ You can repair topological problems and clean your data.*
 
 ## 1. Consolidate
  
-### **<ins>CalculateDbscan()**</ins>
+### *<ins>CalculateDbscan()*</ins>
 `Processing algorithm`<br>
 `Calculate dbscan clusters of lines from a layer source.`<br>
 `Algorithm name : cn.calculatedbscan`<br>
