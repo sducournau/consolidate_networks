@@ -1,4 +1,4 @@
-# <img class="filter-invertfilter" src="https://github.com/sducournau/consolidate_networks/blob/main/icon.png?raw=true" width="50" height="50"> Consolidate Networks
+# ![alt preview preview-1](https://github.com/sducournau/consolidate_networks/blob/main/ressources/icon.png?raw=true) Consolidate Networks
 
 **A Qgis plugin toolset for consolidate your network data**<br>
 https://sducournau.github.io/consolidate_networks/
@@ -14,7 +14,7 @@ You can repair topological problems and clean your data.*
 
 # 1. Preview :
 
-<img src="https://raw.githubusercontent.com/sducournau/consolidate_networks/main/ressources/comparaison_ban.png?raw=true">
+![alt preview preview-1](https://raw.githubusercontent.com/sducournau/consolidate_networks/main/ressources/comparaison_ban.png?raw=true)
 
 
 <br>
@@ -24,7 +24,7 @@ You can repair topological problems and clean your data.*
 `Apply multiple snappings steps and make the use of cn provider algorithms.`<br>
 
 
-<img src="https://raw.githubusercontent.com/sducournau/consolidate_networks/main/ressources/mode_blueprint_halfsize.png?raw=true">
+![alt model cn.sefl-repair](https://raw.githubusercontent.com/sducournau/consolidate_networks/main/ressources/mode_blueprint_halfsize.png?raw=true)
 
 <br>
 <br>
@@ -50,7 +50,7 @@ cn.calculatedbscan
 'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT    #vector layer computed (same type as input)
 }
 ~~~~
-<img src="https://raw.githubusercontent.com/sducournau/consolidate_networks/main/ressources/CalculateDbscan.png?raw=true">
+![alt algorithm cn.calculatedbscan](https://raw.githubusercontent.com/sducournau/consolidate_networks/main/ressources/CalculateDbscan.png?raw=true)
 <br>
 <br>
     
@@ -70,7 +70,7 @@ cn.consolidatewithdbscan
 'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT    #vector layer computed (same type as input)
 }
 ~~~~
-<img src="https://raw.githubusercontent.com/sducournau/consolidate_networks/main/ressources/CalculateDbscan2.png?raw=true">
+![alt algorithm cn.consolidatewithdbscan](https://raw.githubusercontent.com/sducournau/consolidate_networks/main/ressources/CalculateDbscan2.png?raw=true)
 <br>
 <br>
 
@@ -111,7 +111,7 @@ cn.endpointstrimmingextending
 'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT    #vector layer computed (same type as input)
 }
 ~~~~
-<img src="https://raw.githubusercontent.com/sducournau/consolidate_networks/main/ressources/EndpointsStrimmingExtending.png?raw=true">
+![alt algorithm cn.endpointstrimmingextending](https://raw.githubusercontent.com/sducournau/consolidate_networks/main/ressources/EndpointsStrimmingExtending.png?raw=true)
 <br>
 <br>
   
@@ -131,7 +131,7 @@ cn.endpointssnapping
 'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT    #vector layer computed (same type as input)
 }
 ~~~~
-<img src="https://raw.githubusercontent.com/sducournau/consolidate_networks/main/ressources/EndpointsSnapping.png?raw=true">
+![alt algorithm cn.endpointssnapping](https://raw.githubusercontent.com/sducournau/consolidate_networks/main/ressources/EndpointsSnapping.png?raw=true)
 <br>
 <br>
 
@@ -152,7 +152,7 @@ cn.hubsnapping
 'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT    #vector layer computed (same type as input)
 }
 ~~~~
-<img src="https://raw.githubusercontent.com/sducournau/consolidate_networks/main/ressources/HubSnapping.png?raw=true">
+![alt algorithm cn.hubsnapping](https://raw.githubusercontent.com/sducournau/consolidate_networks/main/ressources/HubSnapping.png?raw=true)
 <br>
 <br>
 
