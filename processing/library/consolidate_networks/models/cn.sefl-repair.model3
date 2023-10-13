@@ -124,6 +124,73 @@
         </Option>
       </Option>
     </Option>
+    <Option name="cn:endpointssnapping_4" type="Map">
+      <Option name="active" type="bool" value="true"/>
+      <Option name="alg_config"/>
+      <Option name="alg_id" type="QString" value="cn:endpointssnapping"/>
+      <Option name="color" type="QString" value=""/>
+      <Option name="comment" type="Map">
+        <Option name="color" type="QString" value=""/>
+        <Option name="component_description" type="QString" value=""/>
+        <Option name="component_height" type="double" value="60"/>
+        <Option name="component_pos_x" type="double" value="2117"/>
+        <Option name="component_pos_y" type="double" value="1138"/>
+        <Option name="component_width" type="double" value="100"/>
+        <Option name="outputs_collapsed" type="bool" value="true"/>
+        <Option name="parameters_collapsed" type="bool" value="true"/>
+      </Option>
+      <Option name="component_description" type="QString" value="20. Snap endpoints to each others from a layer source"/>
+      <Option name="component_height" type="double" value="60"/>
+      <Option name="component_pos_x" type="double" value="2528"/>
+      <Option name="component_pos_y" type="double" value="1516"/>
+      <Option name="component_width" type="double" value="240"/>
+      <Option name="dependencies"/>
+      <Option name="id" type="QString" value="cn:endpointssnapping_4"/>
+      <Option name="outputs" type="Map">
+        <Option name="LAYER" type="Map">
+          <Option name="child_id" type="QString" value="cn:endpointssnapping_4"/>
+          <Option name="color" type="QString" value=""/>
+          <Option name="comment" type="Map">
+            <Option name="color" type="QString" value=""/>
+            <Option name="component_description" type="QString" value=""/>
+            <Option name="component_height" type="double" value="60"/>
+            <Option name="component_pos_x" type="double" value="0"/>
+            <Option name="component_pos_y" type="double" value="0"/>
+            <Option name="component_width" type="double" value="100"/>
+            <Option name="outputs_collapsed" type="bool" value="true"/>
+            <Option name="parameters_collapsed" type="bool" value="true"/>
+          </Option>
+          <Option name="component_description" type="QString" value="LAYER"/>
+          <Option name="component_height" type="double" value="30"/>
+          <Option name="component_pos_x" type="double" value="3237"/>
+          <Option name="component_pos_y" type="double" value="1420"/>
+          <Option name="component_width" type="double" value="210"/>
+          <Option name="default_value" type="invalid"/>
+          <Option name="mandatory" type="bool" value="false"/>
+          <Option name="name" type="QString" value="LAYER"/>
+          <Option name="output_name" type="QString" value="OUTPUT"/>
+          <Option name="outputs_collapsed" type="bool" value="true"/>
+          <Option name="parameters_collapsed" type="bool" value="true"/>
+        </Option>
+      </Option>
+      <Option name="outputs_collapsed" type="bool" value="true"/>
+      <Option name="parameters_collapsed" type="bool" value="true"/>
+      <Option name="params" type="Map">
+        <Option name="BUFFER_SNAPPING" type="List">
+          <Option type="Map">
+            <Option name="parameter_name" type="QString" value="snap_endpoints_buffer"/>
+            <Option name="source" type="int" value="0"/>
+          </Option>
+        </Option>
+        <Option name="INPUT" type="List">
+          <Option type="Map">
+            <Option name="child_id" type="QString" value="cn:hubsnapping_4"/>
+            <Option name="output_name" type="QString" value="OUTPUT"/>
+            <Option name="source" type="int" value="1"/>
+          </Option>
+        </Option>
+      </Option>
+    </Option>
     <Option name="cn:endpointstrimmingextending_1" type="Map">
       <Option name="active" type="bool" value="true"/>
       <Option name="alg_config"/>
@@ -428,48 +495,12 @@
       </Option>
       <Option name="component_description" type="QString" value="19. Snap hubs from a layer source"/>
       <Option name="component_height" type="double" value="60"/>
-      <Option name="component_pos_x" type="double" value="2537.5"/>
-      <Option name="component_pos_y" type="double" value="1407"/>
+      <Option name="component_pos_x" type="double" value="2430"/>
+      <Option name="component_pos_y" type="double" value="1410"/>
       <Option name="component_width" type="double" value="240"/>
       <Option name="dependencies"/>
       <Option name="id" type="QString" value="cn:hubsnapping_4"/>
-      <Option name="outputs" type="Map">
-        <Option name="HUB TEST" type="Map">
-          <Option name="child_id" type="QString" value="cn:hubsnapping_4"/>
-          <Option name="color" type="QString" value=""/>
-          <Option name="comment" type="Map">
-            <Option name="color" type="QString" value=""/>
-            <Option name="component_description" type="QString" value=""/>
-            <Option name="component_height" type="double" value="60"/>
-            <Option name="component_pos_x" type="double" value="0"/>
-            <Option name="component_pos_y" type="double" value="0"/>
-            <Option name="component_width" type="double" value="100"/>
-            <Option name="outputs_collapsed" type="bool" value="true"/>
-            <Option name="parameters_collapsed" type="bool" value="true"/>
-          </Option>
-          <Option name="component_description" type="QString" value="HUB TEST"/>
-          <Option name="component_height" type="double" value="30"/>
-          <Option name="component_pos_x" type="double" value="2955"/>
-          <Option name="component_pos_y" type="double" value="1455"/>
-          <Option name="component_width" type="double" value="210"/>
-          <Option name="default_value" type="Map">
-            <Option name="class" type="QString" value="QgsProcessingOutputLayerDefinition"/>
-            <Option name="create_options" type="Map">
-              <Option name="fileEncoding" type="QString" value="windows-1252"/>
-            </Option>
-            <Option name="sink" type="Map">
-              <Option name="active" type="bool" value="true"/>
-              <Option name="type" type="int" value="1"/>
-              <Option name="val" type="QString" value="TEMPORARY_OUTPUT"/>
-            </Option>
-          </Option>
-          <Option name="mandatory" type="bool" value="true"/>
-          <Option name="name" type="QString" value="HUB TEST"/>
-          <Option name="output_name" type="QString" value="OUTPUT"/>
-          <Option name="outputs_collapsed" type="bool" value="true"/>
-          <Option name="parameters_collapsed" type="bool" value="true"/>
-        </Option>
-      </Option>
+      <Option name="outputs"/>
       <Option name="outputs_collapsed" type="bool" value="true"/>
       <Option name="parameters_collapsed" type="bool" value="true"/>
       <Option name="params" type="Map">
@@ -721,8 +752,8 @@
           </Option>
           <Option name="component_description" type="QString" value="POINTS"/>
           <Option name="component_height" type="double" value="30"/>
-          <Option name="component_pos_x" type="double" value="2954"/>
-          <Option name="component_pos_y" type="double" value="1334.5"/>
+          <Option name="component_pos_x" type="double" value="3237"/>
+          <Option name="component_pos_y" type="double" value="1360"/>
           <Option name="component_width" type="double" value="210"/>
           <Option name="default_value" type="Map">
             <Option name="class" type="QString" value="QgsProcessingOutputLayerDefinition"/>
@@ -801,6 +832,79 @@
         </Option>
       </Option>
     </Option>
+    <Option name="native:dissolve_1" type="Map">
+      <Option name="active" type="bool" value="true"/>
+      <Option name="alg_config"/>
+      <Option name="alg_id" type="QString" value="native:dissolve"/>
+      <Option name="color" type="QString" value=""/>
+      <Option name="comment" type="Map">
+        <Option name="color" type="QString" value=""/>
+        <Option name="component_description" type="QString" value=""/>
+        <Option name="component_height" type="double" value="60"/>
+        <Option name="component_pos_x" type="double" value="2920"/>
+        <Option name="component_pos_y" type="double" value="1394"/>
+        <Option name="component_width" type="double" value="100"/>
+        <Option name="outputs_collapsed" type="bool" value="true"/>
+        <Option name="parameters_collapsed" type="bool" value="true"/>
+      </Option>
+      <Option name="component_description" type="QString" value="22. Regrouper"/>
+      <Option name="component_height" type="double" value="60"/>
+      <Option name="component_pos_x" type="double" value="2797"/>
+      <Option name="component_pos_y" type="double" value="1411"/>
+      <Option name="component_width" type="double" value="210"/>
+      <Option name="dependencies"/>
+      <Option name="id" type="QString" value="native:dissolve_1"/>
+      <Option name="outputs" type="Map">
+        <Option name="OUTPUT" type="Map">
+          <Option name="child_id" type="QString" value="native:dissolve_1"/>
+          <Option name="color" type="QString" value=""/>
+          <Option name="comment" type="Map">
+            <Option name="color" type="QString" value=""/>
+            <Option name="component_description" type="QString" value=""/>
+            <Option name="component_height" type="double" value="60"/>
+            <Option name="component_pos_x" type="double" value="0"/>
+            <Option name="component_pos_y" type="double" value="0"/>
+            <Option name="component_width" type="double" value="100"/>
+            <Option name="outputs_collapsed" type="bool" value="true"/>
+            <Option name="parameters_collapsed" type="bool" value="true"/>
+          </Option>
+          <Option name="component_description" type="QString" value="OUTPUT"/>
+          <Option name="component_height" type="double" value="30"/>
+          <Option name="component_pos_x" type="double" value="3237"/>
+          <Option name="component_pos_y" type="double" value="1480"/>
+          <Option name="component_width" type="double" value="210"/>
+          <Option name="default_value" type="invalid"/>
+          <Option name="mandatory" type="bool" value="false"/>
+          <Option name="name" type="QString" value="OUTPUT"/>
+          <Option name="output_name" type="QString" value="OUTPUT"/>
+          <Option name="outputs_collapsed" type="bool" value="true"/>
+          <Option name="parameters_collapsed" type="bool" value="true"/>
+        </Option>
+      </Option>
+      <Option name="outputs_collapsed" type="bool" value="true"/>
+      <Option name="parameters_collapsed" type="bool" value="true"/>
+      <Option name="params" type="Map">
+        <Option name="FIELD" type="List">
+          <Option type="Map">
+            <Option name="parameter_name" type="QString" value="grouping_fields_by_entity"/>
+            <Option name="source" type="int" value="0"/>
+          </Option>
+        </Option>
+        <Option name="INPUT" type="List">
+          <Option type="Map">
+            <Option name="child_id" type="QString" value="native:explodelines_3"/>
+            <Option name="output_name" type="QString" value="OUTPUT"/>
+            <Option name="source" type="int" value="1"/>
+          </Option>
+        </Option>
+        <Option name="SEPARATE_DISJOINT" type="List">
+          <Option type="Map">
+            <Option name="source" type="int" value="2"/>
+            <Option name="static_value" type="bool" value="false"/>
+          </Option>
+        </Option>
+      </Option>
+    </Option>
     <Option name="native:explodelines_1" type="Map">
       <Option name="active" type="bool" value="true"/>
       <Option name="alg_config"/>
@@ -853,44 +957,53 @@
       </Option>
       <Option name="component_description" type="QString" value="16. Exploser des lignes"/>
       <Option name="component_height" type="double" value="60"/>
-      <Option name="component_pos_x" type="double" value="1905"/>
+      <Option name="component_pos_x" type="double" value="1815"/>
       <Option name="component_pos_y" type="double" value="1410"/>
       <Option name="component_width" type="double" value="210"/>
       <Option name="dependencies"/>
       <Option name="id" type="QString" value="native:explodelines_2"/>
-      <Option name="outputs" type="Map">
-        <Option name="LAYER" type="Map">
-          <Option name="child_id" type="QString" value="native:explodelines_2"/>
-          <Option name="color" type="QString" value=""/>
-          <Option name="comment" type="Map">
-            <Option name="color" type="QString" value=""/>
-            <Option name="component_description" type="QString" value=""/>
-            <Option name="component_height" type="double" value="60"/>
-            <Option name="component_pos_x" type="double" value="0"/>
-            <Option name="component_pos_y" type="double" value="0"/>
-            <Option name="component_width" type="double" value="100"/>
-            <Option name="outputs_collapsed" type="bool" value="true"/>
-            <Option name="parameters_collapsed" type="bool" value="true"/>
-          </Option>
-          <Option name="component_description" type="QString" value="LAYER"/>
-          <Option name="component_height" type="double" value="30"/>
-          <Option name="component_pos_x" type="double" value="2955"/>
-          <Option name="component_pos_y" type="double" value="1395"/>
-          <Option name="component_width" type="double" value="210"/>
-          <Option name="default_value" type="invalid"/>
-          <Option name="mandatory" type="bool" value="false"/>
-          <Option name="name" type="QString" value="LAYER"/>
-          <Option name="output_name" type="QString" value="OUTPUT"/>
-          <Option name="outputs_collapsed" type="bool" value="true"/>
-          <Option name="parameters_collapsed" type="bool" value="true"/>
-        </Option>
-      </Option>
+      <Option name="outputs"/>
       <Option name="outputs_collapsed" type="bool" value="true"/>
       <Option name="parameters_collapsed" type="bool" value="true"/>
       <Option name="params" type="Map">
         <Option name="INPUT" type="List">
           <Option type="Map">
             <Option name="child_id" type="QString" value="cn:endpointstrimmingextending_4"/>
+            <Option name="output_name" type="QString" value="OUTPUT"/>
+            <Option name="source" type="int" value="1"/>
+          </Option>
+        </Option>
+      </Option>
+    </Option>
+    <Option name="native:explodelines_3" type="Map">
+      <Option name="active" type="bool" value="true"/>
+      <Option name="alg_config"/>
+      <Option name="alg_id" type="QString" value="native:explodelines"/>
+      <Option name="color" type="QString" value=""/>
+      <Option name="comment" type="Map">
+        <Option name="color" type="QString" value=""/>
+        <Option name="component_description" type="QString" value=""/>
+        <Option name="component_height" type="double" value="60"/>
+        <Option name="component_pos_x" type="double" value="3480.5"/>
+        <Option name="component_pos_y" type="double" value="1219"/>
+        <Option name="component_width" type="double" value="100"/>
+        <Option name="outputs_collapsed" type="bool" value="true"/>
+        <Option name="parameters_collapsed" type="bool" value="true"/>
+      </Option>
+      <Option name="component_description" type="QString" value="21. Exploser des lignes"/>
+      <Option name="component_height" type="double" value="60"/>
+      <Option name="component_pos_x" type="double" value="2667"/>
+      <Option name="component_pos_y" type="double" value="1313"/>
+      <Option name="component_width" type="double" value="210"/>
+      <Option name="dependencies"/>
+      <Option name="id" type="QString" value="native:explodelines_3"/>
+      <Option name="outputs"/>
+      <Option name="outputs_collapsed" type="bool" value="true"/>
+      <Option name="parameters_collapsed" type="bool" value="true"/>
+      <Option name="params" type="Map">
+        <Option name="INPUT" type="List">
+          <Option type="Map">
+            <Option name="child_id" type="QString" value="cn:endpointssnapping_4"/>
             <Option name="output_name" type="QString" value="OUTPUT"/>
             <Option name="source" type="int" value="1"/>
           </Option>
@@ -1078,7 +1191,7 @@
       <Option name="component_description" type="QString" value="0. Reproject a layer"/>
       <Option name="component_height" type="double" value="30"/>
       <Option name="component_pos_x" type="double" value="600"/>
-      <Option name="component_pos_y" type="double" value="1455"/>
+      <Option name="component_pos_y" type="double" value="1454.4375"/>
       <Option name="component_width" type="double" value="180"/>
       <Option name="dependencies"/>
       <Option name="id" type="QString" value="native:reprojectlayer_1"/>
@@ -1242,8 +1355,8 @@
       </Option>
       <Option name="component_description" type="QString" value="17. Snap geometries to layer"/>
       <Option name="component_height" type="double" value="60"/>
-      <Option name="component_pos_x" type="double" value="2256.5"/>
-      <Option name="component_pos_y" type="double" value="1366.5"/>
+      <Option name="component_pos_x" type="double" value="2130"/>
+      <Option name="component_pos_y" type="double" value="1410"/>
       <Option name="component_width" type="double" value="240"/>
       <Option name="dependencies"/>
       <Option name="id" type="QString" value="native:snapgeometries_2"/>
@@ -1296,38 +1409,12 @@
       </Option>
       <Option name="component_description" type="QString" value="18. Snap geometries to layer"/>
       <Option name="component_height" type="double" value="60"/>
-      <Option name="component_pos_x" type="double" value="2258.5"/>
-      <Option name="component_pos_y" type="double" value="1453"/>
+      <Option name="component_pos_x" type="double" value="2198"/>
+      <Option name="component_pos_y" type="double" value="1516"/>
       <Option name="component_width" type="double" value="240"/>
       <Option name="dependencies"/>
       <Option name="id" type="QString" value="native:snapgeometries_3"/>
-      <Option name="outputs" type="Map">
-        <Option name="SNAP TEST" type="Map">
-          <Option name="child_id" type="QString" value="native:snapgeometries_3"/>
-          <Option name="color" type="QString" value=""/>
-          <Option name="comment" type="Map">
-            <Option name="color" type="QString" value=""/>
-            <Option name="component_description" type="QString" value=""/>
-            <Option name="component_height" type="double" value="60"/>
-            <Option name="component_pos_x" type="double" value="0"/>
-            <Option name="component_pos_y" type="double" value="0"/>
-            <Option name="component_width" type="double" value="100"/>
-            <Option name="outputs_collapsed" type="bool" value="true"/>
-            <Option name="parameters_collapsed" type="bool" value="true"/>
-          </Option>
-          <Option name="component_description" type="QString" value="SNAP TEST"/>
-          <Option name="component_height" type="double" value="30"/>
-          <Option name="component_pos_x" type="double" value="2956.5"/>
-          <Option name="component_pos_y" type="double" value="1518"/>
-          <Option name="component_width" type="double" value="210"/>
-          <Option name="default_value" type="invalid"/>
-          <Option name="mandatory" type="bool" value="false"/>
-          <Option name="name" type="QString" value="SNAP TEST"/>
-          <Option name="output_name" type="QString" value="OUTPUT"/>
-          <Option name="outputs_collapsed" type="bool" value="true"/>
-          <Option name="parameters_collapsed" type="bool" value="true"/>
-        </Option>
-      </Option>
+      <Option name="outputs"/>
       <Option name="outputs_collapsed" type="bool" value="true"/>
       <Option name="parameters_collapsed" type="bool" value="true"/>
       <Option name="params" type="Map">
@@ -1400,11 +1487,11 @@
       <Option name="uuid" type="QString" value="{234470cb-42ab-4ddf-a50d-20b3c6b54e90}"/>
     </Option>
     <Option type="Map">
-      <Option name="color" type="QString" value="16,74,112,192"/>
+      <Option name="color" type="QString" value="21,99,147,102"/>
       <Option name="component_description" type="QString" value="ADVANCED PARAMETERS"/>
       <Option name="component_height" type="double" value="210"/>
-      <Option name="component_pos_x" type="double" value="870"/>
-      <Option name="component_pos_y" type="double" value="1095"/>
+      <Option name="component_pos_x" type="double" value="849.75"/>
+      <Option name="component_pos_y" type="double" value="1101.75"/>
       <Option name="component_width" type="double" value="420"/>
       <Option name="outputs_collapsed" type="bool" value="true"/>
       <Option name="parameters_collapsed" type="bool" value="true"/>
@@ -1425,7 +1512,7 @@
       <Option name="color" type="QString" value="248,252,211,128"/>
       <Option name="component_description" type="QString" value="RESULTS LAYERS"/>
       <Option name="component_height" type="double" value="330"/>
-      <Option name="component_pos_x" type="double" value="2955"/>
+      <Option name="component_pos_x" type="double" value="3236"/>
       <Option name="component_pos_y" type="double" value="1425"/>
       <Option name="component_width" type="double" value="390"/>
       <Option name="outputs_collapsed" type="bool" value="true"/>
@@ -1433,7 +1520,7 @@
       <Option name="uuid" type="QString" value="{64c86918-24de-4114-ab57-35da8340f8df}"/>
     </Option>
     <Option type="Map">
-      <Option name="color" type="QString" value="33,92,125,166"/>
+      <Option name="color" type="QString" value="21,99,147,102"/>
       <Option name="component_description" type="QString" value="CLEAN STEPS PARAMETERS"/>
       <Option name="component_height" type="double" value="330"/>
       <Option name="component_pos_x" type="double" value="1080"/>
@@ -1458,15 +1545,15 @@
       <Option name="color" type="QString" value="183,72,75,191"/>
       <Option name="component_description" type="QString" value="SNAPPING PIPELINE"/>
       <Option name="component_height" type="double" value="330"/>
-      <Option name="component_pos_x" type="double" value="2025"/>
-      <Option name="component_pos_y" type="double" value="1425"/>
-      <Option name="component_width" type="double" value="1350"/>
+      <Option name="component_pos_x" type="double" value="2156.5"/>
+      <Option name="component_pos_y" type="double" value="1424"/>
+      <Option name="component_width" type="double" value="1613"/>
       <Option name="outputs_collapsed" type="bool" value="true"/>
       <Option name="parameters_collapsed" type="bool" value="true"/>
       <Option name="uuid" type="QString" value="{8de7a341-42d5-4838-967e-6e5c8050faa1}"/>
     </Option>
     <Option type="Map">
-      <Option name="color" type="QString" value="41,107,141,101"/>
+      <Option name="color" type="QString" value="60,159,208,77"/>
       <Option name="component_description" type="QString" value="PREPROCESSING SCR&#xa;&#xa;! LAYER CSR UNIT MUST BE IN METERS !"/>
       <Option name="component_height" type="double" value="330"/>
       <Option name="component_pos_x" type="double" value="600"/>
@@ -1516,34 +1603,19 @@
   <Option name="outputGroup" type="QString" value=""/>
   <Option name="outputOrder"/>
   <Option name="parameterDefinitions" type="Map">
-    <Option name="hub_test" type="Map">
-      <Option name="create_by_default" type="bool" value="true"/>
+    <Option name="grouping_fields_by_entity" type="Map">
+      <Option name="allow_multiple" type="bool" value="true"/>
       <Option name="data_type" type="int" value="-1"/>
-      <Option name="default" type="QgsProcessingOutputLayerDefinition">
-        <Option type="Map">
-          <Option name="create_options" type="Map">
-            <Option name="fileEncoding" type="QString" value="windows-1252"/>
-          </Option>
-          <Option name="sink" type="Map">
-            <Option name="active" type="bool" value="true"/>
-            <Option name="type" type="int" value="1"/>
-            <Option name="val" type="QString" value="TEMPORARY_OUTPUT"/>
-          </Option>
-        </Option>
-      </Option>
+      <Option name="default" type="invalid"/>
       <Option name="defaultGui" type="invalid"/>
-      <Option name="description" type="QString" value="HUB TEST"/>
+      <Option name="default_to_all_fields" type="bool" value="false"/>
+      <Option name="description" type="QString" value="&#xa;GROUPING_FIELDS_BY_ENTITY&#xa;"/>
       <Option name="flags" type="int" value="0"/>
       <Option name="help" type="QString" value=""/>
-      <Option name="metadata" type="Map">
-        <Option name="_modelChildId" type="QString" value="cn:hubsnapping_4"/>
-        <Option name="_modelChildOutputName" type="QString" value="HUB TEST"/>
-        <Option name="_modelChildProvider" type="QString" value="cn"/>
-      </Option>
-      <Option name="name" type="QString" value="hub_test"/>
-      <Option name="parameter_type" type="QString" value="sink"/>
-      <Option name="supports_append" type="bool" value="false"/>
-      <Option name="supports_non_file_outputs" type="bool" value="true"/>
+      <Option name="metadata"/>
+      <Option name="name" type="QString" value="grouping_fields_by_entity"/>
+      <Option name="parameter_type" type="QString" value="field"/>
+      <Option name="parent_layer" type="QString" value="input"/>
     </Option>
     <Option name="hubs__buffer" type="Map">
       <Option name="data_type" type="int" value="1"/>
@@ -1576,20 +1648,20 @@
     </Option>
     <Option name="layer" type="Map">
       <Option name="create_by_default" type="bool" value="true"/>
-      <Option name="data_type" type="int" value="1"/>
+      <Option name="data_type" type="int" value="-1"/>
       <Option name="default" type="invalid"/>
       <Option name="defaultGui" type="invalid"/>
       <Option name="description" type="QString" value="LAYER"/>
       <Option name="flags" type="int" value="0"/>
       <Option name="help" type="QString" value=""/>
       <Option name="metadata" type="Map">
-        <Option name="_modelChildId" type="QString" value="native:explodelines_2"/>
+        <Option name="_modelChildId" type="QString" value="cn:endpointssnapping_4"/>
         <Option name="_modelChildOutputName" type="QString" value="LAYER"/>
-        <Option name="_modelChildProvider" type="QString" value="native"/>
+        <Option name="_modelChildProvider" type="QString" value="cn"/>
       </Option>
       <Option name="name" type="QString" value="layer"/>
       <Option name="parameter_type" type="QString" value="sink"/>
-      <Option name="supports_append" type="bool" value="true"/>
+      <Option name="supports_append" type="bool" value="false"/>
       <Option name="supports_non_file_outputs" type="bool" value="true"/>
     </Option>
     <Option name="make_intersection__buffer" type="Map">
@@ -1606,6 +1678,24 @@
       <Option name="name" type="QString" value="make_intersection__buffer"/>
       <Option name="parameter_type" type="QString" value="distance"/>
       <Option name="parent" type="QString" value="input"/>
+    </Option>
+    <Option name="output" type="Map">
+      <Option name="create_by_default" type="bool" value="true"/>
+      <Option name="data_type" type="int" value="-1"/>
+      <Option name="default" type="invalid"/>
+      <Option name="defaultGui" type="invalid"/>
+      <Option name="description" type="QString" value="OUTPUT"/>
+      <Option name="flags" type="int" value="0"/>
+      <Option name="help" type="QString" value=""/>
+      <Option name="metadata" type="Map">
+        <Option name="_modelChildId" type="QString" value="native:dissolve_1"/>
+        <Option name="_modelChildOutputName" type="QString" value="OUTPUT"/>
+        <Option name="_modelChildProvider" type="QString" value="native"/>
+      </Option>
+      <Option name="name" type="QString" value="output"/>
+      <Option name="parameter_type" type="QString" value="sink"/>
+      <Option name="supports_append" type="bool" value="false"/>
+      <Option name="supports_non_file_outputs" type="bool" value="true"/>
     </Option>
     <Option name="points" type="Map">
       <Option name="create_by_default" type="bool" value="true"/>
@@ -1650,24 +1740,6 @@
       <Option name="name" type="QString" value="snap_endpoints_buffer"/>
       <Option name="parameter_type" type="QString" value="distance"/>
       <Option name="parent" type="QString" value="input"/>
-    </Option>
-    <Option name="snap_test" type="Map">
-      <Option name="create_by_default" type="bool" value="true"/>
-      <Option name="data_type" type="int" value="-1"/>
-      <Option name="default" type="invalid"/>
-      <Option name="defaultGui" type="invalid"/>
-      <Option name="description" type="QString" value="SNAP TEST"/>
-      <Option name="flags" type="int" value="0"/>
-      <Option name="help" type="QString" value=""/>
-      <Option name="metadata" type="Map">
-        <Option name="_modelChildId" type="QString" value="native:snapgeometries_3"/>
-        <Option name="_modelChildOutputName" type="QString" value="SNAP TEST"/>
-        <Option name="_modelChildProvider" type="QString" value="native"/>
-      </Option>
-      <Option name="name" type="QString" value="snap_test"/>
-      <Option name="parameter_type" type="QString" value="sink"/>
-      <Option name="supports_append" type="bool" value="false"/>
-      <Option name="supports_non_file_outputs" type="bool" value="true"/>
     </Option>
     <Option name="snap_vertices_buffer" type="Map">
       <Option name="data_type" type="int" value="1"/>
@@ -1732,6 +1804,27 @@
   </Option>
   <Option name="parameterOrder"/>
   <Option name="parameters" type="Map">
+    <Option name="grouping_fields_by_entity" type="Map">
+      <Option name="color" type="QString" value=""/>
+      <Option name="comment" type="Map">
+        <Option name="color" type="QString" value=""/>
+        <Option name="component_description" type="QString" value=""/>
+        <Option name="component_height" type="double" value="60"/>
+        <Option name="component_pos_x" type="double" value="522"/>
+        <Option name="component_pos_y" type="double" value="1036"/>
+        <Option name="component_width" type="double" value="100"/>
+        <Option name="outputs_collapsed" type="bool" value="true"/>
+        <Option name="parameters_collapsed" type="bool" value="true"/>
+      </Option>
+      <Option name="component_description" type="QString" value="grouping_fields_by_entity"/>
+      <Option name="component_height" type="double" value="30"/>
+      <Option name="component_pos_x" type="double" value="1079.625"/>
+      <Option name="component_pos_y" type="double" value="1901.625"/>
+      <Option name="component_width" type="double" value="270"/>
+      <Option name="name" type="QString" value="grouping_fields_by_entity"/>
+      <Option name="outputs_collapsed" type="bool" value="true"/>
+      <Option name="parameters_collapsed" type="bool" value="true"/>
+    </Option>
     <Option name="hubs__buffer" type="Map">
       <Option name="color" type="QString" value=""/>
       <Option name="comment" type="Map">
@@ -1746,8 +1839,8 @@
       </Option>
       <Option name="component_description" type="QString" value="hubs__buffer"/>
       <Option name="component_height" type="double" value="30"/>
-      <Option name="component_pos_x" type="double" value="1065.5"/>
-      <Option name="component_pos_y" type="double" value="2033"/>
+      <Option name="component_pos_x" type="double" value="1079.625"/>
+      <Option name="component_pos_y" type="double" value="2052.75"/>
       <Option name="component_width" type="double" value="270"/>
       <Option name="name" type="QString" value="hubs__buffer"/>
       <Option name="outputs_collapsed" type="bool" value="true"/>
@@ -1767,9 +1860,9 @@
       </Option>
       <Option name="component_description" type="QString" value="input"/>
       <Option name="component_height" type="double" value="30"/>
-      <Option name="component_pos_x" type="double" value="615"/>
+      <Option name="component_pos_x" type="double" value="599.8125"/>
       <Option name="component_pos_y" type="double" value="1395"/>
-      <Option name="component_width" type="double" value="210"/>
+      <Option name="component_width" type="double" value="180.75"/>
       <Option name="name" type="QString" value="input"/>
       <Option name="outputs_collapsed" type="bool" value="true"/>
       <Option name="parameters_collapsed" type="bool" value="true"/>
@@ -1809,8 +1902,8 @@
       </Option>
       <Option name="component_description" type="QString" value="snap_endpoints_buffer"/>
       <Option name="component_height" type="double" value="30"/>
-      <Option name="component_pos_x" type="double" value="1065"/>
-      <Option name="component_pos_y" type="double" value="1982"/>
+      <Option name="component_pos_x" type="double" value="1079.125"/>
+      <Option name="component_pos_y" type="double" value="2001.625"/>
       <Option name="component_width" type="double" value="270"/>
       <Option name="name" type="QString" value="snap_endpoints_buffer"/>
       <Option name="outputs_collapsed" type="bool" value="true"/>
@@ -1851,8 +1944,8 @@
       </Option>
       <Option name="component_description" type="QString" value="snapping_geometries_buffer"/>
       <Option name="component_height" type="double" value="30"/>
-      <Option name="component_pos_x" type="double" value="853"/>
-      <Option name="component_pos_y" type="double" value="1109"/>
+      <Option name="component_pos_x" type="double" value="856.125"/>
+      <Option name="component_pos_y" type="double" value="1110.375"/>
       <Option name="component_width" type="double" value="270"/>
       <Option name="name" type="QString" value="snapping_geometries_buffer"/>
       <Option name="outputs_collapsed" type="bool" value="true"/>
@@ -1872,8 +1965,8 @@
       </Option>
       <Option name="component_description" type="QString" value="trimextend_long_buffer"/>
       <Option name="component_height" type="double" value="30"/>
-      <Option name="component_pos_x" type="double" value="1065"/>
-      <Option name="component_pos_y" type="double" value="1935"/>
+      <Option name="component_pos_x" type="double" value="1079.625"/>
+      <Option name="component_pos_y" type="double" value="1952.625"/>
       <Option name="component_width" type="double" value="270"/>
       <Option name="name" type="QString" value="trimextend_long_buffer"/>
       <Option name="outputs_collapsed" type="bool" value="true"/>
@@ -1893,8 +1986,8 @@
       </Option>
       <Option name="component_description" type="QString" value="trimextend_short_buffer"/>
       <Option name="component_height" type="double" value="30"/>
-      <Option name="component_pos_x" type="double" value="1065"/>
-      <Option name="component_pos_y" type="double" value="2085"/>
+      <Option name="component_pos_x" type="double" value="1080.125"/>
+      <Option name="component_pos_y" type="double" value="2103.75"/>
       <Option name="component_width" type="double" value="270"/>
       <Option name="name" type="QString" value="trimextend_short_buffer"/>
       <Option name="outputs_collapsed" type="bool" value="true"/>
