@@ -1,4 +1,4 @@
-# ![alt title logo](https://raw.githubusercontent.com/sducournau/consolidate_networks/main/ressources/black_icon.png?raw=true) Consolidate Networks
+# ![alt title logo](https://raw.githubusercontent.com/sducournau/consolidate_networks/main/ressources/logo_black.png?raw=true) Consolidate Networks
 
 **A Qgis plugin toolset for consolidate your network data**<br>
 
