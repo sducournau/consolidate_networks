@@ -1,4 +1,4 @@
-# <img class="filter-invertfilter" src="https://github.com/sducournau/consolidate_networks/blob/main/ressources/icon.png?raw=true" width="50" height="50"> Consolidate Networks
+# ![alt title logo](https://raw.githubusercontent.com/sducournau/consolidate_networks/main/ressources/icon.png?raw=true) Consolidate Networks
 
 
 **A Qgis plugin toolset for consolidate your network data**<br>
@@ -14,7 +14,7 @@ You can repair topological problems and clean your data.*
 
 <br>
 
-# 1. Preview :
+# 1. Preview
 
 ![alt preview preview-1](https://raw.githubusercontent.com/sducournau/consolidate_networks/main/ressources/comparaison_ban.png?raw=true)
 
@@ -33,10 +33,7 @@ You can repair topological problems and clean your data.*
     
 ******
 
-# 3. List of cn provider algorithms' :
-
-
-![alt preview cover](https://raw.githubusercontent.com/sducournau/consolidate_networks/main/ressources/cover_50.png?raw=true)
+# 3. List of cn provider algorithms'
 
 ## Consolidate
 
