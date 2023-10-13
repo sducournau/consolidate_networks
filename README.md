@@ -24,7 +24,7 @@ You can repair topological problems and clean your data.*
 `Apply multiple snappings steps and make the use of cn provider algorithms.`<br>
 
 
-<img src="https://raw.githubusercontent.com/sducournau/consolidate_networks/main/ressources/mode_blueprint.png?raw=true">
+<img src="https://raw.githubusercontent.com/sducournau/consolidate_networks/main/ressources/mode_blueprint_halfsize.png?raw=true">
 
 <br>
 <br>
