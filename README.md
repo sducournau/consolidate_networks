@@ -1,7 +1,7 @@
-# ![alt preview preview-1](https://github.com/sducournau/consolidate_networks/blob/main/ressources/icon.png?raw=true) Consolidate Networks
+# <img class="filter-invertfilter" src="https://github.com/sducournau/consolidate_networks/blob/main/ressources/black_icon.png?raw=true" width="50" height="50"> Consolidate Networks
+
 
 **A Qgis plugin toolset for consolidate your network data**<br>
-https://sducournau.github.io/consolidate_networks/
 
 *This plugin provides processing algorithms that allow you to manipulate the vertices of a line layer.
 You can repair topological problems and clean your data.*
