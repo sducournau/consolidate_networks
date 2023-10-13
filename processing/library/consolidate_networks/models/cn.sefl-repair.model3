@@ -1600,8 +1600,12 @@
   <Option name="modelVariables"/>
   <Option name="model_group" type="QString" value="Consolidate Network"/>
   <Option name="model_name" type="QString" value="cn.sefl-repair"/>
-  <Option name="outputGroup" type="QString" value=""/>
-  <Option name="outputOrder"/>
+  <Option name="outputGroup" type="QString" value="CN_SELF-REPAIR"/>
+  <Option name="outputOrder" type="StringList">
+    <Option type="QString" value="cn:endpointssnapping_4:OUTPUT"/>
+    <Option type="QString" value="native:centroids_1:OUTPUT"/>
+    <Option type="QString" value="native:dissolve_1:OUTPUT"/>
+  </Option>
   <Option name="parameterDefinitions" type="Map">
     <Option name="grouping_fields_by_entity" type="Map">
       <Option name="allow_multiple" type="bool" value="true"/>
@@ -1802,7 +1806,17 @@
       <Option name="parent" type="QString" value="input"/>
     </Option>
   </Option>
-  <Option name="parameterOrder"/>
+  <Option name="parameterOrder" type="StringList">
+    <Option type="QString" value="input"/>
+    <Option type="QString" value="grouping_fields_by_entity"/>
+    <Option type="QString" value="trimextend_long_buffer"/>
+    <Option type="QString" value="trimextend_short_buffer"/>
+    <Option type="QString" value="snap_endpoints_buffer"/>
+    <Option type="QString" value="hubs__buffer"/>
+    <Option type="QString" value="snap_vertices_buffer"/>
+    <Option type="QString" value="snapping_geometries_buffer"/>
+    <Option type="QString" value="make_intersection__buffer"/>
+  </Option>
   <Option name="parameters" type="Map">
     <Option name="grouping_fields_by_entity" type="Map">
       <Option name="color" type="QString" value=""/>
