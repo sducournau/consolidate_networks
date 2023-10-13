@@ -22,14 +22,14 @@ You can repair topological problems and clean your data.*
 # 2. Models
 #### <ins>**CN | Self-repair Pipeline model**</ins>
 `Apply multiple snappings steps and make the use of cn provider algorithms.`<br>
+
+
+<img src="https://raw.githubusercontent.com/sducournau/consolidate_networks/main/ressources/mode_blueprint.png?raw=true">
+
 <br>
 <br>
     
 ******
-
-<img src="https://raw.githubusercontent.com/sducournau/consolidate_networks/main/ressources/mode_blueprint.png?raw=true">
-
-
 
 # 3. List of cn provider algorithms' :
 
