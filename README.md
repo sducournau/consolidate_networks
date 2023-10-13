@@ -14,7 +14,7 @@ You can repair topological problems and clean your data.*
 
 # 1. Preview :
 
-<img src="https://raw.githubusercontent.com/sducournau/consolidate_networks/main/ressources/mode_blueprint.png?raw=true">
+<img src="https://raw.githubusercontent.com/sducournau/consolidate_networks/main/ressources/comparaison_ban.png?raw=true">
 
 
 <br>
@@ -27,7 +27,7 @@ You can repair topological problems and clean your data.*
     
 ******
 
-<img src="https://raw.githubusercontent.com/sducournau/consolidate_networks/main/ressources/comparaison_ban.png?raw=true">
+<img src="https://raw.githubusercontent.com/sducournau/consolidate_networks/main/ressources/mode_blueprint.png?raw=true">
 
 
 
