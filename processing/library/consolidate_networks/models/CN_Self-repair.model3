@@ -1273,7 +1273,7 @@
   <Option name="internal_version" value="Version2" type="QString"/>
   <Option name="modelVariables"/>
   <Option name="model_group" value="Consolidate Network" type="QString"/>
-  <Option name="model_name" value="Self-repair" type="QString"/>
+  <Option name="model_name" value="CN_Self-repair" type="QString"/>
   <Option name="outputGroup" value="" type="QString"/>
   <Option name="outputOrder"/>
   <Option name="parameterDefinitions" type="Map">
@@ -1386,7 +1386,9 @@
       <Option name="supports_non_file_outputs" value="true" type="bool"/>
     </Option>
   </Option>
-  <Option name="parameterOrder"/>
+  <Option name="parameterOrder" type="StringList">
+    <Option value="input" type="QString"/>
+  </Option>
   <Option name="parameters" type="Map">
     <Option name="input" type="Map">
       <Option name="color" value="" type="QString"/>
