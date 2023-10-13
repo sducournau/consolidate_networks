@@ -1,9 +1,8 @@
 # ![alt title logo](https://raw.githubusercontent.com/sducournau/consolidate_networks/main/ressources/logo_black.png?raw=true) Consolidate Networks
 
-**A Qgis plugin toolset for consolidate your network data**<br>
+**Consolidate Networks is a Qgis plugin toolset that helps youoptimize the geometry of your line network.**<br>
 
-*This plugin provides processing algorithms that allow you to manipulate the vertices of a line layer.
-You can repair topological problems and clean your data.*
+*This plugin provides processing algorithms that allow you to manipulate the vertices of a line layer.You can repair topological problems and clean your data.*
 
 
 
