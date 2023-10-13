@@ -1,0 +1,43 @@
+▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
+▼                          MODELS                          ▼
+▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
+                                    ▼
+                                    ▼
+▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
+► cn.sefl-repair
+Apply multiple snappings steps and make the use of cn provider algorithms.
+▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
+▼ LIST OF CN PROVIDER ALGORITHMS ▼
+▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
+                                    ▼
+                                    ▼
+▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
+DBSCAN AND CONSOLIDATE
+► cn.calculatedbscan
+Calculate dbscan clusters of lines from a layer source.
+► cn.consolidatewithdbscan
+Snap lines to each other splitting by their clusters from a layer source resulted from CalculateDbscan().
+► cn.makeintersectionsvertexes
+Insert missing vertices from a source layer.
+▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
+                                    ▼
+                                    ▼
+▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
+SNAPPING LAYER (FROM ANOTHER LAYER)
+► cn.endpointstrimmingextending
+Cut and extend end lines from a layer source.
+► cn.endpointssnapping
+Snap lines endpoints' to each other's from a layer source.
+► cn.calculatedbscan
+Align lines vertices' hubs on top of each other within a buffer.
+► cn.hubsnapping
+Calculate dbscan clusters of lines from a layer source.
+▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
+                                    ▼
+                                    ▼
+▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
+SNAPPING LAYER (FROM ANOTHER LAYER)
+► cn.snapendpointstoLayer
+Snap lines endpoints' to each other's from an other layer source.
+► cn.snaphubspointstolayer
+Align lines vertices' hubs on top of a point layer within a buffer.

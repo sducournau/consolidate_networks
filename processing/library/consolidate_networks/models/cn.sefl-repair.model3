@@ -162,8 +162,13 @@
           </Option>
           <Option name="component_description" type="QString" value="LAYER"/>
           <Option name="component_height" type="double" value="30"/>
+<<<<<<< Updated upstream
           <Option name="component_pos_x" type="double" value="3237"/>
           <Option name="component_pos_y" type="double" value="1420"/>
+=======
+          <Option name="component_pos_x" type="double" value="3318"/>
+          <Option name="component_pos_y" type="double" value="1418"/>
+>>>>>>> Stashed changes
           <Option name="component_width" type="double" value="210"/>
           <Option name="default_value" type="invalid"/>
           <Option name="mandatory" type="bool" value="false"/>
@@ -191,6 +196,50 @@
         </Option>
       </Option>
     </Option>
+<<<<<<< Updated upstream
+=======
+    <Option name="cn:endpointssnapping_5" type="Map">
+      <Option name="active" type="bool" value="true"/>
+      <Option name="alg_config"/>
+      <Option name="alg_id" type="QString" value="cn:endpointssnapping"/>
+      <Option name="color" type="QString" value=""/>
+      <Option name="comment" type="Map">
+        <Option name="color" type="QString" value=""/>
+        <Option name="component_description" type="QString" value=""/>
+        <Option name="component_height" type="double" value="60"/>
+        <Option name="component_pos_x" type="double" value="2821"/>
+        <Option name="component_pos_y" type="double" value="1430"/>
+        <Option name="component_width" type="double" value="100"/>
+        <Option name="outputs_collapsed" type="bool" value="true"/>
+        <Option name="parameters_collapsed" type="bool" value="true"/>
+      </Option>
+      <Option name="component_description" type="QString" value="23. Snap endpoints to each others from a layer source"/>
+      <Option name="component_height" type="double" value="60"/>
+      <Option name="component_pos_x" type="double" value="2764"/>
+      <Option name="component_pos_y" type="double" value="1892"/>
+      <Option name="component_width" type="double" value="180"/>
+      <Option name="dependencies"/>
+      <Option name="id" type="QString" value="cn:endpointssnapping_5"/>
+      <Option name="outputs"/>
+      <Option name="outputs_collapsed" type="bool" value="true"/>
+      <Option name="parameters_collapsed" type="bool" value="true"/>
+      <Option name="params" type="Map">
+        <Option name="BUFFER_SNAPPING" type="List">
+          <Option type="Map">
+            <Option name="parameter_name" type="QString" value="snap_endpoints_buffer"/>
+            <Option name="source" type="int" value="0"/>
+          </Option>
+        </Option>
+        <Option name="INPUT" type="List">
+          <Option type="Map">
+            <Option name="child_id" type="QString" value="cn:endpointstrimmingextending_5"/>
+            <Option name="output_name" type="QString" value="OUTPUT"/>
+            <Option name="source" type="int" value="1"/>
+          </Option>
+        </Option>
+      </Option>
+    </Option>
+>>>>>>> Stashed changes
     <Option name="cn:endpointstrimmingextending_1" type="Map">
       <Option name="active" type="bool" value="true"/>
       <Option name="alg_config"/>
@@ -355,6 +404,91 @@
         </Option>
       </Option>
     </Option>
+<<<<<<< Updated upstream
+=======
+    <Option name="cn:endpointstrimmingextending_5" type="Map">
+      <Option name="active" type="bool" value="true"/>
+      <Option name="alg_config"/>
+      <Option name="alg_id" type="QString" value="cn:endpointstrimmingextending"/>
+      <Option name="color" type="QString" value=""/>
+      <Option name="comment" type="Map">
+        <Option name="color" type="QString" value=""/>
+        <Option name="component_description" type="QString" value=""/>
+        <Option name="component_height" type="double" value="60"/>
+        <Option name="component_pos_x" type="double" value="3654"/>
+        <Option name="component_pos_y" type="double" value="1034"/>
+        <Option name="component_width" type="double" value="100"/>
+        <Option name="outputs_collapsed" type="bool" value="true"/>
+        <Option name="parameters_collapsed" type="bool" value="true"/>
+      </Option>
+      <Option name="component_description" type="QString" value="22. Trim and extend endlines from a layer source"/>
+      <Option name="component_height" type="double" value="60"/>
+      <Option name="component_pos_x" type="double" value="2584"/>
+      <Option name="component_pos_y" type="double" value="1802"/>
+      <Option name="component_width" type="double" value="180"/>
+      <Option name="dependencies"/>
+      <Option name="id" type="QString" value="cn:endpointstrimmingextending_5"/>
+      <Option name="outputs"/>
+      <Option name="outputs_collapsed" type="bool" value="true"/>
+      <Option name="parameters_collapsed" type="bool" value="true"/>
+      <Option name="params" type="Map">
+        <Option name="BUFFER_TRIM_EXTEND" type="List">
+          <Option type="Map">
+            <Option name="parameter_name" type="QString" value="trimextend_long_buffer"/>
+            <Option name="source" type="int" value="0"/>
+          </Option>
+        </Option>
+        <Option name="INPUT" type="List">
+          <Option type="Map">
+            <Option name="child_id" type="QString" value="native:explodelines_3"/>
+            <Option name="output_name" type="QString" value="OUTPUT"/>
+            <Option name="source" type="int" value="1"/>
+          </Option>
+        </Option>
+      </Option>
+    </Option>
+    <Option name="cn:endpointstrimmingextending_6" type="Map">
+      <Option name="active" type="bool" value="true"/>
+      <Option name="alg_config"/>
+      <Option name="alg_id" type="QString" value="cn:endpointstrimmingextending"/>
+      <Option name="color" type="QString" value=""/>
+      <Option name="comment" type="Map">
+        <Option name="color" type="QString" value=""/>
+        <Option name="component_description" type="QString" value=""/>
+        <Option name="component_height" type="double" value="60"/>
+        <Option name="component_pos_x" type="double" value="3468.5"/>
+        <Option name="component_pos_y" type="double" value="1187.5"/>
+        <Option name="component_width" type="double" value="100"/>
+        <Option name="outputs_collapsed" type="bool" value="true"/>
+        <Option name="parameters_collapsed" type="bool" value="true"/>
+      </Option>
+      <Option name="component_description" type="QString" value="25. Trim and extend endlines from a layer source"/>
+      <Option name="component_height" type="double" value="60"/>
+      <Option name="component_pos_x" type="double" value="2599"/>
+      <Option name="component_pos_y" type="double" value="2072"/>
+      <Option name="component_width" type="double" value="210"/>
+      <Option name="dependencies"/>
+      <Option name="id" type="QString" value="cn:endpointstrimmingextending_6"/>
+      <Option name="outputs"/>
+      <Option name="outputs_collapsed" type="bool" value="true"/>
+      <Option name="parameters_collapsed" type="bool" value="true"/>
+      <Option name="params" type="Map">
+        <Option name="BUFFER_TRIM_EXTEND" type="List">
+          <Option type="Map">
+            <Option name="parameter_name" type="QString" value="trimextend_short_buffer"/>
+            <Option name="source" type="int" value="0"/>
+          </Option>
+        </Option>
+        <Option name="INPUT" type="List">
+          <Option type="Map">
+            <Option name="child_id" type="QString" value="cn:hubsnapping_5"/>
+            <Option name="output_name" type="QString" value="OUTPUT"/>
+            <Option name="source" type="int" value="1"/>
+          </Option>
+        </Option>
+      </Option>
+    </Option>
+>>>>>>> Stashed changes
     <Option name="cn:hubsnapping_1" type="Map">
       <Option name="active" type="bool" value="true"/>
       <Option name="alg_config"/>
@@ -519,6 +653,50 @@
         </Option>
       </Option>
     </Option>
+<<<<<<< Updated upstream
+=======
+    <Option name="cn:hubsnapping_5" type="Map">
+      <Option name="active" type="bool" value="true"/>
+      <Option name="alg_config"/>
+      <Option name="alg_id" type="QString" value="cn:hubsnapping"/>
+      <Option name="color" type="QString" value=""/>
+      <Option name="comment" type="Map">
+        <Option name="color" type="QString" value=""/>
+        <Option name="component_description" type="QString" value=""/>
+        <Option name="component_height" type="double" value="60"/>
+        <Option name="component_pos_x" type="double" value="3444.5"/>
+        <Option name="component_pos_y" type="double" value="1262"/>
+        <Option name="component_width" type="double" value="100"/>
+        <Option name="outputs_collapsed" type="bool" value="true"/>
+        <Option name="parameters_collapsed" type="bool" value="true"/>
+      </Option>
+      <Option name="component_description" type="QString" value="24. Snap hubs from a layer source"/>
+      <Option name="component_height" type="double" value="60"/>
+      <Option name="component_pos_x" type="double" value="2764"/>
+      <Option name="component_pos_y" type="double" value="1982"/>
+      <Option name="component_width" type="double" value="180"/>
+      <Option name="dependencies"/>
+      <Option name="id" type="QString" value="cn:hubsnapping_5"/>
+      <Option name="outputs"/>
+      <Option name="outputs_collapsed" type="bool" value="true"/>
+      <Option name="parameters_collapsed" type="bool" value="true"/>
+      <Option name="params" type="Map">
+        <Option name="BUFFER_REGION" type="List">
+          <Option type="Map">
+            <Option name="parameter_name" type="QString" value="hubs__buffer"/>
+            <Option name="source" type="int" value="0"/>
+          </Option>
+        </Option>
+        <Option name="INPUT" type="List">
+          <Option type="Map">
+            <Option name="child_id" type="QString" value="cn:endpointssnapping_5"/>
+            <Option name="output_name" type="QString" value="OUTPUT"/>
+            <Option name="source" type="int" value="1"/>
+          </Option>
+        </Option>
+      </Option>
+    </Option>
+>>>>>>> Stashed changes
     <Option name="cn:makeintersectionsvertexes_1" type="Map">
       <Option name="active" type="bool" value="true"/>
       <Option name="alg_config"/>
@@ -752,8 +930,13 @@
           </Option>
           <Option name="component_description" type="QString" value="POINTS"/>
           <Option name="component_height" type="double" value="30"/>
+<<<<<<< Updated upstream
           <Option name="component_pos_x" type="double" value="3237"/>
           <Option name="component_pos_y" type="double" value="1360"/>
+=======
+          <Option name="component_pos_x" type="double" value="3318"/>
+          <Option name="component_pos_y" type="double" value="1358"/>
+>>>>>>> Stashed changes
           <Option name="component_width" type="double" value="210"/>
           <Option name="default_value" type="Map">
             <Option name="class" type="QString" value="QgsProcessingOutputLayerDefinition"/>
@@ -847,10 +1030,17 @@
         <Option name="outputs_collapsed" type="bool" value="true"/>
         <Option name="parameters_collapsed" type="bool" value="true"/>
       </Option>
+<<<<<<< Updated upstream
       <Option name="component_description" type="QString" value="22. Regrouper"/>
       <Option name="component_height" type="double" value="60"/>
       <Option name="component_pos_x" type="double" value="2797"/>
       <Option name="component_pos_y" type="double" value="1411"/>
+=======
+      <Option name="component_description" type="QString" value="26. Regrouper"/>
+      <Option name="component_height" type="double" value="60"/>
+      <Option name="component_pos_x" type="double" value="2919"/>
+      <Option name="component_pos_y" type="double" value="1418"/>
+>>>>>>> Stashed changes
       <Option name="component_width" type="double" value="210"/>
       <Option name="dependencies"/>
       <Option name="id" type="QString" value="native:dissolve_1"/>
@@ -870,8 +1060,13 @@
           </Option>
           <Option name="component_description" type="QString" value="OUTPUT"/>
           <Option name="component_height" type="double" value="30"/>
+<<<<<<< Updated upstream
           <Option name="component_pos_x" type="double" value="3237"/>
           <Option name="component_pos_y" type="double" value="1480"/>
+=======
+          <Option name="component_pos_x" type="double" value="3318"/>
+          <Option name="component_pos_y" type="double" value="1478"/>
+>>>>>>> Stashed changes
           <Option name="component_width" type="double" value="210"/>
           <Option name="default_value" type="invalid"/>
           <Option name="mandatory" type="bool" value="false"/>
@@ -892,7 +1087,11 @@
         </Option>
         <Option name="INPUT" type="List">
           <Option type="Map">
+<<<<<<< Updated upstream
             <Option name="child_id" type="QString" value="native:explodelines_3"/>
+=======
+            <Option name="child_id" type="QString" value="cn:endpointstrimmingextending_6"/>
+>>>>>>> Stashed changes
             <Option name="output_name" type="QString" value="OUTPUT"/>
             <Option name="source" type="int" value="1"/>
           </Option>
@@ -992,8 +1191,13 @@
       </Option>
       <Option name="component_description" type="QString" value="21. Exploser des lignes"/>
       <Option name="component_height" type="double" value="60"/>
+<<<<<<< Updated upstream
       <Option name="component_pos_x" type="double" value="2667"/>
       <Option name="component_pos_y" type="double" value="1313"/>
+=======
+      <Option name="component_pos_x" type="double" value="2695"/>
+      <Option name="component_pos_y" type="double" value="1315"/>
+>>>>>>> Stashed changes
       <Option name="component_width" type="double" value="210"/>
       <Option name="dependencies"/>
       <Option name="id" type="QString" value="native:explodelines_3"/>
@@ -1501,6 +1705,20 @@
       <Option name="color" type="QString" value="238,108,77,128"/>
       <Option name="component_description" type="QString" value="CLEAN&#xa;&#xa;Trim/Extend&#xa;Snap Endpoints&#xa;Snap Hubs&#xa;Trim/Extend"/>
       <Option name="component_height" type="double" value="510"/>
+<<<<<<< Updated upstream
+=======
+      <Option name="component_pos_x" type="double" value="2674"/>
+      <Option name="component_pos_y" type="double" value="1907"/>
+      <Option name="component_width" type="double" value="420"/>
+      <Option name="outputs_collapsed" type="bool" value="true"/>
+      <Option name="parameters_collapsed" type="bool" value="true"/>
+      <Option name="uuid" type="QString" value="{404b217e-a112-4b80-b88a-2dd4ae7a8370}"/>
+    </Option>
+    <Option type="Map">
+      <Option name="color" type="QString" value="238,108,77,128"/>
+      <Option name="component_description" type="QString" value="CLEAN&#xa;&#xa;Trim/Extend&#xa;Snap Endpoints&#xa;Snap Hubs&#xa;Trim/Extend"/>
+      <Option name="component_height" type="double" value="510"/>
+>>>>>>> Stashed changes
       <Option name="component_pos_x" type="double" value="480"/>
       <Option name="component_pos_y" type="double" value="1905"/>
       <Option name="component_width" type="double" value="420"/>
@@ -1512,8 +1730,13 @@
       <Option name="color" type="QString" value="248,252,211,128"/>
       <Option name="component_description" type="QString" value="RESULTS LAYERS"/>
       <Option name="component_height" type="double" value="330"/>
+<<<<<<< Updated upstream
       <Option name="component_pos_x" type="double" value="3236"/>
       <Option name="component_pos_y" type="double" value="1425"/>
+=======
+      <Option name="component_pos_x" type="double" value="3317"/>
+      <Option name="component_pos_y" type="double" value="1423"/>
+>>>>>>> Stashed changes
       <Option name="component_width" type="double" value="390"/>
       <Option name="outputs_collapsed" type="bool" value="true"/>
       <Option name="parameters_collapsed" type="bool" value="true"/>
@@ -1545,9 +1768,15 @@
       <Option name="color" type="QString" value="183,72,75,191"/>
       <Option name="component_description" type="QString" value="SNAPPING PIPELINE"/>
       <Option name="component_height" type="double" value="330"/>
+<<<<<<< Updated upstream
       <Option name="component_pos_x" type="double" value="2156.5"/>
       <Option name="component_pos_y" type="double" value="1424"/>
       <Option name="component_width" type="double" value="1613"/>
+=======
+      <Option name="component_pos_x" type="double" value="2207"/>
+      <Option name="component_pos_y" type="double" value="1424"/>
+      <Option name="component_width" type="double" value="1714"/>
+>>>>>>> Stashed changes
       <Option name="outputs_collapsed" type="bool" value="true"/>
       <Option name="parameters_collapsed" type="bool" value="true"/>
       <Option name="uuid" type="QString" value="{8de7a341-42d5-4838-967e-6e5c8050faa1}"/>

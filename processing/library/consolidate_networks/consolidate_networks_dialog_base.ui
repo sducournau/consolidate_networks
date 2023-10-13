@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ConsolidateNetworkDialogBase</class>
+ <widget class="QDialog" name="ConsolidateNetworkDialogBase">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1045</width>
+    <height>734</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Consolidate Network</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout_3">
+   <item row="0" column="0">
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="2" column="0">
+      <layout class="QGridLayout" name="gridLayout_2">
+       <item row="6" column="1">
+        <widget class="QCheckBox" name="checkBox_intersection">
+         <property name="text">
+          <string>Create vertexes on intersections</string>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="0">
+        <widget class="QSlider" name="horizontalSlider_2">
+         <property name="minimum">
+          <number>1</number>
+         </property>
+         <property name="maximum">
+          <number>6</number>
+         </property>
+         <property name="value">
+          <number>2</number>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="tickPosition">
+          <enum>QSlider::NoTicks</enum>
+         </property>
+         <property name="tickInterval">
+          <number>1</number>
+         </property>
+        </widget>
+       </item>
+       <item row="9" column="1">
+        <widget class="QCheckBox" name="checkBox_consolidate_dbscan">
+         <property name="text">
+          <string>Consolidate with DBSCAN</string>
+         </property>
+        </widget>
+       </item>
+       <item row="12" column="0">
+        <widget class="QSlider" name="horizontalSlider_5">
+         <property name="minimum">
+          <number>1</number>
+         </property>
+         <property name="maximum">
+          <number>6</number>
+         </property>
+         <property name="value">
+          <number>5</number>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="tickPosition">
+          <enum>QSlider::NoTicks</enum>
+         </property>
+         <property name="tickInterval">
+          <number>1</number>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="0">
+        <widget class="QSlider" name="horizontalSlider_1">
+         <property name="minimum">
+          <number>1</number>
+         </property>
+         <property name="maximum">
+          <number>6</number>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="tickPosition">
+          <enum>QSlider::TicksAbove</enum>
+         </property>
+         <property name="tickInterval">
+          <number>1</number>
+         </property>
+        </widget>
+       </item>
+       <item row="9" column="0">
+        <widget class="QSlider" name="horizontalSlider_3">
+         <property name="minimum">
+          <number>1</number>
+         </property>
+         <property name="maximum">
+          <number>6</number>
+         </property>
+         <property name="value">
+          <number>3</number>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="10" column="0">
+        <widget class="QSlider" name="horizontalSlider_4">
+         <property name="minimum">
+          <number>1</number>
+         </property>
+         <property name="maximum">
+          <number>6</number>
+         </property>
+         <property name="value">
+          <number>4</number>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="10" column="1">
+        <widget class="QCheckBox" name="checkBox_snap_point_nodes">
+         <property name="text">
+          <string>Snap all vertexes with a layer</string>
+         </property>
+        </widget>
+       </item>
+       <item row="14" column="1">
+        <widget class="QCheckBox" name="checkBox_snap_point_intersections">
+         <property name="text">
+          <string>Snap intersections with a layer</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QCheckBox" name="checkBox_edit_input">
+         <property name="text">
+          <string>Edit input geometries</string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="1">
+        <widget class="QCheckBox" name="checkBox_main">
+         <property name="text">
+          <string>Main pipeline (snap, trim, extend, intersect)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="14" column="0">
+        <widget class="QSlider" name="horizontalSlider_6">
+         <property name="minimum">
+          <number>1</number>
+         </property>
+         <property name="maximum">
+          <number>6</number>
+         </property>
+         <property name="value">
+          <number>6</number>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="tickPosition">
+          <enum>QSlider::TicksBelow</enum>
+         </property>
+         <property name="tickInterval">
+          <number>1</number>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QCheckBox" name="checkBox_only_selected">
+         <property name="text">
+          <string>Only selected</string>
+         </property>
+        </widget>
+       </item>
+       <item row="12" column="1">
+        <widget class="QCheckBox" name="checkBox_snap_point_extremities">
+         <property name="text">
+          <string>Snap extremities with a layer/ two layers</string>
+         </property>
+        </widget>
+       </item>
+       <item row="12" column="3">
+        <widget class="QComboBox" name="comboBox_snap_point_extremities_one"/>
+       </item>
+       <item row="12" column="4">
+        <widget class="QComboBox" name="comboBox_snap_point_extremities_two"/>
+       </item>
+       <item row="12" column="2">
+        <widget class="QComboBox" name="comboBox_snap_point_extremities_mode">
+         <item>
+          <property name="text">
+           <string>One layer</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Two layers</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="9" column="2">
+        <widget class="QComboBox" name="checkBox_consolidate_dbscan_mode">
+         <item>
+          <property name="text">
+           <string>Correct</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Don't correct</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="10" column="2">
+        <widget class="QComboBox" name="comboBox_snap_point_nodes_mode"/>
+       </item>
+       <item row="10" column="3">
+        <widget class="QComboBox" name="comboBox_snap_point_nodes"/>
+       </item>
+       <item row="14" column="2">
+        <widget class="QComboBox" name="comboBox_snap_point_intersections"/>
+       </item>
+      </layout>
+     </item>
+     <item row="0" column="0">
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QComboBox" name="mMapLayerComboBox"/>
+       </item>
+       <item>
+        <widget class="QgsFieldExpressionWidget" name="mFieldExpressionWidget"/>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+   <item row="1" column="1">
+    <widget class="QProgressBar" name="progressBar">
+     <property name="value">
+      <number>0</number>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="2">
+    <widget class="QPushButton" name="pushButton">
+     <property name="text">
+      <string>Run</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QgsFieldExpressionWidget</class>
+   <extends>QWidget</extends>
+   <header>qgsfieldexpressionwidget.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
