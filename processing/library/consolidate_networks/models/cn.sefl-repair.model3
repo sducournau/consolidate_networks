@@ -426,10 +426,10 @@
         <Option name="outputs_collapsed" type="bool" value="true"/>
         <Option name="parameters_collapsed" type="bool" value="true"/>
       </Option>
-      <Option name="component_description" type="QString" value="18. Snap hubs from a layer source"/>
+      <Option name="component_description" type="QString" value="19. Snap hubs from a layer source"/>
       <Option name="component_height" type="double" value="60"/>
-      <Option name="component_pos_x" type="double" value="2550"/>
-      <Option name="component_pos_y" type="double" value="1410"/>
+      <Option name="component_pos_x" type="double" value="2537.5"/>
+      <Option name="component_pos_y" type="double" value="1407"/>
       <Option name="component_width" type="double" value="240"/>
       <Option name="dependencies"/>
       <Option name="id" type="QString" value="cn:hubsnapping_4"/>
@@ -1242,55 +1242,19 @@
       </Option>
       <Option name="component_description" type="QString" value="17. Snap geometries to layer"/>
       <Option name="component_height" type="double" value="60"/>
-      <Option name="component_pos_x" type="double" value="2280"/>
-      <Option name="component_pos_y" type="double" value="1410"/>
+      <Option name="component_pos_x" type="double" value="2256.5"/>
+      <Option name="component_pos_y" type="double" value="1366.5"/>
       <Option name="component_width" type="double" value="240"/>
       <Option name="dependencies"/>
       <Option name="id" type="QString" value="native:snapgeometries_2"/>
-      <Option name="outputs" type="Map">
-        <Option name="SNAP TEST" type="Map">
-          <Option name="child_id" type="QString" value="native:snapgeometries_2"/>
-          <Option name="color" type="QString" value=""/>
-          <Option name="comment" type="Map">
-            <Option name="color" type="QString" value=""/>
-            <Option name="component_description" type="QString" value=""/>
-            <Option name="component_height" type="double" value="60"/>
-            <Option name="component_pos_x" type="double" value="0"/>
-            <Option name="component_pos_y" type="double" value="0"/>
-            <Option name="component_width" type="double" value="100"/>
-            <Option name="outputs_collapsed" type="bool" value="true"/>
-            <Option name="parameters_collapsed" type="bool" value="true"/>
-          </Option>
-          <Option name="component_description" type="QString" value="SNAP TEST"/>
-          <Option name="component_height" type="double" value="30"/>
-          <Option name="component_pos_x" type="double" value="2955"/>
-          <Option name="component_pos_y" type="double" value="1515"/>
-          <Option name="component_width" type="double" value="210"/>
-          <Option name="default_value" type="Map">
-            <Option name="class" type="QString" value="QgsProcessingOutputLayerDefinition"/>
-            <Option name="create_options" type="Map">
-              <Option name="fileEncoding" type="QString" value="windows-1252"/>
-            </Option>
-            <Option name="sink" type="Map">
-              <Option name="active" type="bool" value="true"/>
-              <Option name="type" type="int" value="1"/>
-              <Option name="val" type="QString" value="TEMPORARY_OUTPUT"/>
-            </Option>
-          </Option>
-          <Option name="mandatory" type="bool" value="true"/>
-          <Option name="name" type="QString" value="SNAP TEST"/>
-          <Option name="output_name" type="QString" value="OUTPUT"/>
-          <Option name="outputs_collapsed" type="bool" value="true"/>
-          <Option name="parameters_collapsed" type="bool" value="true"/>
-        </Option>
-      </Option>
+      <Option name="outputs"/>
       <Option name="outputs_collapsed" type="bool" value="true"/>
       <Option name="parameters_collapsed" type="bool" value="true"/>
       <Option name="params" type="Map">
         <Option name="BEHAVIOR" type="List">
           <Option type="Map">
             <Option name="source" type="int" value="2"/>
-            <Option name="static_value" type="int" value="2"/>
+            <Option name="static_value" type="int" value="0"/>
           </Option>
         </Option>
         <Option name="INPUT" type="List">
@@ -1311,6 +1275,86 @@
           <Option type="Map">
             <Option name="source" type="int" value="2"/>
             <Option name="static_value" type="double" value="2"/>
+          </Option>
+        </Option>
+      </Option>
+    </Option>
+    <Option name="native:snapgeometries_3" type="Map">
+      <Option name="active" type="bool" value="true"/>
+      <Option name="alg_config"/>
+      <Option name="alg_id" type="QString" value="native:snapgeometries"/>
+      <Option name="color" type="QString" value=""/>
+      <Option name="comment" type="Map">
+        <Option name="color" type="QString" value=""/>
+        <Option name="component_description" type="QString" value=""/>
+        <Option name="component_height" type="double" value="60"/>
+        <Option name="component_pos_x" type="double" value="2841"/>
+        <Option name="component_pos_y" type="double" value="1159.5"/>
+        <Option name="component_width" type="double" value="100"/>
+        <Option name="outputs_collapsed" type="bool" value="true"/>
+        <Option name="parameters_collapsed" type="bool" value="true"/>
+      </Option>
+      <Option name="component_description" type="QString" value="18. Snap geometries to layer"/>
+      <Option name="component_height" type="double" value="60"/>
+      <Option name="component_pos_x" type="double" value="2258.5"/>
+      <Option name="component_pos_y" type="double" value="1453"/>
+      <Option name="component_width" type="double" value="240"/>
+      <Option name="dependencies"/>
+      <Option name="id" type="QString" value="native:snapgeometries_3"/>
+      <Option name="outputs" type="Map">
+        <Option name="SNAP TEST" type="Map">
+          <Option name="child_id" type="QString" value="native:snapgeometries_3"/>
+          <Option name="color" type="QString" value=""/>
+          <Option name="comment" type="Map">
+            <Option name="color" type="QString" value=""/>
+            <Option name="component_description" type="QString" value=""/>
+            <Option name="component_height" type="double" value="60"/>
+            <Option name="component_pos_x" type="double" value="0"/>
+            <Option name="component_pos_y" type="double" value="0"/>
+            <Option name="component_width" type="double" value="100"/>
+            <Option name="outputs_collapsed" type="bool" value="true"/>
+            <Option name="parameters_collapsed" type="bool" value="true"/>
+          </Option>
+          <Option name="component_description" type="QString" value="SNAP TEST"/>
+          <Option name="component_height" type="double" value="30"/>
+          <Option name="component_pos_x" type="double" value="2956.5"/>
+          <Option name="component_pos_y" type="double" value="1518"/>
+          <Option name="component_width" type="double" value="210"/>
+          <Option name="default_value" type="invalid"/>
+          <Option name="mandatory" type="bool" value="false"/>
+          <Option name="name" type="QString" value="SNAP TEST"/>
+          <Option name="output_name" type="QString" value="OUTPUT"/>
+          <Option name="outputs_collapsed" type="bool" value="true"/>
+          <Option name="parameters_collapsed" type="bool" value="true"/>
+        </Option>
+      </Option>
+      <Option name="outputs_collapsed" type="bool" value="true"/>
+      <Option name="parameters_collapsed" type="bool" value="true"/>
+      <Option name="params" type="Map">
+        <Option name="BEHAVIOR" type="List">
+          <Option type="Map">
+            <Option name="source" type="int" value="2"/>
+            <Option name="static_value" type="int" value="2"/>
+          </Option>
+        </Option>
+        <Option name="INPUT" type="List">
+          <Option type="Map">
+            <Option name="child_id" type="QString" value="native:snapgeometries_2"/>
+            <Option name="output_name" type="QString" value="OUTPUT"/>
+            <Option name="source" type="int" value="1"/>
+          </Option>
+        </Option>
+        <Option name="REFERENCE_LAYER" type="List">
+          <Option type="Map">
+            <Option name="child_id" type="QString" value="native:centroids_1"/>
+            <Option name="output_name" type="QString" value="OUTPUT"/>
+            <Option name="source" type="int" value="1"/>
+          </Option>
+        </Option>
+        <Option name="TOLERANCE" type="List">
+          <Option type="Map">
+            <Option name="source" type="int" value="2"/>
+            <Option name="static_value" type="double" value="3"/>
           </Option>
         </Option>
       </Option>
@@ -1610,24 +1654,13 @@
     <Option name="snap_test" type="Map">
       <Option name="create_by_default" type="bool" value="true"/>
       <Option name="data_type" type="int" value="-1"/>
-      <Option name="default" type="QgsProcessingOutputLayerDefinition">
-        <Option type="Map">
-          <Option name="create_options" type="Map">
-            <Option name="fileEncoding" type="QString" value="windows-1252"/>
-          </Option>
-          <Option name="sink" type="Map">
-            <Option name="active" type="bool" value="true"/>
-            <Option name="type" type="int" value="1"/>
-            <Option name="val" type="QString" value="TEMPORARY_OUTPUT"/>
-          </Option>
-        </Option>
-      </Option>
+      <Option name="default" type="invalid"/>
       <Option name="defaultGui" type="invalid"/>
       <Option name="description" type="QString" value="SNAP TEST"/>
       <Option name="flags" type="int" value="0"/>
       <Option name="help" type="QString" value=""/>
       <Option name="metadata" type="Map">
-        <Option name="_modelChildId" type="QString" value="native:snapgeometries_2"/>
+        <Option name="_modelChildId" type="QString" value="native:snapgeometries_3"/>
         <Option name="_modelChildOutputName" type="QString" value="SNAP TEST"/>
         <Option name="_modelChildProvider" type="QString" value="native"/>
       </Option>
