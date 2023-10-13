@@ -1,4 +1,4 @@
-# <img class="filter-invertfilter" src="https://github.com/sducournau/consolidate_networks/blob/main/ressources/black_icon.png?raw=true" width="50" height="50"> Consolidate Networks
+# <img class="filter-invertfilter" src="https://github.com/sducournau/consolidate_networks/blob/main/ressources/icon.png?raw=true" width="50" height="50"> Consolidate Networks
 
 
 **A Qgis plugin toolset for consolidate your network data**<br>
