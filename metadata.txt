@@ -5,12 +5,56 @@
 [general]
 name=Consolidate Networks
 qgisMinimumVersion=3.0
-description=A Qgis plugin toolset for consolidate your network data
+description=Consolidate Networks is a Qgis plugin toolset that helps you
+optimize the geometry of your line network.
+This plugin provides processing algorithms that allow you to manipulate the vertices of a line layer.You can repair topological problems and clean your data.
 version=1.2
 author=imagodata
 email=imagodata+consolidate_networks@skiff.com
 
-about=This plugin provides processing algorithms that allow you to manipulate the vertices of a line layer.You can repair topological problems and clean your data.
+about=▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
+▼                          MODELS                          ▼
+▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
+                                    ▼
+                                    ▼
+▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
+► cn.sefl-repair
+Apply multiple snappings steps and make the use of cn provider algorithms.
+▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
+▼ LIST OF CN PROVIDER ALGORITHMS ▼
+▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
+                                    ▼
+                                    ▼
+▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
+DBSCAN AND CONSOLIDATE
+► cn.calculatedbscan
+Calculate dbscan clusters of lines from a layer source.
+► cn.consolidatewithdbscan
+Snap lines to each other splitting by their clusters from a layer source resulted from CalculateDbscan().
+► cn.makeintersectionsvertexes
+Insert missing vertices from a source layer.
+▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
+                                    ▼
+                                    ▼
+▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
+SNAPPING LAYER (FROM ANOTHER LAYER)
+► cn.endpointstrimmingextending
+Cut and extend end lines from a layer source.
+► cn.endpointssnapping
+Snap lines endpoints' to each other's from a layer source.
+► cn.calculatedbscan
+Align lines vertices' hubs on top of each other within a buffer.
+► cn.hubsnapping
+Calculate dbscan clusters of lines from a layer source.
+▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
+                                    ▼
+                                    ▼
+▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
+SNAPPING LAYER (FROM ANOTHER LAYER)
+► cn.snapendpointstoLayer
+Snap lines endpoints' to each other's from an other layer source.
+► cn.snaphubspointstolayer
+Align lines vertices' hubs on top of a point layer within a buffer.
 
 tracker=https://github.com/sducournau/consolidate_networks/issues
 repository=https://github.com/sducournau/consolidate_networks

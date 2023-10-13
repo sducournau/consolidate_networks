@@ -1,7 +1,8 @@
 # ![alt title logo](https://raw.githubusercontent.com/sducournau/consolidate_networks/main/ressources/logo_white.png?raw=true) Consolidate Networks
 
 
-**A Qgis plugin toolset for consolidate your network data**<br>
+**Consolidate Networks is a Qgis plugin toolset that helps you optimize the geometry of your line network.**
+<br>
 
 https://sducournau.github.io/consolidate_networks/
 
@@ -33,12 +34,12 @@ You can repair topological problems and clean your data.*
     
 ******
 
-# 3. List of cn provider algorithms'
+# 3. List of CN provider algorithms
 
 ![alt preview cover](https://raw.githubusercontent.com/sducournau/consolidate_networks/main/ressources/cover_50.png?raw=true)
 
 
-## Consolidate
+## DBscan and consolidate
 
 #### <ins>**CalculateDbscan()**</ins>
 `Calculate dbscan clusters of lines from a layer source.`<br>
@@ -125,7 +126,7 @@ cn.endpointstrimmingextending
 #### <ins>**EndpointsSnapping()**</ins>
 `Snap lines endpoints' to each other's from a layer source.`<br>
 ##### Processing algorithm :<br>
-~~~~
+~~~~LIST OF CN PROVIDER ALGORITHMSModels
 cn.endpointssnapping
 ~~~~
 ##### Paramètres<br>
@@ -189,7 +190,7 @@ cn.snapendpointstoLayer
 
 
 #### <ins>**SnapHubsPointsToLayer()**</ins>
-`Align lines vertices' hubs on top of a point layer within a buffer`<br>
+`Align lines vertices' hubs on top of a point layer within a buffer.`<br>
 ##### Processing algorithm :<br>
 ~~~~
 cn.snaphubspointstolayer
