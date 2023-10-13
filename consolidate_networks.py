@@ -204,8 +204,8 @@ class ConsolidateNetworksManager:
 
     def run_algs(self, name):
         """Run the different algorithms from cn provider"""
-        if name == 'pipeline':
-            processing.execAlgorithmDialog("model:Pipeline")
+        
+        processing.execAlgorithmDialog("model:" + name)
 
     def open_file(self, path):
 
@@ -235,6 +235,6 @@ class ConsolidateNetworksManager:
             
             modup = self.plugin_dir + os.sep + 'operating_mode' + os.sep + 'Operating mode CN.docx'
 
-            self.run_algs('pipeline')
+            self.run_algs('cn.sefl-repair')
 
         
