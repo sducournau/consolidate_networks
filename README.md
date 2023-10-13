@@ -3,6 +3,8 @@
 
 **A Qgis plugin toolset for consolidate your network data**<br>
 
+https://sducournau.github.io/consolidate_networks/
+
 *This plugin provides processing algorithms that allow you to manipulate the vertices of a line layer.
 You can repair topological problems and clean your data.*
 
