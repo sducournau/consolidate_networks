@@ -26,7 +26,7 @@ You can repair topological problems and clean your data.*
 `Apply multiple snappings steps and make the use of cn provider algorithms.`<br>
 
 
-![alt model cn.sefl-repair](https://raw.githubusercontent.com/sducournau/consolidate_networks/main/ressources/mode_blueprint_halfsize.png?raw=true)
+![alt model cn.sefl-repair](https://raw.githubusercontent.com/sducournau/consolidate_networks/main/ressources/mode_blueprint_50.png?raw=true)
 
 <br>
 <br>
