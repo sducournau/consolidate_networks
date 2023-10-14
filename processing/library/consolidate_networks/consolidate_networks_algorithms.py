@@ -35,6 +35,7 @@ from qgis.core import *
 import math
 from qgis import processing
 from qgis.processing import alg
+from datetime import datetime
 
 class CalculateDbscan(QgsProcessingAlgorithm):
     """
@@ -109,6 +110,9 @@ class CalculateDbscan(QgsProcessingAlgorithm):
         points_dbscan = self.parameterAsDouble(parameters, 'POINTS_DBSCAN',
                                                 context)
 
+
+
+        start_timer = datetime.now()
 
         outputs = {}
         alg_params_unipart = {
@@ -185,6 +189,12 @@ class CalculateDbscan(QgsProcessingAlgorithm):
             output_feature = QgsFeature(feature)
             sink_output.addFeature(output_feature, QgsFeatureSink.FastInsert)
             feedback.setProgress(int((y /numfeatures) * 100))
+            
+        end_timer = datetime.now() - start_timer
+
+        #feedback.pushInfo('cn.' + self.name() + ' : ' + self.displayName() + " took {} seconds to calculate.".format(end_timer.strftime("%H:%M:%S")))
+
+
         return {'OUTPUT': self.OUTPUT,
                 'NUMBEROFFEATURES': numfeatures}
 
@@ -220,7 +230,7 @@ class CalculateDbscan(QgsProcessingAlgorithm):
         contain lowercase alphanumeric characters only and no spaces or other
         formatting characters.
         """
-        return 'Consolidate'
+        return 'DBscan and consolidate'
 
     def tr(self, string):
         return QCoreApplication.translate('Processing', string)
@@ -296,7 +306,9 @@ class ConsolidateWithDbscan(QgsProcessingAlgorithm):
 
         buffer_snap_dbscan   = self.parameterAsDouble(parameters, 'BUFFER_DBSCAN',
                                                 context)
-
+        
+        
+        start_timer = datetime.now()
 
         outputs = {}
         alg_params_unipart = {
@@ -398,6 +410,12 @@ class ConsolidateWithDbscan(QgsProcessingAlgorithm):
             output_feature = QgsFeature(feature)
             sink_output.addFeature(output_feature, QgsFeatureSink.FastInsert)
             feedback.setProgress(int((y /numfeatures) * 100))
+
+        end_timer = datetime.now() - start_timer
+
+        #feedback.pushInfo('cn.' + self.name() + ' : ' + self.displayName() + " took {} seconds to calculate.".format(end_timer.strftime("%H:%M:%S")))
+
+
         return {'OUTPUT': self.OUTPUT,
                 'NUMBEROFFEATURES': numfeatures}
 
@@ -416,7 +434,7 @@ class ConsolidateWithDbscan(QgsProcessingAlgorithm):
         Returns the translated algorithm name, which should be used for any
         user-visible display of the algorithm name.
         """
-        return 'Consolidate with DBscan'
+        return 'Snap lines to each other splitting by their clusters from a layer source resulted from cn.calculatedbscan.'
 
     def group(self):
         """
@@ -433,7 +451,7 @@ class ConsolidateWithDbscan(QgsProcessingAlgorithm):
         contain lowercase alphanumeric characters only and no spaces or other
         formatting characters.
         """
-        return 'Consolidate'
+        return 'DBscan and consolidate'
 
     def tr(self, string):
         return QCoreApplication.translate('Processing', string)
@@ -528,7 +546,9 @@ class MakeIntersectionsVertexes(QgsProcessingAlgorithm):
                         vertex = feature.geometry().closestVertex(QgsPointXY(inter.x(), inter.y()))[i]
                     QgsVectorLayerEditUtils(layer).insertVertex(inter.x(), inter.y(),feature.id(),vertex)
                     return True
+                
 
+        start_timer = datetime.now()
 
         if feedback.isCanceled():
             return {}
@@ -590,6 +610,12 @@ class MakeIntersectionsVertexes(QgsProcessingAlgorithm):
             output_feature = QgsFeature(feature)
             sink_output.addFeature(output_feature, QgsFeatureSink.FastInsert)
             feedback.setProgress(int((y /numfeatures) * 100))
+
+        end_timer = datetime.now() - start_timer
+
+        #feedback.pushInfo('cn.' + self.name() + ' : ' + self.displayName() + " took {} seconds to calculate.".format(end_timer.strftime("%H:%M:%S")))
+
+
         return {'OUTPUT': self.OUTPUT,
                 'NUMBEROFFEATURES': numfeatures}
 
@@ -608,7 +634,7 @@ class MakeIntersectionsVertexes(QgsProcessingAlgorithm):
         Returns the translated algorithm name, which should be used for any
         user-visible display of the algorithm name.
         """
-        return 'Make intersections vertexes'
+        return 'Insert missing vertices from a source layer.'
 
     def group(self):
         """
@@ -625,7 +651,7 @@ class MakeIntersectionsVertexes(QgsProcessingAlgorithm):
         contain lowercase alphanumeric characters only and no spaces or other
         formatting characters.
         """
-        return 'Consolidate'
+        return 'DBscan and consolidate'
 
     def tr(self, string):
         return QCoreApplication.translate('Processing', string)
@@ -665,7 +691,7 @@ class EndpointsStrimmingExtending(QgsProcessingAlgorithm):
 
                 self.tr('BUFFER_TRIM_EXTEND'),
                 self.tr('BUFFER_TRIM_EXTEND'),
-                1
+                5
             )
         )
 
@@ -699,7 +725,7 @@ class EndpointsStrimmingExtending(QgsProcessingAlgorithm):
         buffer_trim = self.parameterAsDouble(parameters, 'BUFFER_TRIM_EXTEND',
                                                 context)
 
-
+        start_timer = datetime.now()
 
 
         if feedback.isCanceled():
@@ -882,6 +908,12 @@ class EndpointsStrimmingExtending(QgsProcessingAlgorithm):
             output_feature = QgsFeature(feature)
             sink_output.addFeature(output_feature, QgsFeatureSink.FastInsert)
             feedback.setProgress(int((y /numfeatures) * 100))
+
+        end_timer = datetime.now() - start_timer
+
+        #feedback.pushInfo('cn.' + self.name() + ' : ' + self.displayName() + " took {} seconds to calculate.".format(end_timer.strftime("%H:%M:%S")))
+
+
         return {'OUTPUT': self.OUTPUT,
                 'NUMBEROFFEATURES': numfeatures}
 
@@ -900,7 +932,7 @@ class EndpointsStrimmingExtending(QgsProcessingAlgorithm):
         Returns the translated algorithm name, which should be used for any
         user-visible display of the algorithm name.
         """
-        return 'Trim and extend endlines from a layer source'
+        return 'Cut and extend end lines from a layer source.'
 
     def group(self):
         """
@@ -917,7 +949,7 @@ class EndpointsStrimmingExtending(QgsProcessingAlgorithm):
         contain lowercase alphanumeric characters only and no spaces or other
         formatting characters.
         """
-        return 'Snapping one layer'
+        return 'Snapping layer (from himself)'
 
     def tr(self, string):
         return QCoreApplication.translate('Processing', string)
@@ -958,9 +990,21 @@ class EndpointsSnapping(QgsProcessingAlgorithm):
 
                 self.tr('BUFFER_SNAPPING'),
                 self.tr('BUFFER SNAPPING'),
-                1
+                5
             )
         )
+
+        self.addParameter(
+            QgsProcessingParameterNumber(
+                self.tr('HAUSDORFF_DISTANCE_LIMIT'),
+                self.tr('HAUSDORFF DISTANCE LIMIT'),
+                1,
+                10.0,
+                True,
+                0.0
+            )
+        )
+
 
         # We add a feature sink in which to store our processed features (this
         # usually takes the form of a newly created vector layer when the
@@ -993,10 +1037,11 @@ class EndpointsSnapping(QgsProcessingAlgorithm):
         buffer_snap = self.parameterAsDouble(parameters, 'BUFFER_SNAPPING',
                                                 context)
 
+        hausdorff_distance_limit = self.parameterAsDouble(parameters, 'HAUSDORFF_DISTANCE_LIMIT',
+                                               context)
 
-
-
-
+        start_timer = datetime.now()
+ 
         if feedback.isCanceled():
             return {}
         outputs = {}
@@ -1062,25 +1107,41 @@ class EndpointsSnapping(QgsProcessingAlgorithm):
                             nnfeature = next(layer.getFeatures(QgsFeatureRequest(nearestid)))
                             nnfeature_closest_vertex = nnfeature.geometry().closestVertex(geometry_start.asPoint())
                             if nnfeature_closest_vertex[-1] <= buffer_snap and nnfeature_closest_vertex[-1] > 0.0:
-                                nnfeatures_closest_vertex.append(nnfeature_closest_vertex)
+                                nnfeatures_closest_vertex.append([nnfeature, nnfeature_closest_vertex])
                         if len(nnfeatures_closest_vertex)  > 0:
 
-                            nnfeatures_closest_vertex.sort(key=lambda k:k[-1])
+                            nnfeatures_closest_vertex.sort(key=lambda k:k[1][-1])
                             nnfeature_closest =  nnfeatures_closest_vertex[0]
 
-                            polyline[0] = QgsPointXY(nnfeature_closest[0].x(),nnfeature_closest[0].y())
-                            new_geom = QgsGeometry.fromPolylineXY(polyline)
+                            nnfeature_closest_vertex = nnfeature_closest[1]
+                            nnfeature_closest_geom = nnfeature_closest[0].geometry()
 
-                            calculate_angle = QgsGeometryUtils.lineAngle(seg_start.x(), seg_start.y(), nnfeature_closest[0].x(),nnfeature_closest[0].y())
 
-                            if math.degrees(natural_angle) != math.degrees(calculate_angle):
-                                         
-                                if (math.degrees(calculate_angle)  < (math.degrees(natural_angle) + 90) or math.degrees(calculate_angle)  > (math.degrees(natural_angle) - 90)):
+                            nnfeature_closest_PointXY = QgsPointXY(nnfeature_closest_vertex[0].x(),nnfeature_closest_vertex[0].y())
+                            nnfeature_closest_PointXY_geom = QgsGeometry.fromPointXY(nnfeature_closest_PointXY)
+
+                            intersection_buffer = geometry_start.buffer(buffer_snap,5).intersection(nnfeature_closest_PointXY_geom.buffer(buffer_snap,5))
+                            if intersection_buffer.contains(geometry_start) and intersection_buffer.contains(nnfeature_closest_PointXY_geom):
+                                
+                                hausdorff_distance = geometry.hausdorffDistance(nnfeature_closest_geom)
+          
+                                
+                                if hausdorff_distance > hausdorff_distance_limit:
+                                    polyline[0] = nnfeature_closest_PointXY
+                                    new_geom = QgsGeometry.fromPolylineXY(polyline)
+
+                                    # extended_geom = geometry.extendLine(0.0, buffer_snap)
+                                    # extended_polyline = extended_geom.asPolyline()
                                     feature.setGeometry(new_geom)
                                     layer.updateFeature(feature)
+                            # calculate_angle = math.degrees(QgsGeometryUtils.angleBetweenThreePoints(extended_polyline[0].x(),extended_polyline[0].y(), seg_start.x(), seg_start.y(), nnfeature_closest[0].x(),nnfeature_closest[0].y()))
+                            # calculate_angle = 360 - calculate_angle if calculate_angle > 180 else calculate_angle
+                            # print(feature.id(), nnfeature_closest, calculate_angle)
+
+                            
 
 
-                    natural_angle = QgsGeometryUtils.lineAngle(seg_end.x(), seg_end.y(), seg_start.x(), seg_start.y())
+
 
 
                     nnfeatures_closest_vertex = []
@@ -1095,26 +1156,34 @@ class EndpointsSnapping(QgsProcessingAlgorithm):
                             nnfeature = next(layer.getFeatures(QgsFeatureRequest(nearestid)))
                             nnfeature_closest_vertex = nnfeature.geometry().closestVertex(geometry_end.asPoint())
                             if nnfeature_closest_vertex[-1] <= buffer_snap and nnfeature_closest_vertex[-1] > 0.0:
-                                nnfeatures_closest_vertex.append(nnfeature_closest_vertex)
+                                nnfeatures_closest_vertex.append([nnfeature, nnfeature_closest_vertex])
                         if len(nnfeatures_closest_vertex)  > 0:
 
-                            nnfeatures_closest_vertex.sort(key=lambda k:k[-1])
+                            nnfeatures_closest_vertex.sort(key=lambda k:k[1][-1])
                             nnfeature_closest =  nnfeatures_closest_vertex[0]
 
+                            nnfeature_closest_vertex = nnfeature_closest[1]
+                            nnfeature_closest_geom = nnfeature_closest[0].geometry()
 
-                            polyline[-1] = QgsPointXY(nnfeature_closest[0].x(),nnfeature_closest[0].y())
-                            new_geom = QgsGeometry.fromPolylineXY(polyline)
 
-                            
-                            calculate_angle = QgsGeometryUtils.lineAngle(seg_end.x(), seg_end.y(), nnfeature_closest[0].x(),nnfeature_closest[0].y())
-                            
-                            if math.degrees(natural_angle) != math.degrees(calculate_angle):
-                                       
-                                if (math.degrees(calculate_angle)  < (math.degrees(natural_angle) + 90) or math.degrees(calculate_angle)  > (math.degrees(natural_angle) - 90)):
+                            nnfeature_closest_PointXY = QgsPointXY(nnfeature_closest_vertex[0].x(),nnfeature_closest_vertex[0].y())
+                            nnfeature_closest_PointXY_geom = QgsGeometry.fromPointXY(nnfeature_closest_PointXY)
+
+                            intersection_buffer = geometry_end.buffer(buffer_snap,5).intersection(nnfeature_closest_PointXY_geom.buffer(buffer_snap,5))
+                            if intersection_buffer.contains(geometry_end) and intersection_buffer.contains(nnfeature_closest_PointXY_geom):
+                                
+                                hausdorff_distance = geometry.hausdorffDistance(nnfeature_closest_geom)
+              
+
+                                if hausdorff_distance > hausdorff_distance_limit:
+                                    polyline[-1] = nnfeature_closest_PointXY
+                                    new_geom = QgsGeometry.fromPolylineXY(polyline)
+
+                                    # extended_geom = geometry.extendLine(0.0, buffer_snap)
+                                    # extended_polyline = extended_geom.asPolyline()
                                     feature.setGeometry(new_geom)
                                     layer.updateFeature(feature)
-
-
+                                    
 
 
                 feedback.setProgress(int((y /numfeatures) * 100))
@@ -1126,6 +1195,12 @@ class EndpointsSnapping(QgsProcessingAlgorithm):
             output_feature = QgsFeature(feature)
             sink_output.addFeature(output_feature, QgsFeatureSink.FastInsert)
             feedback.setProgress(int((y /numfeatures) * 100))
+
+        end_timer = datetime.now() - start_timer
+
+        #feedback.pushInfo('cn.' + self.name() + ' : ' + self.displayName() + " took {} seconds to calculate.".format(end_timer.strftime("%H:%M:%S")))
+
+
         return {'OUTPUT': self.OUTPUT,
                 'NUMBEROFFEATURES': numfeatures}
 
@@ -1144,7 +1219,7 @@ class EndpointsSnapping(QgsProcessingAlgorithm):
         Returns the translated algorithm name, which should be used for any
         user-visible display of the algorithm name.
         """
-        return self.tr('Snap endpoints to each others from a layer source')
+        return 'Snap lines endpoints'' to each other''s from a layer source.'
 
     def group(self):
         """
@@ -1161,7 +1236,7 @@ class EndpointsSnapping(QgsProcessingAlgorithm):
         contain lowercase alphanumeric characters only and no spaces or other
         formatting characters.
         """
-        return 'Snapping one layer'
+        return 'Snapping layer (from himself)'
 
     def tr(self, string):
         return QCoreApplication.translate('Processing', string)
@@ -1235,7 +1310,7 @@ class HubSnapping(QgsProcessingAlgorithm):
         buffer_region = self.parameterAsDouble(parameters, 'BUFFER_REGION',
                                                 context)
 
-
+        start_timer = datetime.now()
 
 
         if feedback.isCanceled():
@@ -1349,6 +1424,13 @@ class HubSnapping(QgsProcessingAlgorithm):
             output_feature = QgsFeature(feature)
             sink_output.addFeature(output_feature, QgsFeatureSink.FastInsert)
             feedback.setProgress(int((y /numfeatures) * 100))
+
+        end_timer = datetime.now() - start_timer
+
+        #feedback.pushInfo('cn.' + self.name() + ' : ' + self.displayName() + " took {} seconds to calculate.".format(end_timer.strftime("%H:%M:%S")))
+
+
+
         return {'OUTPUT': self.OUTPUT,
                 'NUMBEROFFEATURES': numfeatures}
 
@@ -1367,7 +1449,7 @@ class HubSnapping(QgsProcessingAlgorithm):
         Returns the translated algorithm name, which should be used for any
         user-visible display of the algorithm name.
         """
-        return 'Snap hubs from a layer source'
+        return 'Align lines vertices'' hubs on top of each other within a buffer.'
 
     def group(self):
         """
@@ -1384,7 +1466,7 @@ class HubSnapping(QgsProcessingAlgorithm):
         contain lowercase alphanumeric characters only and no spaces or other
         formatting characters.
         """
-        return 'Snapping one layer'
+        return 'Snapping layer (from himself)'
 
     def tr(self, string):
         return QCoreApplication.translate('Processing', string)
@@ -1468,7 +1550,9 @@ class SnapHubsPointsToLayer(QgsProcessingAlgorithm):
 
         buffer_region = self.parameterAsDouble(parameters, 'BUFFER_SNAPPING',
                                                 context)
-
+        
+        start_timer = datetime.now()
+        
         def takeLast(elem):
             return elem[-1]
 
@@ -1568,6 +1652,13 @@ class SnapHubsPointsToLayer(QgsProcessingAlgorithm):
             output_feature = QgsFeature(feature)
             sink_output.addFeature(output_feature, QgsFeatureSink.FastInsert)
             feedback.setProgress(int((y /numfeatures) * 100))
+
+        end_timer = datetime.now() - start_timer
+
+        #feedback.pushInfo('cn.' + self.name() + ' : ' + self.displayName() + " took {} seconds to calculate.".format(end_timer.strftime("%H:%M:%S")))
+
+
+
         return {'OUTPUT': self.OUTPUT,
                 'NUMBEROFFEATURES': numfeatures}
 
@@ -1586,7 +1677,7 @@ class SnapHubsPointsToLayer(QgsProcessingAlgorithm):
         Returns the translated algorithm name, which should be used for any
         user-visible display of the algorithm name.
         """
-        return 'Snap hubs points to layer'
+        return 'Align lines vertices'' hubs on top of a point layer within a buffer.'
 
     def group(self):
         """
@@ -1603,7 +1694,7 @@ class SnapHubsPointsToLayer(QgsProcessingAlgorithm):
         contain lowercase alphanumeric characters only and no spaces or other
         formatting characters.
         """
-        return 'Snapping two layers'
+        return 'Snapping layer (from another layer)'
 
     def tr(self, string):
         return QCoreApplication.translate('Processing', string)
@@ -1648,10 +1739,20 @@ class SnapEndpointsToLayer(QgsProcessingAlgorithm):
 
         self.addParameter(
             QgsProcessingParameterDistance(
+                self.tr('BUFFER_SNAPPING'),
+                self.tr('BUFFER SNAPPING'),
+                5
+            )
+        )
 
-                self.tr('BUFFER_REGION'),
-                self.tr('BUFFER REGION'),
-                10
+        self.addParameter(
+            QgsProcessingParameterNumber(
+                self.tr('HAUSDORFF_DISTANCE_LIMIT'),
+                self.tr('HAUSDORFF DISTANCE LIMIT'),
+                1,
+                10.0,
+                True,
+                0.0
             )
         )
 
@@ -1675,7 +1776,7 @@ class SnapEndpointsToLayer(QgsProcessingAlgorithm):
         source = self.parameterAsSource(parameters, self.INPUT, context)
         if source is None:
             raise QgsProcessingException(self.invalidSourceError(parameters, self.INPUT))
-        ref_layer = self.parameterAsSource(parameters, self.REF_INPUT, context)
+        source_ref_layer = self.parameterAsSource(parameters, self.REF_INPUT, context)
 
 
         (sink_output, dest_output) = self.parameterAsSink(parameters, self.OUTPUT,
@@ -1684,26 +1785,38 @@ class SnapEndpointsToLayer(QgsProcessingAlgorithm):
         numfeatures = source.featureCount()
 
 
-        buffer_extrimity = self.parameterAsDouble(parameters, 'BUFFER_REGION',
+        buffer_snap = self.parameterAsDouble(parameters, 'BUFFER_SNAPPING',
                                                 context)
+        
+        hausdorff_distance_limit = self.parameterAsDouble(parameters, 'HAUSDORFF_DISTANCE_LIMIT',
+                                               context)
 
-        def takeLast(elem):
-            return elem[-1]
-
+        start_timer = datetime.now()
 
         if feedback.isCanceled():
             return {}
         outputs = {}
-        alg_params_unipart = {
+
+
+        alg_params_unipart_input = {
         'INPUT': source.materialize(QgsFeatureRequest()),
         'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
         }
 
 
-        outputs['alg_params_unipart'] = processing.run("qgis:multiparttosingleparts",alg_params_unipart,context=context,  feedback=feedback)
+        outputs['alg_params_unipart_input'] = processing.run("qgis:multiparttosingleparts",alg_params_unipart_input,context=context,  feedback=feedback)
+        layer = outputs['alg_params_unipart_input']['OUTPUT']
 
 
-        layer = outputs['alg_params_unipart']['OUTPUT']
+        alg_params_unipart_ref_layer = {
+        'INPUT': source_ref_layer.materialize(QgsFeatureRequest()),
+        'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+        }
+
+
+        outputs['alg_params_unipart_ref_layer'] = processing.run("qgis:multiparttosingleparts",alg_params_unipart_ref_layer,context=context,  feedback=feedback)
+        ref_layer = outputs['alg_params_unipart_ref_layer']['OUTPUT']   
+
         request = QgsFeatureRequest()
         #set order by length
         clause = QgsFeatureRequest().OrderByClause('$length', ascending=False)
@@ -1722,18 +1835,12 @@ class SnapEndpointsToLayer(QgsProcessingAlgorithm):
                 with edit(layer):
 
                     geometry = feature.geometry()
-                    spatial_index = QgsSpatialIndex(layer.getFeatures())
+                    spatial_index = QgsSpatialIndex(ref_layer.getFeatures())
                     polyline = geometry.asPolyline()
                     seg_start = polyline[0]
                     seg_end = polyline[-1]
                     geometry_start = QgsGeometry.fromPointXY(QgsPointXY(seg_start.x(),seg_start.y()))
                     geometry_end = QgsGeometry.fromPointXY(QgsPointXY(seg_end.x(),seg_end.y()))
-                    lastvert = len(polyline)-1
-                    nearest_point = None
-                    nearests_points = []
-                    feats = []
-
-                    natural_angle = QgsGeometryUtils.lineAngle(seg_start.x(), seg_start.y(), seg_end.x(), seg_end.y())
 
 
                     nnfeatures_closest_vertex = []
@@ -1746,28 +1853,35 @@ class SnapEndpointsToLayer(QgsProcessingAlgorithm):
 
                     if len(nearestids) > 0:
                         for nearestid in nearestids:
-                            nnfeature = next(layer.getFeatures(QgsFeatureRequest(nearestid)))
+                            nnfeature = next(ref_layer.getFeatures(QgsFeatureRequest(nearestid)))
                             nnfeature_closest_vertex = nnfeature.geometry().closestVertex(geometry_start.asPoint())
-                            if nnfeature_closest_vertex[-1] <= buffer_extrimity and nnfeature_closest_vertex[-1] > 0.0:
-                                nnfeatures_closest_vertex.append(nnfeature_closest_vertex)
-
+                            if nnfeature_closest_vertex[-1] <= buffer_snap and nnfeature_closest_vertex[-1] > 0.0:
+                                nnfeatures_closest_vertex.append([nnfeature, nnfeature_closest_vertex])
                         if len(nnfeatures_closest_vertex)  > 0:
-                            nnfeatures_closest_vertex.sort(key=lambda k:k[-1])
+
+                            nnfeatures_closest_vertex.sort(key=lambda k:k[1][-1])
                             nnfeature_closest =  nnfeatures_closest_vertex[0]
 
-                            polyline[0] = QgsPointXY(nnfeature_closest[0].x(),nnfeature_closest[0].y())
-                            new_geom = QgsGeometry.fromPolylineXY(polyline)
+                            nnfeature_closest_vertex = nnfeature_closest[1]
+                            nnfeature_closest_geom = nnfeature_closest[0].geometry()
 
-                            calculate_angle = QgsGeometryUtils.lineAngle(seg_start.x(), seg_start.y(), nnfeature_closest[0].x(),nnfeature_closest[0].y())
 
-                            if math.degrees(natural_angle) != math.degrees(calculate_angle):
-                                         
-                                if (math.degrees(calculate_angle)  < (math.degrees(natural_angle) + 90) or math.degrees(calculate_angle)  > (math.degrees(natural_angle) - 90)):
+                            nnfeature_closest_PointXY = QgsPointXY(nnfeature_closest_vertex[0].x(),nnfeature_closest_vertex[0].y())
+                            nnfeature_closest_PointXY_geom = QgsGeometry.fromPointXY(nnfeature_closest_PointXY)
+
+                            intersection_buffer = geometry_start.buffer(buffer_snap,5).intersection(nnfeature_closest_PointXY_geom.buffer(buffer_snap,5))
+                            if intersection_buffer.contains(geometry_start) and intersection_buffer.contains(nnfeature_closest_PointXY_geom):
+                                
+                                hausdorff_distance = geometry.hausdorffDistance(nnfeature_closest_geom)
+                
+                                
+                                if hausdorff_distance > hausdorff_distance_limit:
+                                    polyline[0] = nnfeature_closest_PointXY
+                                    new_geom = QgsGeometry.fromPolylineXY(polyline)
+
                                     feature.setGeometry(new_geom)
                                     layer.updateFeature(feature)
 
-
-                    natural_angle = QgsGeometryUtils.lineAngle(seg_end.x(), seg_end.y(), seg_start.x(), seg_start.y())
 
                     nnfeatures_closest_vertex = []
                     nearestids = None
@@ -1779,26 +1893,36 @@ class SnapEndpointsToLayer(QgsProcessingAlgorithm):
 
                     if len(nearestids) > 0:
                         for nearestid in nearestids:
-                            nnfeature = next(layer.getFeatures(QgsFeatureRequest(nearestid)))
+                            nnfeature = next(ref_layer.getFeatures(QgsFeatureRequest(nearestid)))
                             nnfeature_closest_vertex = nnfeature.geometry().closestVertex(geometry_end.asPoint())
-                            if nnfeature_closest_vertex[-1] <= buffer_extrimity and nnfeature_closest_vertex[-1] > 0.0:
-                                nnfeatures_closest_vertex.append(nnfeature_closest_vertex)
+                            if nnfeature_closest_vertex[-1] <= buffer_snap and nnfeature_closest_vertex[-1] > 0.0:
+                                nnfeatures_closest_vertex.append([nnfeature, nnfeature_closest_vertex])
                         if len(nnfeatures_closest_vertex)  > 0:
-                            nnfeatures_closest_vertex.sort(key=lambda k:k[-1])
+
+                            nnfeatures_closest_vertex.sort(key=lambda k:k[1][-1])
                             nnfeature_closest =  nnfeatures_closest_vertex[0]
 
+                            nnfeature_closest_vertex = nnfeature_closest[1]
+                            nnfeature_closest_geom = nnfeature_closest[0].geometry()
 
-                            polyline[-1] = QgsPointXY(nnfeature_closest[0].x(),nnfeature_closest[0].y())
-                            new_geom = QgsGeometry.fromPolylineXY(polyline)
 
-                            
-                            calculate_angle = QgsGeometryUtils.lineAngle(seg_end.x(), seg_end.y(), nnfeature_closest[0].x(),nnfeature_closest[0].y())
-                            
-                            if math.degrees(natural_angle) != math.degrees(calculate_angle):
-                                       
-                                if (math.degrees(calculate_angle)  < (math.degrees(natural_angle) + 90) or math.degrees(calculate_angle)  > (math.degrees(natural_angle) - 90)):
+                            nnfeature_closest_PointXY = QgsPointXY(nnfeature_closest_vertex[0].x(),nnfeature_closest_vertex[0].y())
+                            nnfeature_closest_PointXY_geom = QgsGeometry.fromPointXY(nnfeature_closest_PointXY)
+
+                            intersection_buffer = geometry_end.buffer(buffer_snap,5).intersection(nnfeature_closest_PointXY_geom.buffer(buffer_snap,5))
+                            if intersection_buffer.contains(geometry_end) and intersection_buffer.contains(nnfeature_closest_PointXY_geom):
+                                
+                                hausdorff_distance = geometry.hausdorffDistance(nnfeature_closest_geom)
+                
+
+                                if hausdorff_distance > hausdorff_distance_limit:
+                                    polyline[-1] = nnfeature_closest_PointXY
+                                    new_geom = QgsGeometry.fromPolylineXY(polyline)
+
                                     feature.setGeometry(new_geom)
                                     layer.updateFeature(feature)
+
+
 
                     feedback.setProgress(int((y /numfeatures) * 100))
 
@@ -1809,6 +1933,13 @@ class SnapEndpointsToLayer(QgsProcessingAlgorithm):
             output_feature = QgsFeature(feature)
             sink_output.addFeature(output_feature, QgsFeatureSink.FastInsert)
             feedback.setProgress(int((y /numfeatures) * 100))
+
+        end_timer = datetime.now() - start_timer
+
+        #feedback.pushInfo('cn.' + self.name() + ' : ' + self.displayName() + " took {} seconds to calculate.".format(end_timer.strftime("%H:%M:%S")))
+
+
+
         return {'OUTPUT': self.OUTPUT,
                 'NUMBEROFFEATURES': numfeatures}
 
@@ -1827,7 +1958,7 @@ class SnapEndpointsToLayer(QgsProcessingAlgorithm):
         Returns the translated algorithm name, which should be used for any
         user-visible display of the algorithm name.
         """
-        return 'Snap endpoints points to layer'
+        return 'Snap lines endpoints'' to each other''s from an other layer source.'
 
     def group(self):
         """
@@ -1844,7 +1975,7 @@ class SnapEndpointsToLayer(QgsProcessingAlgorithm):
         contain lowercase alphanumeric characters only and no spaces or other
         formatting characters.
         """
-        return 'Snapping two layers'
+        return 'Snapping layer (from another layer)'
 
     def tr(self, string):
         return QCoreApplication.translate('Processing', string)
