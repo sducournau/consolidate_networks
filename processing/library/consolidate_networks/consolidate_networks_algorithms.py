@@ -661,7 +661,7 @@ class MakeIntersectionsVertexes(QgsProcessingAlgorithm):
 
 class EndpointsStrimmingExtending(QgsProcessingAlgorithm):
     """
-    Cut and extend end lines from a layer source.
+    Cut and extend end lines from a layer source within a buffer.
     """
 
     # Constants used to refer to parameters and outputs. They will be
@@ -954,7 +954,7 @@ class EndpointsStrimmingExtending(QgsProcessingAlgorithm):
         Returns the translated algorithm name, which should be used for any
         user-visible display of the algorithm name.
         """
-        return 'Cut and extend end lines from a layer source.'
+        return 'Cut and extend end lines from a layer source within a buffer.'
 
     def group(self):
         """
@@ -981,7 +981,7 @@ class EndpointsStrimmingExtending(QgsProcessingAlgorithm):
 
 class EndpointsSnapping(QgsProcessingAlgorithm):
     """
-    Snap lines endpoints' to each other's from a layer source
+    Snap lines endpoints' to each other's from a layer source within a buffer.
     """
 
     # Constants used to refer to parameters and outputs. They will be
@@ -1241,7 +1241,7 @@ class EndpointsSnapping(QgsProcessingAlgorithm):
         Returns the translated algorithm name, which should be used for any
         user-visible display of the algorithm name.
         """
-        return 'Snap lines endpoints'' to each other''s from a layer source.'
+        return 'Snap lines endpoints'' to each other''s from a layer source within a buffer.'
 
     def group(self):
         """
@@ -1499,7 +1499,7 @@ class HubSnapping(QgsProcessingAlgorithm):
 
 class SnapHubsPointsToLayer(QgsProcessingAlgorithm):
     """
-    Align lines vertices' hubs on top of a point layer within a buffer.
+    Align lines vertices' hubs on top of an other layer source within a buffer.
     """
 
     # Constants used to refer to parameters and outputs. They will be
@@ -1699,7 +1699,7 @@ class SnapHubsPointsToLayer(QgsProcessingAlgorithm):
         Returns the translated algorithm name, which should be used for any
         user-visible display of the algorithm name.
         """
-        return 'Align lines vertices'' hubs on top of a point layer within a buffer.'
+        return 'Align lines vertices'' hubs on top of an other layer source within a buffer.'
 
     def group(self):
         """
@@ -1726,7 +1726,7 @@ class SnapHubsPointsToLayer(QgsProcessingAlgorithm):
 
 class SnapEndpointsToLayer(QgsProcessingAlgorithm):
     """
-    Snap lines endpoints' to each other's from an other layer source.
+    Snap lines endpoints' to each other's from an other layer source within a buffer.
     """
 
     # Constants used to refer to parameters and outputs. They will be
@@ -1980,7 +1980,7 @@ class SnapEndpointsToLayer(QgsProcessingAlgorithm):
         Returns the translated algorithm name, which should be used for any
         user-visible display of the algorithm name.
         """
-        return 'Snap lines endpoints'' to each other''s from an other layer source.'
+        return 'Snap lines endpoints'' to each other''s from an other layer source within a buffer.'
 
     def group(self):
         """

@@ -30,7 +30,7 @@ from qgis.core import QgsApplication
 from qgis.utils import iface
 # Initialize Qt resources from file resources.py
 from .resources import *
-
+from functools import partial
 # Import the code for the DockWidget
 import processing
 from .processing.library.consolidate_networks.consolidate_networks_provider import ConsolidateNetworksProvider
@@ -148,7 +148,7 @@ class ConsolidateNetworksManager:
 
         icon = QIcon(icon_path)
         action = QAction(icon, text, parent)
-        action.triggered.connect(callback)
+        action.triggered.connect(partial(callback, status_tip))
         action.setEnabled(enabled_flag)
 
         if status_tip is not None:
@@ -190,18 +190,108 @@ class ConsolidateNetworksManager:
         self.add_action(
             icon_path,
             text=self.tr(u'Consolidate Networks'),
-            callback=self.run,
+            callback=self.run_algs,
             add_to_menu=False,
             add_to_toolbar=True,
+            status_tip='model:cn.sefl-repair',
+            whats_this='model:cn.sefl-repair',
             parent=self.iface.mainWindow())
         
         self.add_action(
             icon_path,
             text=self.tr(u'Auto-repair pipeline'),
-            callback=self.run,
+            callback=self.run_algs,
             add_to_menu=True,
             add_to_toolbar=False,
+            status_tip='model:cn.sefl-repair',
+            whats_this='model:cn.sefl-repair',
             parent=self.iface.mainWindow())
+        
+
+        self.add_action(
+            icon_path,
+            text=self.tr(u'Cut and extend end lines from a layer source within a buffer.'),
+            callback=self.run_algs,
+            add_to_menu=True,
+            add_to_toolbar=False,
+            status_tip='cn:endpointstrimmingextending',
+            whats_this='cn:endpointstrimmingextending',
+            parent=self.iface.mainWindow())
+        
+        self.add_action(
+            icon_path,
+            text=self.tr(u'Snap lines endpoints'' to each other''s from a layer source within a buffer.'),
+            callback=self.run_algs,
+            add_to_menu=True,
+            add_to_toolbar=False,
+            status_tip='cn:endpointssnapping',
+            whats_this='cn:endpointssnapping',
+            parent=self.iface.mainWindow())
+        
+        self.add_action(
+            icon_path,
+            text=self.tr(u'Snap lines endpoints'' to each other''s from an other layer source within a buffer.'),
+            callback=self.run_algs,
+            add_to_menu=True,
+            add_to_toolbar=False,
+            status_tip='cn:snapendpointstoLayer',
+            whats_this='cn:snapendpointstoLayer',
+            parent=self.iface.mainWindow())
+        
+        self.add_action(
+            icon_path,
+            text=self.tr(u'Align lines vertices'' hubs on top of each other within a buffer.'),
+            callback=self.run_algs,
+            add_to_menu=True,
+            add_to_toolbar=False,
+            status_tip='cn:hubsnapping',
+            whats_this='cn:hubsnapping',
+            parent=self.iface.mainWindow())
+        
+        self.add_action(
+            icon_path,
+            text=self.tr(u'Align lines vertices'' hubs on top of an other layer source within a buffer.'),
+            callback=self.run_algs,
+            add_to_menu=True,
+            add_to_toolbar=False,
+            status_tip='cn:snaphubspointstolayer',
+            whats_this='cn:snaphubspointstolayer',
+            parent=self.iface.mainWindow())
+        
+        
+        self.add_action(
+            icon_path,
+            text=self.tr(u'Calculate dbscan clusters of lines from a layer source.'),
+            callback=self.run_algs,
+            add_to_menu=True,
+            add_to_toolbar=False,
+            status_tip='cn:calculatedbscan',
+            whats_this='cn:calculatedbscan',
+            parent=self.iface.mainWindow())
+        
+        self.add_action(
+            icon_path,
+            text=self.tr(u'Snap lines to each other splitting by their clusters from a layer source resulted from cn.calculatedbscan.'),
+            callback=self.run_algs,
+            add_to_menu=True,
+            add_to_toolbar=False,
+            status_tip='cn:consolidatewithdbscan',
+            whats_this='cn:consolidatewithdbscan',
+            parent=self.iface.mainWindow())
+        
+        self.add_action(
+            icon_path,
+            text=self.tr(u'Insert missing vertices from a source layer.'),
+            callback=self.run_algs,
+            add_to_menu=True,
+            add_to_toolbar=False,
+            status_tip='cn:makeintersectionsvertexes',
+            whats_this='cn:makeintersectionsvertexes',
+            parent=self.iface.mainWindow())
+        
+
+        
+
         
         self.first_start = True
 
@@ -215,7 +305,7 @@ class ConsolidateNetworksManager:
     def run_algs(self, name):
         """Run the different algorithms from cn provider"""
         
-        processing.execAlgorithmDialog("model:" + name)
+        processing.execAlgorithmDialog(name)
 
     def open_file(self, path):
 
@@ -245,7 +335,7 @@ class ConsolidateNetworksManager:
         if self.first_start == True:
             
             modup = self.plugin_dir + os.sep + 'operating_mode' + os.sep + 'Operating mode CN.docx'
-
-            self.run_algs('cn.sefl-repair')
+            self.run_algs('model:cn.sefl-repair')
+            
 
         
