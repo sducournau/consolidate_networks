@@ -21,11 +21,11 @@
  *                                                                         *
  ***************************************************************************/
 """
-import inspect
-from qgis.PyQt.QtCore import QSettings, QTranslator, QCoreApplication, Qt
+
+from qgis.PyQt.QtCore import QSettings, QTranslator, QCoreApplication
 from qgis.PyQt.QtGui import QIcon
 from qgis.PyQt.QtWidgets import QAction
-from qgis.core import QgsProcessingAlgorithm, QgsApplication
+from qgis.core import QgsApplication
 from qgis.utils import iface
 # Initialize Qt resources from file resources.py
 from .resources import *
@@ -33,17 +33,10 @@ from .resources import *
 # Import the code for the DockWidget
 import processing
 from .processing.library.consolidate_networks.consolidate_networks_provider import ConsolidateNetworksProvider
-import subprocess
 import os.path
-import sys
-from functools import partial
 
-from osgeo import ogr
 
-cmd_folder = os.path.split(inspect.getfile(inspect.currentframe()))[0]
 
-if cmd_folder not in sys.path:
-    sys.path.insert(0, cmd_folder)
 
 class ConsolidateNetworksManager:
     """QGIS Plugin Implementation."""

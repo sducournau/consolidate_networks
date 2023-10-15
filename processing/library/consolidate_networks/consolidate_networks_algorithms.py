@@ -695,7 +695,17 @@ class EndpointsStrimmingExtending(QgsProcessingAlgorithm):
             )
         )
 
-
+        self.addParameter(
+            QgsProcessingParameterNumber(
+                self.tr('HAUSDORFF_DISTANCE_LIMIT'),
+                self.tr('HAUSDORFF DISTANCE LIMIT'),
+                1,
+                10.0,
+                True,
+                0.0
+            )
+        )
+        
         # We add a feature sink in which to store our processed features (this
         # usually takes the form of a newly created vector layer when the
         # algorithm is run in QGIS).
@@ -724,7 +734,9 @@ class EndpointsStrimmingExtending(QgsProcessingAlgorithm):
 
         buffer_trim = self.parameterAsDouble(parameters, 'BUFFER_TRIM_EXTEND',
                                                 context)
-
+        
+        hausdorff_distance_limit = self.parameterAsDouble(parameters, 'HAUSDORFF_DISTANCE_LIMIT',
+                                               context)
         start_timer = datetime.now()
 
 
@@ -804,6 +816,8 @@ class EndpointsStrimmingExtending(QgsProcessingAlgorithm):
                                 nnfeature = next(layer.getFeatures(QgsFeatureRequest(nearestid)))
                                 nnfeature_closest_vertex = (nnfeature.geometry().closestSegmentWithContext(geometry_start.asPoint()),nnfeature.geometry())
 
+                                print(nnfeature_closest_vertex) 
+
                                 if nnfeature_closest_vertex[0][0] <=  buffer_trim**2:
 
                                     distance = [nnfeature_closest_vertex[1].vertexAt(nnfeature_closest_vertex[0][2]).x() - nnfeature_closest_vertex[1].vertexAt(nnfeature_closest_vertex[0][2]-1).x(), nnfeature_closest_vertex[1].vertexAt(nnfeature_closest_vertex[0][2]).y() - nnfeature_closest_vertex[1].vertexAt(nnfeature_closest_vertex[0][2]-1).y() ]
@@ -834,7 +848,10 @@ class EndpointsStrimmingExtending(QgsProcessingAlgorithm):
 
                                 polyline[0] = QgsPointXY(closest_intersections[0][0])
                                 new_geom = QgsGeometry.fromPolylineXY(polyline)
-                                if new_geom.length() >= buffer_trim:
+                                hausdorff_distance = geometry.hausdorffDistance(new_geom)
+                                print(feature.id(), hausdorff_distance)
+                                
+                                if hausdorff_distance > hausdorff_distance_limit:
                                     feature.setGeometry(new_geom)
                                     layer.updateFeature(feature)
 
@@ -855,8 +872,10 @@ class EndpointsStrimmingExtending(QgsProcessingAlgorithm):
                         if len(nearestids) > 0:
                             for nearestid in nearestids:
                                 nnfeature = next(layer.getFeatures(QgsFeatureRequest(nearestid)))
-                                nnfeature_closest_vertex = (nnfeature.geometry().closestSegmentWithContext(geometry_end.asPoint()),nnfeature.geometry())
-
+                                nnfeature_closest_vertex = (nnfeature.geometry().closestSegmentWithContext(geometry_end.asPoint(),buffer_trim),nnfeature.geometry())
+                                
+                                print(nnfeature_closest_vertex)    
+                                
                                 if nnfeature_closest_vertex[0][0] <=  buffer_trim**2:
 
                                     distance = [nnfeature_closest_vertex[1].vertexAt(nnfeature_closest_vertex[0][2]).x() - nnfeature_closest_vertex[1].vertexAt(nnfeature_closest_vertex[0][2]-1).x(), nnfeature_closest_vertex[1].vertexAt(nnfeature_closest_vertex[0][2]).y() - nnfeature_closest_vertex[1].vertexAt(nnfeature_closest_vertex[0][2]-1).y() ]
@@ -885,7 +904,10 @@ class EndpointsStrimmingExtending(QgsProcessingAlgorithm):
 
                                 polyline[-1] = QgsPointXY(closest_intersections[0][0])
                                 new_geom = QgsGeometry.fromPolylineXY(polyline)
-                                if new_geom.length() >= buffer_trim:
+                                hausdorff_distance = geometry.hausdorffDistance(new_geom)
+                                print(feature.id(), hausdorff_distance)
+                                
+                                if hausdorff_distance > hausdorff_distance_limit:
                                     feature.setGeometry(new_geom)
                                     layer.updateFeature(feature)
 
