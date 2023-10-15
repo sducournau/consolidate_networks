@@ -6,7 +6,7 @@
 name=Consolidate Networks
 qgisMinimumVersion=3.0
 description=Consolidate Networks is a Qgis plugin toolset that helps you optimize the geometry of your line network.
-version=1.2
+version=1.5
 author=imagodata
 email=imagodata+consolidate_networks@skiff.com
 
@@ -25,8 +25,8 @@ hasProcessingProvider=yes
 # Tags are comma separated with spaces allowed
 tags=python,consolidate,network,library,geometry,lines,vector
 
-homepage=https://sducournau.github.io/consolidate_networks/
-icon=black_icon.png
+homepage=https://sducournau.github.io/consolidate_networks
+icon=icon.png
 # experimental flag
 experimental=False
 
