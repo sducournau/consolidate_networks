@@ -4,7 +4,7 @@
 
 *This plugin provides processing algorithms that allow you to manipulate the vertices of a line layer.You can repair topological problems and clean your data.*
 
-Qgis plugin repository : (https://plugins.qgis.org/plugins/consolidate_networks/)
+Qgis plugin repository : https://plugins.qgis.org/plugins/consolidate_networks/
 
 ******
 
