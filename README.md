@@ -8,6 +8,7 @@
 You can repair topological problems and clean your data.*
 
 Github page : https://sducournau.github.io/consolidate_networks/
+<br>
 Qgis plugin repository : https://plugins.qgis.org/plugins/consolidate_networks/
 
 ******
