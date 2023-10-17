@@ -210,7 +210,7 @@ class ConsolidateNetworksManager:
 
         self.add_action(
             icon_path,
-            text=self.tr(u'Cut and extend end lines from a layer source within a buffer.'),
+            text=self.tr(u'Cut and extend end lines from a layer source within a buffer'),
             callback=self.run_algs,
             add_to_menu=True,
             add_to_toolbar=False,
@@ -220,7 +220,7 @@ class ConsolidateNetworksManager:
         
         self.add_action(
             icon_path,
-            text=self.tr(u'Snap lines endpoints'' to each other''s from a layer source within a buffer.'),
+            text=self.tr(u'Snap lines endpoints'' to each other''s from a layer source within a buffer'),
             callback=self.run_algs,
             add_to_menu=True,
             add_to_toolbar=False,
@@ -230,7 +230,7 @@ class ConsolidateNetworksManager:
         
         self.add_action(
             icon_path,
-            text=self.tr(u'Snap lines endpoints'' to each other''s from an other layer source within a buffer.'),
+            text=self.tr(u'Snap lines endpoints'' to each other''s from an other layer source within a buffer'),
             callback=self.run_algs,
             add_to_menu=True,
             add_to_toolbar=False,
@@ -240,7 +240,7 @@ class ConsolidateNetworksManager:
         
         self.add_action(
             icon_path,
-            text=self.tr(u'Align lines vertices'' hubs on top of each other within a buffer.'),
+            text=self.tr(u'Align lines vertices'' hubs on top of each other within a buffer'),
             callback=self.run_algs,
             add_to_menu=True,
             add_to_toolbar=False,
@@ -250,7 +250,7 @@ class ConsolidateNetworksManager:
         
         self.add_action(
             icon_path,
-            text=self.tr(u'Align lines vertices'' hubs on top of an other layer source within a buffer.'),
+            text=self.tr(u'Align lines vertices'' hubs on top of an other layer source within a buffer'),
             callback=self.run_algs,
             add_to_menu=True,
             add_to_toolbar=False,
@@ -261,7 +261,7 @@ class ConsolidateNetworksManager:
         
         self.add_action(
             icon_path,
-            text=self.tr(u'Calculate dbscan clusters of lines from a layer source.'),
+            text=self.tr(u'Calculate dbscan clusters of lines from a layer source'),
             callback=self.run_algs,
             add_to_menu=True,
             add_to_toolbar=False,
@@ -271,7 +271,7 @@ class ConsolidateNetworksManager:
         
         self.add_action(
             icon_path,
-            text=self.tr(u'Snap lines to each other splitting by their clusters from a layer source resulted from cn.calculatedbscan.'),
+            text=self.tr(u'Snap lines to each other splitting by their clusters from a layer source resulted from cn.calculatedbscan'),
             callback=self.run_algs,
             add_to_menu=True,
             add_to_toolbar=False,
@@ -281,7 +281,7 @@ class ConsolidateNetworksManager:
         
         self.add_action(
             icon_path,
-            text=self.tr(u'Insert missing vertices from a source layer.'),
+            text=self.tr(u'Insert missing vertices from a source layer'),
             callback=self.run_algs,
             add_to_menu=True,
             add_to_toolbar=False,
