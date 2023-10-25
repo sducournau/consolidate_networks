@@ -1905,7 +1905,9 @@ class EndpointsSnapping(QgsProcessingAlgorithm):
                                                     if (angular_variation >= min_angular_limit and angular_variation <= max_angular_limit) and hausdorff_distance > hausdorff_distance_limit:
                                                         closest_vertices.append((nnfeature_closest_PointXY, distance_point_from_geom, angular_variation, endpoint_type))
                                     except:
-                                        pass
+                                        if print_debug_flag is True:
+                                            print('EXCEPTION : '  + 'END_POINT LOOP', 'local_feature : ' + str(feature['fid']))
+                                
 
                         if len(closest_vertices) > 0:
                             if break_update_step is False:
@@ -1947,7 +1949,8 @@ class EndpointsSnapping(QgsProcessingAlgorithm):
                                         layer.updateFeature(feature)
                                         break
                 except:
-                    pass                           
+                    if print_debug_flag is True:
+                        print('EXCEPTION : '  + 'FEATURE_LOOP', 'local_feature : ' + str(feature['fid']))                          
 
 
             feedback.setProgress(int((y /numfeatures) * 100))
@@ -2065,6 +2068,14 @@ class HubSnapping(QgsProcessingAlgorithm):
             )
         )
 
+        self.addParameter(
+            QgsProcessingParameterBoolean(
+                self.tr('ONLY_ENDPOINTS'),
+                self.tr('ONLY ENDPOINTS'),
+                True,
+                False
+            )
+        )
 
         self.addParameter(
             QgsProcessingParameterBoolean(
@@ -2136,7 +2147,9 @@ class HubSnapping(QgsProcessingAlgorithm):
         buffer_hub_snap = self.parameterAsDouble(parameters, 'BUFFER_HUB_SNAPPING',
                                                 context)
         
-
+        only_endpoints_flag = self.parameterAsBool(parameters, 'ONLY_ENDPOINTS',
+                                        context)
+        
         hubpoint_is_existing_vertex_flag = self.parameterAsBool(parameters, 'HUBPOINT_MUST_BE_AN_EXISTING_VERTEX',
                                         context)
         
@@ -2234,7 +2247,11 @@ class HubSnapping(QgsProcessingAlgorithm):
                                     distance_from_nnfeature_nearest_vertex = geometry_start.distance(nnfeature_nearest_vertex_geom)
                                     
                                     if distance_from_nnfeature_nearest_vertex <= buffer_hub_snap:
-                                        nearest_nnfeatures_points.append((nnfeature_closest_vertex, nnfeature_nearest_vertex_geom, distance_from_nnfeature_nearest_vertex, nnfeature))
+                                        if only_endpoints_flag:
+                                            if nnfeature_closest_vertex[2] == -1 or nnfeature_closest_vertex[3] == -1:
+                                                nearest_nnfeatures_points.append((nnfeature_closest_vertex, nnfeature_nearest_vertex_geom, distance_from_nnfeature_nearest_vertex, nnfeature))
+                                        else:
+                                            nearest_nnfeatures_points.append((nnfeature_closest_vertex, nnfeature_nearest_vertex_geom, distance_from_nnfeature_nearest_vertex, nnfeature))
 
                             nearest_nnfeatures_points.sort(key=lambda x:x[2])
                             if len(nearest_nnfeatures_points) > 2:
@@ -2260,7 +2277,8 @@ class HubSnapping(QgsProcessingAlgorithm):
                                             QgsVectorLayerEditUtils(layer).moveVertex(polygon.centroid().asPoint().x(),polygon.centroid().asPoint().y(),nnfeature[3].id(),nnfeature[0][1])
 
                         except:
-                            pass
+                            if print_debug_flag is True:
+                                print('EXCEPTION : '  + 'START_POINT LOOP', 'local_feature : ' + str(feature['fid']))
 
 
 
@@ -2276,7 +2294,11 @@ class HubSnapping(QgsProcessingAlgorithm):
                                     distance_from_nnfeature_nearest_vertex = geometry_end.distance(nnfeature_nearest_vertex_geom)
                                     
                                     if distance_from_nnfeature_nearest_vertex <= buffer_hub_snap:
-                                        nearest_nnfeatures_points.append((nnfeature_closest_vertex, nnfeature_nearest_vertex_geom, distance_from_nnfeature_nearest_vertex, nnfeature))
+                                        if only_endpoints_flag:
+                                            if nnfeature_closest_vertex[2] == -1 or nnfeature_closest_vertex[3] == -1:
+                                                nearest_nnfeatures_points.append((nnfeature_closest_vertex, nnfeature_nearest_vertex_geom, distance_from_nnfeature_nearest_vertex, nnfeature))
+                                        else:
+                                            nearest_nnfeatures_points.append((nnfeature_closest_vertex, nnfeature_nearest_vertex_geom, distance_from_nnfeature_nearest_vertex, nnfeature))
 
                             nearest_nnfeatures_points.sort(key=lambda x:x[2])
                             if len(nearest_nnfeatures_points) > 2:
@@ -2302,9 +2324,12 @@ class HubSnapping(QgsProcessingAlgorithm):
                                             QgsVectorLayerEditUtils(layer).moveVertex(polygon.centroid().asPoint().x(),polygon.centroid().asPoint().y(),nnfeature[3].id(),nnfeature[0][1])
 
                         except:
-                            pass
+                            if print_debug_flag is True:
+                                print('EXCEPTION : '  + 'END_POINT LOOP', 'local_feature : ' + str(feature['fid']))
+
                 except:
-                    pass
+                    if print_debug_flag is True:
+                        print('EXCEPTION : '  + 'FEATURE_LOOP', 'local_feature : ' + str(feature['fid']))  
 
 
             feedback.setProgress(int((y /numfeatures) * 100))
@@ -2433,6 +2458,15 @@ class SnapHubsPointsToLayer(QgsProcessingAlgorithm):
 
         self.addParameter(
             QgsProcessingParameterBoolean(
+                self.tr('ONLY_ENDPOINTS'),
+                self.tr('ONLY ENDPOINTS'),
+                True,
+                False
+            )
+        )
+
+        self.addParameter(
+            QgsProcessingParameterBoolean(
                 self.tr('HUBPOINT_MUST_BE_AN_EXISTING_VERTEX'),
                 self.tr('HUBPOINT MUST BE AN EXISTING VERTEX'),
                 True,
@@ -2507,6 +2541,9 @@ class SnapHubsPointsToLayer(QgsProcessingAlgorithm):
         
         buffer_hub_snap = self.parameterAsDouble(parameters, 'BUFFER_HUB_SNAPPING',
                                                 context)
+        
+        only_endpoints_flag = self.parameterAsBool(parameters, 'ONLY_ENDPOINTS',
+                                        context)
         
         hubpoint_is_existing_vertex_flag = self.parameterAsBool(parameters, 'HUBPOINT_MUST_BE_AN_EXISTING_VERTEX',
                                         context)
@@ -2629,7 +2666,11 @@ class SnapHubsPointsToLayer(QgsProcessingAlgorithm):
                                     distance_from_nnfeature_nearest_vertex = geometry_start.distance(nnfeature_nearest_vertex_geom)
                                     
                                     if distance_from_nnfeature_nearest_vertex <= buffer_hub_snap:
-                                        nearest_nnfeatures_points.append((nnfeature_closest_vertex, nnfeature_nearest_vertex_geom, distance_from_nnfeature_nearest_vertex, nnfeature))
+                                        if only_endpoints_flag:
+                                            if nnfeature_closest_vertex[2] == -1 or nnfeature_closest_vertex[3] == -1:
+                                                nearest_nnfeatures_points.append((nnfeature_closest_vertex, nnfeature_nearest_vertex_geom, distance_from_nnfeature_nearest_vertex, nnfeature))
+                                        else:
+                                            nearest_nnfeatures_points.append((nnfeature_closest_vertex, nnfeature_nearest_vertex_geom, distance_from_nnfeature_nearest_vertex, nnfeature))
 
                             nearest_nnfeatures_points.sort(key=lambda x:x[2])
                             if len(nearest_nnfeatures_points) > 2:
@@ -2673,8 +2714,12 @@ class SnapHubsPointsToLayer(QgsProcessingAlgorithm):
                                     distance_from_nnfeature_nearest_vertex = geometry_end.distance(nnfeature_nearest_vertex_geom)
                                     
                                     if distance_from_nnfeature_nearest_vertex <= buffer_hub_snap:
-                                        nearest_nnfeatures_points.append((nnfeature_closest_vertex, nnfeature_nearest_vertex_geom, distance_from_nnfeature_nearest_vertex, nnfeature))
-
+                                        if only_endpoints_flag:
+                                            if nnfeature_closest_vertex[2] == -1 or nnfeature_closest_vertex[3] == -1:
+                                                nearest_nnfeatures_points.append((nnfeature_closest_vertex, nnfeature_nearest_vertex_geom, distance_from_nnfeature_nearest_vertex, nnfeature))
+                                        else:
+                                            nearest_nnfeatures_points.append((nnfeature_closest_vertex, nnfeature_nearest_vertex_geom, distance_from_nnfeature_nearest_vertex, nnfeature))
+                                            
                             nearest_nnfeatures_points.sort(key=lambda x:x[2])
                             if len(nearest_nnfeatures_points) > 2:
 
