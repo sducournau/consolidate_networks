@@ -210,20 +210,17 @@ class CalculateDbscan(QgsProcessingAlgorithm):
 
         outputs['alg_params_joinattributesbylocation'] = processing.run('qgis:joinattributesbylocation', alg_params_joinattributesbylocation,context=context, feedback=feedback)
 
-
-
-
         layer = outputs['alg_params_joinattributesbylocation']['OUTPUT']
 
-
-        if feedback.isCanceled():
-            return {}
+            
         (sink_output, dest_output) = self.parameterAsSink(parameters, self.OUTPUT,
                 context, layer.fields(), layer.wkbType(), layer.sourceCrs())
+        
+        numfeatures = layer.featureCount()
+
         for y, feature in enumerate(layer.getFeatures()):
             output_feature = QgsFeature(feature)
             sink_output.addFeature(output_feature, QgsFeatureSink.FastInsert)
-            feedback.setProgress(int((y /numfeatures) * 100))
             
         end_timer = datetime.now() - start_timer
 
@@ -385,14 +382,7 @@ class ConsolidateWithDbscan(QgsProcessingAlgorithm):
             outputs['alg_params_unipart'] = processing.run("qgis:multiparttosingleparts", alg_params_unipart, context=context,  feedback=feedback)
 
 
-
-
-
         layer = outputs['alg_params_unipart']['OUTPUT']
-
-
-        if feedback.isCanceled():
-            return {}
 
 
         request = QgsFeatureRequest()
@@ -402,8 +392,10 @@ class ConsolidateWithDbscan(QgsProcessingAlgorithm):
 
 
         for y, feature in enumerate(layer.getFeatures(request)):
+            
             if feedback.isCanceled():
                 return {}
+            
             if not feature.geometry().isEmpty():
                 with edit(layer):
 
@@ -468,15 +460,14 @@ class ConsolidateWithDbscan(QgsProcessingAlgorithm):
 
 
 
-                feedback.setProgress(int((y /numfeatures) * 100))
+            feedback.setProgress(int((y /numfeatures) * 100))
 
-        if feedback.isCanceled():
-            return {}
+        numfeatures = layer.featureCount()
+
 
         for y, feature in enumerate(layer.getFeatures()):
             output_feature = QgsFeature(feature)
             sink_output.addFeature(output_feature, QgsFeatureSink.FastInsert)
-            feedback.setProgress(int((y /numfeatures) * 100))
 
         end_timer = datetime.now() - start_timer
 
@@ -564,16 +555,17 @@ class MakeIntersectionsVertexes(QgsProcessingAlgorithm):
         )
 
         self.addParameter(
-            QgsProcessingParameterDistance(
-                self.tr('BUFFER'),
-                self.tr('BUFFER'),
-                0.3,
+            QgsProcessingParameterField(
+                self.tr('ENTITY_IDENTIFICATION_FIELDS'),
+                self.tr('ENTITY IDENTIFICATION FIELDS'),
+                None,
                 self.INPUT,
-                False,
-                0.0
+                QgsProcessingParameterField.Any,
+                True,
+                True,
+                True
             )
         )
-
         # We add a feature sink in which to store our processed features (this
         # usually takes the form of a newly created vector layer when the
         # algorithm is run in QGIS).
@@ -603,29 +595,9 @@ class MakeIntersectionsVertexes(QgsProcessingAlgorithm):
         fix_geoms_flag = self.parameterAsBool(parameters, 'FIX_GEOMETRIES_BEFORE_PROCESSING',
                                         context)
         
-        buffer_region = self.parameterAsDouble(parameters, 'BUFFER',
+
+        entity_identification_fields = self.parameterAsFields(parameters, 'ENTITY_IDENTIFICATION_FIELDS',
                                                 context)
-
-
-        def insert_vertex_same_length(layer, feature, inter):
-
-            #QgsVectorLayerEditUtils(layer).moveVertex(inter.x(), inter.y(),feature.id(),feature_vertex)
-
-            length = QgsGeometry.length(feature.geometry())
-            for i in range(1,4):
-
-                geom_search_same_length = QgsGeometry(feature.geometry())
-                geom_search_same_length.insertVertex(inter.x(), inter.y(),feature.geometry().closestVertex(QgsPointXY(inter.x(), inter.y()))[i])
-                if QgsGeometry.length(geom_search_same_length) == length:
-                    if feature.geometry().closestVertex(QgsPointXY(inter.x(), inter.y()))[i] == -1 and i == 2:
-                        vertex = 1
-                    elif feature.geometry().closestVertex(QgsPointXY(inter.x(), inter.y()))[i] == -1 and i == 3:
-                        vertex = len(feature.geometry().asPolyline())-1
-                    else:
-                        vertex = feature.geometry().closestVertex(QgsPointXY(inter.x(), inter.y()))[i]
-                    QgsVectorLayerEditUtils(layer).insertVertex(inter.x(), inter.y(),feature.id(),vertex)
-                    return True
-                
 
         start_timer = datetime.now()
 
@@ -674,33 +646,15 @@ class MakeIntersectionsVertexes(QgsProcessingAlgorithm):
         if feedback.isCanceled():
             return {}
         
+        alg_params_dissolve = {
+            'FIELD': entity_identification_fields,
+            'INPUT': outputs['alg_params_split_lines']['OUTPUT'],
+            'SEPARATE_DISJOINT': False,
+            'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+        }
+        outputs['alg_params_dissolve'] = processing.run('qgis:dissolve', alg_params_dissolve, context=context, feedback=feedback)
 
-        #create points from polylines intersections
-        # alg_params_extractvertices = {
-        # "INPUT": outputs['alg_params_split_lines']['OUTPUT'],
-        # 'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
-        # }
-        # outputs['alg_params_extractvertices'] = processing.run('qgis:extractvertices', alg_params_extractvertices, context=context,feedback=feedback)
-
-
-        # points = outputs['alg_params_extractvertices']['OUTPUT']
-
-        # if feedback.isCanceled():
-        #     return {}
-
-        # alg_params_snapgeometries = {
-        #     'BEHAVIOR': 1,
-        #     'INPUT': layer,
-        #     'REFERENCE_LAYER': points,
-        #     'TOLERANCE': buffer_region,
-        #     'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
-        # }
-        # outputs['alg_params_snapgeometries'] = processing.run('qgis:snapgeometries', alg_params_snapgeometries,context=context, feedback=feedback)
-
-        layer = outputs['alg_params_split_lines']['OUTPUT']
-
-        if feedback.isCanceled():
-            return {}
+        layer = outputs['alg_params_dissolve']['OUTPUT']
 
         numfeatures = layer.featureCount()
 
@@ -864,6 +818,28 @@ class EndpointsStrimmingExtending(QgsProcessingAlgorithm):
 
         self.addParameter(
             QgsProcessingParameterBoolean(
+                self.tr('EXPLODE_AND_GATHER'),
+                self.tr('EXPLODE AND GATHER'),
+                False,
+                True
+            )
+        )
+
+        self.addParameter(
+            QgsProcessingParameterField(
+                self.tr('ENTITY_IDENTIFICATION_FIELDS'),
+                self.tr('ENTITY IDENTIFICATION FIELDS'),
+                None,
+                self.INPUT,
+                QgsProcessingParameterField.Any,
+                True,
+                True,
+                True
+            )
+        )
+
+        self.addParameter(
+            QgsProcessingParameterBoolean(
                 self.tr('PRINT_DEBUG'),
                 self.tr('PRINT DEBUG'),
                 False,
@@ -919,6 +895,12 @@ class EndpointsStrimmingExtending(QgsProcessingAlgorithm):
         angular_limit = self.parameterAsDouble(parameters, 'ANGULAR_LIMIT_OF_PARALLEL_GEOMETRIES',
                                                context)
 
+        explode_and_gather_flag = self.parameterAsBool(parameters, 'EXPLODE_AND_GATHER',
+                                context)
+
+        entity_identification_fields = self.parameterAsFields(parameters, 'ENTITY_IDENTIFICATION_FIELDS',
+                                                context)
+
         print_debug_flag = self.parameterAsBool(parameters, 'PRINT_DEBUG',
                                 context)
 
@@ -954,26 +936,30 @@ class EndpointsStrimmingExtending(QgsProcessingAlgorithm):
             outputs['alg_params_unipart'] = processing.run("qgis:multiparttosingleparts", alg_params_unipart, context=context,  feedback=feedback)
 
 
-        if feedback.isCanceled():
-            return {}
+        if explode_and_gather_flag is True:
 
-        layer = outputs['alg_params_unipart']['OUTPUT']
+            alg_params_explodelines = {
+            'INPUT': outputs['alg_params_unipart']['OUTPUT'],
+            'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+            }
+            outputs['alg_params_explodelines'] = processing.run("qgis:explodelines", alg_params_explodelines, context=context,  feedback=feedback)
+            layer = outputs['alg_params_explodelines']['OUTPUT']
+
+        else:
+            layer = outputs['alg_params_unipart']['OUTPUT']
+
+
         request = QgsFeatureRequest()
-        #set order by length
         clause = QgsFeatureRequest().OrderByClause('$length', ascending=True)
         orderby = QgsFeatureRequest().OrderBy([clause])
         request.setOrderBy(orderby)
 
 
-        if feedback.isCanceled():
-            return {}
-
-        #trim_&_extend
         for y, feature in enumerate(layer.getFeatures(request)):
+            
             if feedback.isCanceled():
                 return {}
             
-
             if not feature.geometry().isEmpty():
                 try:    
                     with edit(layer):
@@ -1005,7 +991,7 @@ class EndpointsStrimmingExtending(QgsProcessingAlgorithm):
                         start_out_segment_geom.deleteVertex(0)
 
                         if print_debug_flag is True:
-                            print('init', 'local_feature : ' + str(feature['fid']), 'start_out_segment_geom : ', start_out_segment_geom)          
+                            print('STEP : ' + 'INIT', 'local_feature : ' + str(feature['fid']), 'start_out_segment_geom : ', start_out_segment_geom)          
 
 
 
@@ -1015,7 +1001,7 @@ class EndpointsStrimmingExtending(QgsProcessingAlgorithm):
                         end_out_segment_geom.deleteVertex(0)
 
                         if print_debug_flag is True:
-                            print('init', 'local_feature : ' + str(feature['fid']), 'end_out_segment_geom : ', end_out_segment_geom) 
+                            print('STEP : ' + 'INIT', 'local_feature : ' + str(feature['fid']), 'end_out_segment_geom : ', end_out_segment_geom) 
 
 
 
@@ -1027,7 +1013,7 @@ class EndpointsStrimmingExtending(QgsProcessingAlgorithm):
                         start_in_segment_geom = QgsGeometry.fromPolylineXY(start_in_segment)
 
                         if print_debug_flag is True:
-                            print('init', 'local_feature : ' + str(feature['fid']), 'start_in_segment_geom : ', start_in_segment_geom) 
+                            print('STEP : ' + 'INIT', 'local_feature : ' + str(feature['fid']), 'start_in_segment_geom : ', start_in_segment_geom) 
 
 
 
@@ -1039,7 +1025,7 @@ class EndpointsStrimmingExtending(QgsProcessingAlgorithm):
                         end_in_segment_geom = QgsGeometry.fromPolylineXY(end_in_segment)
 
                         if print_debug_flag is True:
-                            print('init', 'local_feature : ' + str(feature['fid']), 'end_in_segment_geom : ', end_in_segment_geom) 
+                            print('STEP : ' + 'INIT', 'local_feature : ' + str(feature['fid']), 'end_in_segment_geom : ', end_in_segment_geom) 
 
 
 
@@ -1100,13 +1086,15 @@ class EndpointsStrimmingExtending(QgsProcessingAlgorithm):
                                             intersects_segment = start_in_segment_geom.intersects(segment_geom)
 
                                             if print_debug_flag is True:
-                                                print('start_point buffer_trim', 'local_feature : ' + str(feature['fid']), 'distant_feature : ' + str(nnfeature['fid']), 'distance : ' + str(distance_inter))          
+                                                print('STEP : ' + 'START_POINT BUFFER_TRIM', 'local_feature : ' + str(feature['fid']), 'distant_feature : ' + str(nnfeature['fid']), 'distance : ' + str(distance_inter))          
 
 
                                             if inter[0] and distance_inter <= buffer_trim/2:
                                                 closest_intersections.append((inter[1], segment_geom, nnfeature_closest_vertex, distance_inter, -1, intersects_segment))
                                 except:
-                                    pass
+                                    if print_debug_flag is True:
+                                        print('EXCEPTION : '  + 'START_POINT BUFFER_EXTEND LOOP', 'local_feature : ' + str(feature['fid']))
+                                
 
 
                         geometry_start_buffer = geometry_start.buffer(0.001,1)
@@ -1122,7 +1110,7 @@ class EndpointsStrimmingExtending(QgsProcessingAlgorithm):
                                     break_update_step = True
 
                                     if print_debug_flag is True:
-                                        print('start_point', 'local_feature : ' + str(feature['fid']), 'break_update_step : ' + str(break_update_step))
+                                        print('STEP : ' + 'START_POINT BREAK_UPDATE_STEP', 'local_feature : ' + str(feature['fid']), 'break_update_step : ' + str(break_update_step))
                                     break
 
                         if break_update_step is False:             
@@ -1166,12 +1154,13 @@ class EndpointsStrimmingExtending(QgsProcessingAlgorithm):
                                                 intersects_segment = start_out_segment_geom.intersects(segment_geom)
 
                                                 if print_debug_flag is True:
-                                                    print('start_point buffer_extend', 'local_feature : ' + str(feature['fid']), 'distant_feature : ' + str(nnfeature['fid']), 'distance : ' + str(distance_inter))          
+                                                    print('STEP : ' + 'START_POINT BUFFER_EXTEND', 'local_feature : ' + str(feature['fid']), 'distant_feature : ' + str(nnfeature['fid']), 'distance : ' + str(distance_inter))          
 
                                                 if inter[0] and distance_inter <= buffer_extend/2:
                                                     closest_intersections.append((inter[1], segment_geom, nnfeature_closest_vertex, distance_inter, 1, intersects_segment))
                                     except:
-                                        pass
+                                        if print_debug_flag is True:
+                                            print('EXCEPTION¨: '  + 'START_POINT BUFFER_EXTEND LOOP', 'local_feature : ' + str(feature['fid']))
                                     
                         if len(closest_intersections) > 0:
                             if break_update_step is False:
@@ -1183,7 +1172,7 @@ class EndpointsStrimmingExtending(QgsProcessingAlgorithm):
                                     closest_intersections = sorted(closest_intersections, key=lambda k: (not k[5], k[3]))
 
                                 if print_debug_flag is True:
-                                    print('start_point', 'local_feature : ' + str(feature['fid']), 'closest_intersections : ', closest_intersections)
+                                    print('STEP : ' +  'START_POINT UPDATE GEOMETRY', 'local_feature : ' + str(feature['fid']), 'closest_intersections : ', closest_intersections)
 
                                 for closest_intersection in closest_intersections:
                                     new_polyline = polyline
@@ -1241,12 +1230,13 @@ class EndpointsStrimmingExtending(QgsProcessingAlgorithm):
                                             intersects_segment = end_in_segment_geom.intersects(segment_geom)
 
                                             if print_debug_flag is True:
-                                                print('end_point buffer_trim', 'local_feature : ' + str(feature['fid']), 'distant_feature : ' + str(nnfeature['fid']), 'distance : ' + str(distance_inter))          
+                                                print('STEP : ' + 'END_POINT BUFFER_TRIM', 'local_feature : ' + str(feature['fid']), 'distant_feature : ' + str(nnfeature['fid']), 'distance : ' + str(distance_inter))          
 
                                             if inter[0] and distance_inter <= buffer_trim/2:
                                                 closest_intersections.append((inter[1], segment_geom, nnfeature_closest_vertex, distance_inter, -1, intersects_segment))
                                 except:
-                                    pass
+                                    if print_debug_flag is True:
+                                        print('EXCEPTION¨: '  + 'END_POINT BUFFER_TRIM LOOP', 'local_feature : ' + str(feature['fid']))
 
 
 
@@ -1263,7 +1253,7 @@ class EndpointsStrimmingExtending(QgsProcessingAlgorithm):
                                     break_update_step = True
 
                                     if print_debug_flag is True:
-                                        print('end_point', 'local_feature : ' + str(feature['fid']), 'break_update_step : ' + str(break_update_step))
+                                        print('STEP : ' + 'END_POINT BREAK_UPDATE_STEP', 'local_feature : ' + str(feature['fid']), 'break_update_step : ' + str(break_update_step))
                                     break
 
                         if break_update_step is False: 
@@ -1308,12 +1298,13 @@ class EndpointsStrimmingExtending(QgsProcessingAlgorithm):
                                                 intersects_segment = end_out_segment_geom.intersects(segment_geom)
 
                                                 if print_debug_flag is True:
-                                                    print('end_point buffer_extend', 'local_feature : ' + str(feature['fid']), 'distant_feature : ' + str(nnfeature['fid']), 'distance : ' + str(distance_inter))          
+                                                    print('STEP : ' + 'END_POINT BUFFER_EXTEND', 'local_feature : ' + str(feature['fid']), 'distant_feature : ' + str(nnfeature['fid']), 'distance : ' + str(distance_inter))          
 
                                                 if inter[0] and distance_inter <= buffer_extend/2:
                                                     closest_intersections.append((inter[1], segment_geom, nnfeature_closest_vertex, distance_inter, 1, intersects_segment))
                                     except:
-                                        pass
+                                        if print_debug_flag is True:
+                                            print('EXCEPTION¨: '  + 'END_POINT BUFFER_EXTEND LOOP', 'local_feature : ' + str(feature['fid']))
                                 
 
                     
@@ -1328,7 +1319,7 @@ class EndpointsStrimmingExtending(QgsProcessingAlgorithm):
                                     closest_intersections = sorted(closest_intersections, key=lambda k: (not k[5], k[3]))
 
                                 if print_debug_flag is True:
-                                    print('end_point', 'local_feature : ' + str(feature['fid']), 'closest_intersections : ', closest_intersections)
+                                    print('STEP : ' +  'END_POINT UPDATE GEOMETRY', 'local_feature : ' + str(feature['fid']), 'closest_intersections : ', closest_intersections)
 
                                 for closest_intersection in closest_intersections:
                                     new_polyline = polyline
@@ -1340,21 +1331,29 @@ class EndpointsStrimmingExtending(QgsProcessingAlgorithm):
                                             layer.updateFeature(feature)
                                             break
 
-
-
-
-
-                        feedback.setProgress(int((y /numfeatures) * 100))
                 except:
-                    pass
+                    if print_debug_flag is True:
+                        print('EXCEPTION¨: '  + 'FEATURE_LOOP', 'local_feature : ' + str(feature['fid']))
 
-        if feedback.isCanceled():
-            return {}
+
+            feedback.setProgress(int((y /numfeatures) * 100))
+
+
+        if explode_and_gather_flag is True:
+            alg_params_dissolve = {
+                'FIELD': entity_identification_fields,
+                'INPUT': layer,
+                'SEPARATE_DISJOINT': False,
+                'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+            }
+            outputs['alg_params_dissolve'] = processing.run('qgis:dissolve', alg_params_dissolve, context=context, feedback=feedback)
+            layer = outputs['alg_params_dissolve']['OUTPUT']  
+
+        numfeatures = layer.featureCount()
 
         for y, feature in enumerate(layer.getFeatures()):
             output_feature = QgsFeature(feature)
             sink_output.addFeature(output_feature, QgsFeatureSink.FastInsert)
-            feedback.setProgress(int((y /numfeatures) * 100))
 
         end_timer = datetime.now() - start_timer
 
@@ -1522,12 +1521,37 @@ class EndpointsSnapping(QgsProcessingAlgorithm):
 
         self.addParameter(
             QgsProcessingParameterBoolean(
+                self.tr('EXPLODE_AND_GATHER'),
+                self.tr('EXPLODE AND GATHER'),
+                False,
+                True
+            )
+        )
+
+        self.addParameter(
+            QgsProcessingParameterField(
+                self.tr('ENTITY_IDENTIFICATION_FIELDS'),
+                self.tr('ENTITY IDENTIFICATION FIELDS'),
+                None,
+                self.INPUT,
+                QgsProcessingParameterField.Any,
+                True,
+                True,
+                True
+            )
+        )
+
+
+        self.addParameter(
+            QgsProcessingParameterBoolean(
                 self.tr('PRINT_DEBUG'),
                 self.tr('PRINT DEBUG'),
                 False,
                 True
             )
         )
+
+
         # We add a feature sink in which to store our processed features (this
         # usually takes the form of a newly created vector layer when the
         # algorithm is run in QGIS).
@@ -1578,11 +1602,17 @@ class EndpointsSnapping(QgsProcessingAlgorithm):
 
         same_direction_geoms_flag = self.parameterAsBool(parameters, 'PREFERS_SAME_GEOMETRY_DIRECTION',
                                 context)
+        
+        explode_and_gather_flag = self.parameterAsBool(parameters, 'EXPLODE_AND_GATHER',
+                                context)
+
+        entity_identification_fields = self.parameterAsFields(parameters, 'ENTITY_IDENTIFICATION_FIELDS',
+                                                context)
 
         print_debug_flag = self.parameterAsBool(parameters, 'PRINT_DEBUG',
                                 context)
 
-        print(prefered_behaviour_start, prefered_behaviour_end)
+
 
         start_timer = datetime.now()
 
@@ -1614,22 +1644,27 @@ class EndpointsSnapping(QgsProcessingAlgorithm):
             outputs['alg_params_unipart'] = processing.run("qgis:multiparttosingleparts", alg_params_unipart, context=context,  feedback=feedback)
 
 
-        if feedback.isCanceled():
-            return {}
+        if explode_and_gather_flag is True:
 
-        layer = outputs['alg_params_unipart']['OUTPUT']
+            alg_params_explodelines = {
+            'INPUT': outputs['alg_params_unipart']['OUTPUT'],
+            'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+            }
+            outputs['alg_params_explodelines'] = processing.run("qgis:explodelines", alg_params_explodelines, context=context,  feedback=feedback)
+            layer = outputs['alg_params_explodelines']['OUTPUT']
+
+        else:
+            layer = outputs['alg_params_unipart']['OUTPUT']
+
+
         request = QgsFeatureRequest()
-        #set order by length
         clause = QgsFeatureRequest().OrderByClause('$length', ascending=True)
         orderby = QgsFeatureRequest().OrderBy([clause])
         request.setOrderBy(orderby)
 
 
-        if feedback.isCanceled():
-            return {}
-
-
         for y, feature in enumerate(layer.getFeatures(request)):
+            
             if feedback.isCanceled():
                 return {}
             
@@ -1672,6 +1707,9 @@ class EndpointsSnapping(QgsProcessingAlgorithm):
 
                                 if geometry_start_buffer.intersects(QgsGeometry.fromPointXY(feat_polyline[0])) or geometry_start_buffer.intersects(QgsGeometry.fromPointXY(feat_polyline[-1])):
                                     break_update_step = True
+
+                                    if print_debug_flag is True:
+                                        print('STEP : ' + 'START_POINT BREAK_UPDATE_STEP', 'local_feature : ' + str(feature['fid']), 'break_update_step : ' + str(break_update_step))
                                     break
 
 
@@ -1696,7 +1734,7 @@ class EndpointsSnapping(QgsProcessingAlgorithm):
                                                 distance_point_from_geom = geometry_start.distance(nnfeature_closest_PointXY_geom)
 
                                                 if print_debug_flag is True:
-                                                    print('start_point', 'local_feature : ' + str(feature['fid']), 'distant_feature : ' + str(nnfeature['fid']), 'distance : ' + str(distance_point_from_geom))
+                                                    print('STEP : ' + 'START_POINT DISTANCE TO POINT', 'local_feature : ' + str(feature['fid']), 'distant_feature : ' + str(nnfeature['fid']), 'distance : ' + str(distance_point_from_geom))
                                             
                                                 if distance_point_from_geom <= buffer_snap:
 
@@ -1719,12 +1757,14 @@ class EndpointsSnapping(QgsProcessingAlgorithm):
                                                     hausdorff_distance = start_segment_geometry.hausdorffDistance(distant_segment_geom)
 
                                                     if print_debug_flag is True:
-                                                        print('start_point', 'local_feature : ' + str(feature['fid']), 'distant_feature : ' + str(nnfeature['fid']), 'hausdorff_distance : ' + str(hausdorff_distance), 'angular_variation : ' + str(angular_variation), 'nnfeature_closest_vertex : ', nnfeature_closest_vertex)
+                                                        print('STEP : ' + 'START_POINT ANGULAR_VARIATION & HAUSDORFF_DISTANCE', 'local_feature : ' + str(feature['fid']), 'distant_feature : ' + str(nnfeature['fid']), 'hausdorff_distance : ' + str(hausdorff_distance), 'angular_variation : ' + str(angular_variation), 'nnfeature_closest_vertex : ', nnfeature_closest_vertex)
 
                                                     if (angular_variation >= min_angular_limit and angular_variation <= max_angular_limit) and hausdorff_distance > hausdorff_distance_limit:
                                                         closest_vertices.append((nnfeature_closest_PointXY, distance_point_from_geom, angular_variation, endpoint_type))
                                     except:
-                                        pass
+                                        if print_debug_flag is True:
+                                            print('EXCEPTION¨: '  + 'START_POINT LOOP', 'local_feature : ' + str(feature['fid']))
+
 
                         if len(closest_vertices) > 0:
 
@@ -1753,7 +1793,7 @@ class EndpointsSnapping(QgsProcessingAlgorithm):
                                     closest_vertices = sorted(closest_vertices, key=lambda k: (k[1]*-1, k[2]*-1))
 
                             if print_debug_flag is True:
-                                print('start_point', 'local_feature : ' + str(feature['fid']), 'closest_vertices : ', closest_vertices)
+                                print('STEP : ' +  'START_POINT UPDATE GEOMETRY', 'local_feature : ' + str(feature['fid']), 'closest_vertices : ', closest_vertices)
 
                             for closest_vertex in closest_vertices:
                                 new_polyline = polyline
@@ -1782,6 +1822,9 @@ class EndpointsSnapping(QgsProcessingAlgorithm):
 
                                 if geometry_end_buffer.intersects(QgsGeometry.fromPointXY(feat_polyline[0])) or geometry_end_buffer.intersects(QgsGeometry.fromPointXY(feat_polyline[-1])):
                                     break_update_step = True
+
+                                    if print_debug_flag is True:
+                                        print('STEP : ' + 'END_POINT BREAK_UPDATE_STEP', 'local_feature : ' + str(feature['fid']), 'break_update_step : ' + str(break_update_step))
                                     break
 
                         if break_update_step is False:            
@@ -1805,7 +1848,7 @@ class EndpointsSnapping(QgsProcessingAlgorithm):
                                                 distance_point_from_geom = geometry_end.distance(nnfeature_closest_PointXY_geom)
 
                                                 if print_debug_flag is True:
-                                                    print('end_point', 'local_feature : ' + str(feature['fid']), 'distant_feature : ' + str(nnfeature['fid']), 'distance : ' + str(distance_point_from_geom))          
+                                                    print('STEP : ' + 'END_POINT DISTANCE TO POINT', 'local_feature : ' + str(feature['fid']), 'distant_feature : ' + str(nnfeature['fid']), 'distance : ' + str(distance_point_from_geom))          
                                             
                                                 if distance_point_from_geom <= buffer_snap:
 
@@ -1828,7 +1871,7 @@ class EndpointsSnapping(QgsProcessingAlgorithm):
                                                     hausdorff_distance = end_segment_geometry.hausdorffDistance(distant_segment_geom)
 
                                                     if print_debug_flag is True:
-                                                        print('end_point', 'local_feature : ' + str(feature['fid']), 'distant_feature : ' + str(nnfeature['fid']), 'hausdorff_distance : ' + str(hausdorff_distance), 'angular_variation : ' + str(angular_variation), 'nnfeature_closest_vertex : ', nnfeature_closest_vertex)
+                                                        print('STEP : ' + 'END_POINT ANGULAR_VARIATION & HAUSDORFF_DISTANCE', 'local_feature : ' + str(feature['fid']), 'distant_feature : ' + str(nnfeature['fid']), 'hausdorff_distance : ' + str(hausdorff_distance), 'angular_variation : ' + str(angular_variation), 'nnfeature_closest_vertex : ', nnfeature_closest_vertex)
 
                                                     if (angular_variation >= min_angular_limit and angular_variation <= max_angular_limit) and hausdorff_distance > hausdorff_distance_limit:
                                                         closest_vertices.append((nnfeature_closest_PointXY, distance_point_from_geom, angular_variation, endpoint_type))
@@ -1862,7 +1905,7 @@ class EndpointsSnapping(QgsProcessingAlgorithm):
                                     closest_vertices = sorted(closest_vertices, key=lambda k: (k[1]*-1, k[2]*-1))
 
                             if print_debug_flag is True:
-                                print('end_point', 'local_feature : ' + str(feature['fid']), 'closest_vertices : ', closest_vertices)
+                                print('STEP : ' +  'END_POINT UPDATE GEOMETRY', 'local_feature : ' + str(feature['fid']), 'closest_vertices : ', closest_vertices)
 
 
                 
@@ -1878,15 +1921,24 @@ class EndpointsSnapping(QgsProcessingAlgorithm):
                     pass                           
 
 
-                feedback.setProgress(int((y /numfeatures) * 100))
+            feedback.setProgress(int((y /numfeatures) * 100))
 
-        if feedback.isCanceled():
-            return {}
+        
+        if explode_and_gather_flag is True:
+            alg_params_dissolve = {
+                'FIELD': entity_identification_fields,
+                'INPUT': layer,
+                'SEPARATE_DISJOINT': False,
+                'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+            }
+            outputs['alg_params_dissolve'] = processing.run('qgis:dissolve', alg_params_dissolve, context=context, feedback=feedback)
+            layer = outputs['alg_params_dissolve']['OUTPUT']    
+
+        numfeatures = layer.featureCount()
 
         for y, feature in enumerate(layer.getFeatures()):
             output_feature = QgsFeature(feature)
             sink_output.addFeature(output_feature, QgsFeatureSink.FastInsert)
-            feedback.setProgress(int((y /numfeatures) * 100))
 
         end_timer = datetime.now() - start_timer
 
@@ -1994,6 +2046,27 @@ class HubSnapping(QgsProcessingAlgorithm):
             )
         )
 
+        self.addParameter(
+            QgsProcessingParameterBoolean(
+                self.tr('EXPLODE_AND_GATHER'),
+                self.tr('EXPLODE AND GATHER'),
+                False,
+                True
+            )
+        )
+
+        self.addParameter(
+            QgsProcessingParameterField(
+                self.tr('ENTITY_IDENTIFICATION_FIELDS'),
+                self.tr('ENTITY IDENTIFICATION FIELDS'),
+                None,
+                self.INPUT,
+                QgsProcessingParameterField.Any,
+                True,
+                True,
+                True
+            )
+        )
 
         self.addParameter(
             QgsProcessingParameterBoolean(
@@ -2038,6 +2111,12 @@ class HubSnapping(QgsProcessingAlgorithm):
         hubpoint_is_existing_vertex_flag = self.parameterAsBool(parameters, 'HUBPOINT_MUST_BE_AN_EXISTING_VERTEX',
                                         context)
         
+        explode_and_gather_flag = self.parameterAsBool(parameters, 'EXPLODE_AND_GATHER',
+                                context)
+
+        entity_identification_fields = self.parameterAsFields(parameters, 'ENTITY_IDENTIFICATION_FIELDS',
+                                                context)
+
         print_debug_flag = self.parameterAsBool(parameters, 'PRINT_DEBUG',
                                         context)
         
@@ -2070,25 +2149,31 @@ class HubSnapping(QgsProcessingAlgorithm):
             'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
             }
             outputs['alg_params_unipart'] = processing.run("qgis:multiparttosingleparts", alg_params_unipart, context=context,  feedback=feedback)
+        
+
+        if explode_and_gather_flag is True:
+
+            alg_params_explodelines = {
+            'INPUT': outputs['alg_params_unipart']['OUTPUT'],
+            'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+            }
+            outputs['alg_params_explodelines'] = processing.run("qgis:explodelines", alg_params_explodelines, context=context,  feedback=feedback)
+            layer = outputs['alg_params_explodelines']['OUTPUT']
+
+        else:
+            layer = outputs['alg_params_unipart']['OUTPUT']
 
 
-        if feedback.isCanceled():
-            return {}
-        layer = outputs['alg_params_unipart']['OUTPUT']
         request = QgsFeatureRequest()
-        #set order by length
-        clause = QgsFeatureRequest().OrderByClause('$length', ascending=False)
+        clause = QgsFeatureRequest().OrderByClause('$length', ascending=True)
         orderby = QgsFeatureRequest().OrderBy([clause])
         request.setOrderBy(orderby)
 
-
-        if feedback.isCanceled():
-            return {}
-
-        #trim_&_extend
         for y, feature in enumerate(layer.getFeatures(request)):
+            
             if feedback.isCanceled():
                 return {}
+            
             if not feature.geometry().isEmpty():
                 try:
                     with edit(layer):
@@ -2193,15 +2278,24 @@ class HubSnapping(QgsProcessingAlgorithm):
                     pass
 
 
-                feedback.setProgress(int((y /numfeatures) * 100))
+            feedback.setProgress(int((y /numfeatures) * 100))
 
-        if feedback.isCanceled():
-            return {}
+        if explode_and_gather_flag is True:
+            alg_params_dissolve = {
+                'FIELD': entity_identification_fields,
+                'INPUT': layer,
+                'SEPARATE_DISJOINT': False,
+                'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+            }
+            outputs['alg_params_dissolve'] = processing.run('qgis:dissolve', alg_params_dissolve, context=context, feedback=feedback)
+            layer = outputs['alg_params_dissolve']['OUTPUT']  
+
+        
+        numfeatures = layer.featureCount()
 
         for y, feature in enumerate(layer.getFeatures()):
             output_feature = QgsFeature(feature)
             sink_output.addFeature(output_feature, QgsFeatureSink.FastInsert)
-            feedback.setProgress(int((y /numfeatures) * 100))
 
         end_timer = datetime.now() - start_timer
 
@@ -2308,6 +2402,36 @@ class SnapHubsPointsToLayer(QgsProcessingAlgorithm):
             )
         )
 
+        self.addParameter(
+            QgsProcessingParameterBoolean(
+                self.tr('EXPLODE_AND_GATHER'),
+                self.tr('EXPLODE AND GATHER'),
+                False,
+                True
+            )
+        )
+
+        self.addParameter(
+            QgsProcessingParameterField(
+                self.tr('ENTITY_IDENTIFICATION_FIELDS'),
+                self.tr('ENTITY IDENTIFICATION FIELDS'),
+                None,
+                self.INPUT,
+                QgsProcessingParameterField.Any,
+                True,
+                True,
+                True
+            )
+        )
+
+        self.addParameter(
+            QgsProcessingParameterBoolean(
+                self.tr('PRINT_DEBUG'),
+                self.tr('PRINT DEBUG'),
+                False,
+                True
+            )
+        )
         # We add a feature sink in which to store our processed features (this
         # usually takes the form of a newly created vector layer when the
         # algorithm is run in QGIS).
@@ -2346,6 +2470,14 @@ class SnapHubsPointsToLayer(QgsProcessingAlgorithm):
         buffer_region = self.parameterAsDouble(parameters, 'BUFFER_HUB_SNAPPING',
                                                 context)
         
+        explode_and_gather_flag = self.parameterAsBool(parameters, 'EXPLODE_AND_GATHER',
+                                context)
+
+        entity_identification_fields = self.parameterAsFields(parameters, 'ENTITY_IDENTIFICATION_FIELDS',
+                                                context)
+
+        print_debug_flag = self.parameterAsBool(parameters, 'PRINT_DEBUG',
+                                context)
         
         start_timer = datetime.now()
         
@@ -2399,96 +2531,153 @@ class SnapHubsPointsToLayer(QgsProcessingAlgorithm):
             }
             outputs['alg_params_unipart_ref_layer'] = processing.run("qgis:multiparttosingleparts",alg_params_unipart_ref_layer,context=context,  feedback=feedback)
 
-        if feedback.isCanceled():
-            return {}
-        
+        if explode_and_gather_flag is True:
 
-        layer = outputs['alg_params_unipart']['OUTPUT']
+            alg_params_explodelines = {
+            'INPUT': outputs['alg_params_unipart']['OUTPUT'],
+            'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+            }
+            outputs['alg_params_explodelines'] = processing.run("qgis:explodelines", alg_params_explodelines, context=context,  feedback=feedback)
+            layer = outputs['alg_params_explodelines']['OUTPUT']
+
+        else:
+            layer = outputs['alg_params_unipart']['OUTPUT']
+
 
         ref_layer = outputs['alg_params_unipart_ref_layer']['OUTPUT']
 
         request = QgsFeatureRequest()
-        #set order by length
-        clause = QgsFeatureRequest().OrderByClause('$length', ascending=False)
+        clause = QgsFeatureRequest().OrderByClause('$length', ascending=True)
         orderby = QgsFeatureRequest().OrderBy([clause])
         request.setOrderBy(orderby)
 
 
-        if feedback.isCanceled():
-            return {}
-
-        #trim_&_extend
         for y, feature in enumerate(layer.getFeatures(request)):
+            
             if feedback.isCanceled():
                 return {}
+            
             if not feature.geometry().isEmpty():
-                with edit(layer):
+                try:
+                    with edit(layer):
 
-                    geometry = feature.geometry()
-                    spatial_index = QgsSpatialIndex(layer.getFeatures())
-                    polyline = geometry.asPolyline()
-                    seg_start = polyline[0]
-                    seg_end = polyline[-1]
-                    geometry_start = QgsGeometry.fromPointXY(QgsPointXY(seg_start.x(),seg_start.y()))
-                    geometry_end = QgsGeometry.fromPointXY(QgsPointXY(seg_end.x(),seg_end.y()))
-                    lastvert = len(polyline)-1
-                    nearest_point = None
-                    nearests_points = []
-                    feats = []
 
-                    try:
-                        nearest_feats_points = []
-                        for feat in ref_layer.getFeatures(QgsFeatureRequest().setFilterRect(QgsGeometry.fromPointXY(QgsPointXY(seg_start.x(),seg_start.y())).buffer(buffer_region,5).boundingBox())):
-                            if feat.geometry().closestVertex(seg_start)[-1] <= buffer_region:
-                                nearests_points.append(feat.geometry().closestVertex(seg_start))
+                        geometry = feature.geometry()
 
-                        nearest_feats_points.sort(key=lambda x:x[0][-1])
-                        if len(nearest_feats_points) > 2:
-                      
-                            polygon = QgsGeometry.fromPolygonXY( [[ QgsPointXY( pair[0][0][0], pair[0][0][1] ) for pair in nearest_feats_points ]] )
+                        spatial_index = QgsSpatialIndex(layer.getFeatures())
 
-                            if not polygon.isEmpty():
+
+                        polyline = geometry.asPolyline()
+
+                        polyline_start = polyline[0]
+                        polyline_end = polyline[-1]
+
+                        geometry_start = QgsGeometry.fromPointXY(polyline_start)
+                        geometry_end = QgsGeometry.fromPointXY(polyline_end)
+
+
+                        try:
+                            nearest_nnfeatures_points = []
+                
+                            for nnfeature in ref_layer.getFeatures(QgsFeatureRequest().setFilterRect(geometry_start.buffer(buffer_hub_snap,5).boundingBox())):
+                                nnfeature_closest_vertex = nnfeature.geometry().closestVertex(geometry_start.asPoint())
+
+                                if nnfeature_closest_vertex[-1] <= buffer_hub_snap**2:
+                                    nnfeature_closest_PointXY = QgsPointXY(nnfeature.geometry().vertexAt(nnfeature_closest_vertex[1]).x(),  nnfeature.geometry().vertexAt(nnfeature_closest_vertex[1]).y())
+                                    nnfeature_nearest_vertex_geom = QgsGeometry.fromPointXY(nnfeature_closest_PointXY)
+                                    distance_from_nnfeature_nearest_vertex = geometry_start.distance(nnfeature_nearest_vertex_geom)
                                     
-                                for feat in nearest_feats_points:
-                                    QgsVectorLayerEditUtils(layer).moveVertex(polygon.centroid().asPoint().x(),polygon.centroid().asPoint().y(),feat[1].id(),feat[0][1])
-                        
-                    except:
-                        #print("bug_centroid_start", nearest_feats_points)
-                        pass
+                                    if distance_from_nnfeature_nearest_vertex <= buffer_hub_snap:
+                                        nearest_nnfeatures_points.append((nnfeature_closest_vertex, nnfeature_nearest_vertex_geom, distance_from_nnfeature_nearest_vertex, nnfeature))
+
+                            nearest_nnfeatures_points.sort(key=lambda x:x[2])
+                            if len(nearest_nnfeatures_points) > 2:
+
+                                polygon = QgsGeometry.fromPolygonXY( [[ QgsPointXY( pair[0][0][0], pair[0][0][1] ) for pair in nearest_nnfeatures_points ]] )
 
 
-                    try:
-                        nearest_feats_points = []
+                                    
 
-                        #print('end', feature.id())
-                        for feat in layer.getFeatures(QgsFeatureRequest().setFilterRect(QgsGeometry.fromPointXY(QgsPointXY(seg_end.x(),seg_end.y())).buffer(buffer_region,5).boundingBox())):
-                            if feat.geometry().closestVertex(geometry_end.asPoint())[-1] <= buffer_region:
-                                nearest_feats_points.append((feat.geometry().closestVertex(geometry_end.asPoint()),feat))
+                                if not polygon.isEmpty():
 
-                        nearest_feats_points.sort(key=lambda x:x[0][-1])
-                        if len(nearest_feats_points) > 2:
-                            polygon = QgsGeometry.fromPolygonXY( [[ QgsPointXY( pair[0][0][0], pair[0][0][1] ) for pair in nearest_feats_points ]] )
+                                    
+                                    nearest_nnfeatures_points = [nnfeature + (nnfeature[1].distance(polygon.centroid()),) for nnfeature in nearest_nnfeatures_points]
+                                    nearest_nnfeatures_points = sorted(nearest_nnfeatures_points, key=lambda k: k[-1])
 
-                            if not polygon.isEmpty():
-                                
-                                for feat in nearest_feats_points:
-                                    QgsVectorLayerEditUtils(layer).moveVertex(polygon.centroid().asPoint().x(),polygon.centroid().asPoint().y(),feat[1].id(),feat[0][1])
-                                    #edit_vertex_buffer_region(layer, feat[1], feat[1], polygon.centroid().asPoint(),lastvert)
+                                    if hubpoint_is_existing_vertex_flag is True:
+                                        
+                                        for nnfeature in nearest_nnfeatures_points:
+                                            QgsVectorLayerEditUtils(layer).moveVertex(nearest_nnfeatures_points[0][1].asPoint().x(),nearest_nnfeatures_points[0][1].asPoint().y(),nnfeature[3].id(),nnfeature[0][1])
+
+                                    else:
+                                        for nnfeature in nearest_nnfeatures_points:
+                                            QgsVectorLayerEditUtils(layer).moveVertex(polygon.centroid().asPoint().x(),polygon.centroid().asPoint().y(),nnfeature[3].id(),nnfeature[0][1])
+
+                        except:
+                            pass
 
 
-                    except:
-                        #print("bug_centroid_end", nearest_feats_points)
-                        pass
 
-                    feedback.setProgress(int((y /numfeatures) * 100))
+                        try:                
+                            nearest_nnfeatures_points = []
+                
+                            for nnfeature in ref_layer.getFeatures(QgsFeatureRequest().setFilterRect(geometry_end.buffer(buffer_hub_snap,5).boundingBox())):
+                                nnfeature_closest_vertex = nnfeature.geometry().closestVertex(geometry_end.asPoint())
 
-        if feedback.isCanceled():
-            return {}
+                                if nnfeature_closest_vertex[-1] <= buffer_hub_snap**2:
+                                    nnfeature_closest_PointXY = QgsPointXY(nnfeature.geometry().vertexAt(nnfeature_closest_vertex[1]).x(),  nnfeature.geometry().vertexAt(nnfeature_closest_vertex[1]).y())
+                                    nnfeature_nearest_vertex_geom = QgsGeometry.fromPointXY(nnfeature_closest_PointXY)
+                                    distance_from_nnfeature_nearest_vertex = geometry_end.distance(nnfeature_nearest_vertex_geom)
+                                    
+                                    if distance_from_nnfeature_nearest_vertex <= buffer_hub_snap:
+                                        nearest_nnfeatures_points.append((nnfeature_closest_vertex, nnfeature_nearest_vertex_geom, distance_from_nnfeature_nearest_vertex, nnfeature))
+
+                            nearest_nnfeatures_points.sort(key=lambda x:x[2])
+                            if len(nearest_nnfeatures_points) > 2:
+
+                                polygon = QgsGeometry.fromPolygonXY( [[ QgsPointXY( pair[0][0][0], pair[0][0][1] ) for pair in nearest_nnfeatures_points ]] )
+
+
+                                    
+
+                                if not polygon.isEmpty():
+
+                                    
+                                    nearest_nnfeatures_points = [nnfeature + (nnfeature[1].distance(polygon.centroid()),) for nnfeature in nearest_nnfeatures_points]
+                                    nearest_nnfeatures_points = sorted(nearest_nnfeatures_points, key=lambda k: k[-1])
+
+                                    if hubpoint_is_existing_vertex_flag is True:
+                                        
+                                        for nnfeature in nearest_nnfeatures_points:
+                                            QgsVectorLayerEditUtils(layer).moveVertex(nearest_nnfeatures_points[0][1].asPoint().x(),nearest_nnfeatures_points[0][1].asPoint().y(),nnfeature[3].id(),nnfeature[0][1])
+
+                                    else:
+                                        for nnfeature in nearest_nnfeatures_points:
+                                            QgsVectorLayerEditUtils(layer).moveVertex(polygon.centroid().asPoint().x(),polygon.centroid().asPoint().y(),nnfeature[3].id(),nnfeature[0][1])
+
+                        except:
+                            pass
+                except:
+                    pass
+
+
+            feedback.setProgress(int((y /numfeatures) * 100))
+
+        if explode_and_gather_flag is True:
+            alg_params_dissolve = {
+                'FIELD': entity_identification_fields,
+                'INPUT': layer,
+                'SEPARATE_DISJOINT': False,
+                'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+            }
+            outputs['alg_params_dissolve'] = processing.run('qgis:dissolve', alg_params_dissolve, context=context, feedback=feedback)
+            layer = outputs['alg_params_dissolve']['OUTPUT']
+
+        numfeatures = layer.featureCount()
 
         for y, feature in enumerate(layer.getFeatures()):
             output_feature = QgsFeature(feature)
             sink_output.addFeature(output_feature, QgsFeatureSink.FastInsert)
-            feedback.setProgress(int((y /numfeatures) * 100))
 
         end_timer = datetime.now() - start_timer
 
@@ -2616,6 +2805,37 @@ class SnapEndpointsToLayer(QgsProcessingAlgorithm):
                 180.0
             )
         )
+
+        self.addParameter(
+            QgsProcessingParameterBoolean(
+                self.tr('EXPLODE_AND_GATHER'),
+                self.tr('EXPLODE AND GATHER'),
+                False,
+                True
+            )
+        )
+
+        self.addParameter(
+            QgsProcessingParameterField(
+                self.tr('ENTITY_IDENTIFICATION_FIELDS'),
+                self.tr('ENTITY IDENTIFICATION FIELDS'),
+                None,
+                self.INPUT,
+                QgsProcessingParameterField.Any,
+                True,
+                True,
+                True
+            )
+        )
+
+        self.addParameter(
+            QgsProcessingParameterBoolean(
+                self.tr('PRINT_DEBUG'),
+                self.tr('PRINT DEBUG'),
+                False,
+                True
+            )
+        )
         # We add a feature sink in which to store our processed features (this
         # usually takes the form of a newly created vector layer when the
         # algorithm is run in QGIS).
@@ -2655,6 +2875,15 @@ class SnapEndpointsToLayer(QgsProcessingAlgorithm):
         
         angular_limit = self.parameterAsDouble(parameters, 'ANGULAR_LIMIT_OF_PARALLEL_GEOMETRIES',
                                                context)
+        
+        explode_and_gather_flag = self.parameterAsBool(parameters, 'EXPLODE_AND_GATHER',
+                                context)
+
+        entity_identification_fields = self.parameterAsFields(parameters, 'ENTITY_IDENTIFICATION_FIELDS',
+                                                context)
+
+        print_debug_flag = self.parameterAsBool(parameters, 'PRINT_DEBUG',
+                                context)
         
         start_timer = datetime.now()
 
@@ -2704,129 +2933,297 @@ class SnapEndpointsToLayer(QgsProcessingAlgorithm):
             }
             outputs['alg_params_unipart_ref_layer'] = processing.run("qgis:multiparttosingleparts",alg_params_unipart_ref_layer,context=context,  feedback=feedback)
 
-        if feedback.isCanceled():
-            return {}
-        
-        layer = outputs['alg_params_unipart_input']['OUTPUT']
+        if explode_and_gather_flag is True:
+
+            alg_params_explodelines = {
+            'INPUT': outputs['alg_params_unipart']['OUTPUT'],
+            'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+            }
+            outputs['alg_params_explodelines'] = processing.run("qgis:explodelines", alg_params_explodelines, context=context,  feedback=feedback)
+            layer = outputs['alg_params_explodelines']['OUTPUT']
+
+        else:
+            layer = outputs['alg_params_unipart']['OUTPUT']
+
 
         ref_layer = outputs['alg_params_unipart_ref_layer']['OUTPUT']   
 
         request = QgsFeatureRequest()
-        #set order by length
-        clause = QgsFeatureRequest().OrderByClause('$length', ascending=False)
+        clause = QgsFeatureRequest().OrderByClause('$length', ascending=True)
         orderby = QgsFeatureRequest().OrderBy([clause])
         request.setOrderBy(orderby)
 
 
-        if feedback.isCanceled():
-            return {}
-
-        #trim_&_extend
         for y, feature in enumerate(layer.getFeatures(request)):
+            
             if feedback.isCanceled():
                 return {}
+            
             if not feature.geometry().isEmpty():
-                with edit(layer):
-
-                    geometry = feature.geometry()
-                    spatial_index = QgsSpatialIndex(ref_layer.getFeatures())
-                    polyline = geometry.asPolyline()
-                    seg_start = polyline[0]
-                    seg_end = polyline[-1]
-                    geometry_start = QgsGeometry.fromPointXY(QgsPointXY(seg_start.x(),seg_start.y()))
-                    geometry_end = QgsGeometry.fromPointXY(QgsPointXY(seg_end.x(),seg_end.y()))
+                try:
+                    with edit(layer):
 
 
-                    nnfeatures_closest_vertex = []
-                    nearestids = None
-                    nearestids = spatial_index.nearestNeighbor(geometry_start.asPoint(),3,buffer_extrimity)
+                        geometry = feature.geometry()
 
-                    if feature.id() in nearestids:
-                        nearestids.remove(feature.id())
+                        spatial_index = QgsSpatialIndex(ref_layer.getFeatures())
 
 
-                    if len(nearestids) > 0:
-                        for nearestid in nearestids:
-                            nnfeature = next(ref_layer.getFeatures(QgsFeatureRequest(nearestid)))
-                            nnfeature_closest_vertex = nnfeature.geometry().closestVertex(geometry_start.asPoint())
-                            if nnfeature_closest_vertex[-1] <= buffer_snap and nnfeature_closest_vertex[-1] > 0.0:
-                                nnfeatures_closest_vertex.append([nnfeature, nnfeature_closest_vertex])
-                        if len(nnfeatures_closest_vertex)  > 0:
+                        polyline = geometry.asPolyline()
 
-                            nnfeatures_closest_vertex.sort(key=lambda k:k[1][-1])
-                            nnfeature_closest =  nnfeatures_closest_vertex[0]
+                        polyline_start = polyline[0]
+                        polyline_start_near_vertex = polyline[1]
 
-                            nnfeature_closest_vertex = nnfeature_closest[1]
-                            nnfeature_closest_geom = nnfeature_closest[0].geometry()
+                        polyline_end = polyline[-1]
+                        polyline_end_near_vertex = polyline[-2]
+
+                        geometry_start = QgsGeometry.fromPointXY(polyline_start)
+                        geometry_end = QgsGeometry.fromPointXY(polyline_end)
+
+                        start_segment_geometry = QgsGeometry.fromPolylineXY([polyline_start, polyline_start_near_vertex])
+
+                        end_segment_geometry = QgsGeometry.fromPolylineXY([polyline_end_near_vertex, polyline_end])
+                                                                            
+                        break_update_step = False
+                        closest_vertices = []
+
+                        geometry_start_buffer = geometry_start.buffer(0.001,1)
+                        list_intersects_boundingBox = spatial_index.intersects(geometry_start_buffer.boundingBox())
+                        if len(list_intersects_boundingBox) >= 1:
+                            for id in list_intersects_boundingBox:
+                                feat = next(ref_layer.getFeatures(QgsFeatureRequest(id)))
+                                feat_polyline = feat.geometry().asPolyline()
+
+                                if geometry_start_buffer.intersects(QgsGeometry.fromPointXY(feat_polyline[0])) or geometry_start_buffer.intersects(QgsGeometry.fromPointXY(feat_polyline[-1])):
+                                    break_update_step = True
+
+                                    if print_debug_flag is True:
+                                        print('STEP : ' + 'START_POINT BREAK_UPDATE_STEP', 'local_feature : ' + str(feature['fid']), 'break_update_step : ' + str(break_update_step))
+                                    break
 
 
-                            nnfeature_closest_PointXY = QgsPointXY(nnfeature_closest_vertex[0].x(),nnfeature_closest_vertex[0].y())
-                            nnfeature_closest_PointXY_geom = QgsGeometry.fromPointXY(nnfeature_closest_PointXY)
+                        if break_update_step is False:                
+                            nearestids = spatial_index.nearestNeighbor(geometry_start.asPoint(),5,buffer_snap)
 
-                            intersection_buffer = geometry_start.buffer(buffer_snap,5).intersection(nnfeature_closest_PointXY_geom.buffer(buffer_snap,5))
-                            if intersection_buffer.contains(geometry_start) and intersection_buffer.contains(nnfeature_closest_PointXY_geom):
-                                
-                                hausdorff_distance = geometry.hausdorffDistance(nnfeature_closest_geom)
-                
-                                
-                                if hausdorff_distance > hausdorff_distance_limit:
-                                    polyline[0] = nnfeature_closest_PointXY
-                                    new_geom = QgsGeometry.fromPolylineXY(polyline)
+                            if len(nearestids) > 0:
+                                for nearestid in nearestids:
+                                    try:
+                                        nnfeature = next(ref_layer.getFeatures(QgsFeatureRequest(nearestid)))
+                                        nnfeature_closest_vertex = nnfeature.geometry().closestVertex(geometry_start.asPoint())
 
+                                        if nnfeature_closest_vertex[2] == -1 or nnfeature_closest_vertex[3] == -1:
+
+                                            if nnfeature_closest_vertex[-1] <= buffer_snap**2:
+                                                
+                                                nnfeature_closest_PointXY = QgsPointXY(nnfeature.geometry().vertexAt(nnfeature_closest_vertex[1]).x(),  nnfeature.geometry().vertexAt(nnfeature_closest_vertex[1]).y())
+                                                nnfeature_closest_PointXY_geom = QgsGeometry.fromPointXY(nnfeature_closest_PointXY)
+
+                                                distance_point_from_geom = geometry_start.distance(nnfeature_closest_PointXY_geom)
+
+                                                if print_debug_flag is True:
+                                                    print('STEP : ' + 'START_POINT DISTANCE TO POINT', 'local_feature : ' + str(feature['fid']), 'distant_feature : ' + str(nnfeature['fid']), 'distance : ' + str(distance_point_from_geom))
+                                            
+                                                if distance_point_from_geom <= buffer_snap:
+
+                                                    endpoint_type = 1 if nnfeature_closest_vertex[3] == -1 else -1
+
+                                                    distant_segment = [nnfeature_closest_PointXY]
+
+                                                    if endpoint_type == 1:
+                                                        distant_segment.append(QgsPointXY(nnfeature.geometry().vertexAt(nnfeature_closest_vertex[2]).x(),  nnfeature.geometry().vertexAt(nnfeature_closest_vertex[2]).y()))
+                                                    elif endpoint_type == -1:
+                                                        distant_segment.append(QgsPointXY(nnfeature.geometry().vertexAt(nnfeature_closest_vertex[3]).x(),  nnfeature.geometry().vertexAt(nnfeature_closest_vertex[3]).y()))
+
+                                                    distant_segment_geom = QgsGeometry.fromPolylineXY(distant_segment)
+
+                                                    start_segment_angle = math.degrees(start_segment_geometry.interpolateAngle(start_segment_geometry.length())) % 180
+                                                    distant_segment_angle = math.degrees(distant_segment_geom.interpolateAngle(distant_segment_geom.length())) % 180
+                                          
+                                                    angular_variation = abs(start_segment_angle - distant_segment_angle)
+
+                                                    hausdorff_distance = start_segment_geometry.hausdorffDistance(distant_segment_geom)
+
+                                                    if print_debug_flag is True:
+                                                        print('STEP : ' + 'START_POINT ANGULAR_VARIATION & HAUSDORFF_DISTANCE', 'local_feature : ' + str(feature['fid']), 'distant_feature : ' + str(nnfeature['fid']), 'hausdorff_distance : ' + str(hausdorff_distance), 'angular_variation : ' + str(angular_variation), 'nnfeature_closest_vertex : ', nnfeature_closest_vertex)
+
+                                                    if (angular_variation >= min_angular_limit and angular_variation <= max_angular_limit) and hausdorff_distance > hausdorff_distance_limit:
+                                                        closest_vertices.append((nnfeature_closest_PointXY, distance_point_from_geom, angular_variation, endpoint_type))
+                                    except:
+                                        if print_debug_flag is True:
+                                            print('EXCEPTION¨: '  + 'START_POINT LOOP', 'local_feature : ' + str(feature['fid']))
+
+                        if len(closest_vertices) > 0:
+
+                            if prefered_behaviour_start == 'Nearest, Minimum angular variation':
+                                if same_direction_geoms_flag is True:
+                                    closest_vertices = sorted(closest_vertices, key=lambda k: (k[3]*-1, k[1], k[2]))
+                                else:
+                                    closest_vertices = sorted(closest_vertices, key=lambda k: (k[1], k[2]))
+
+                            elif prefered_behaviour_start == 'Farest, Minimum angular variation':
+                                if same_direction_geoms_flag is True:
+                                    closest_vertices = sorted(closest_vertices, key=lambda k: (k[3]*-1, k[1]*-1, k[2]))
+                                else:
+                                    closest_vertices = sorted(closest_vertices, key=lambda k: (k[1]*-1, k[2]))
+
+                            elif prefered_behaviour_start == 'Nearest, Maximum angular variation':
+                                if same_direction_geoms_flag is True:
+                                    closest_vertices = sorted(closest_vertices, key=lambda k: (k[3]*-1, k[1], k[2]*-1))
+                                else:
+                                    closest_vertices = sorted(closest_vertices, key=lambda k: (k[1], k[2]*-1))
+
+                            elif prefered_behaviour_start == 'Farest, Maximum angular variation':
+                                if same_direction_geoms_flag is True:
+                                    closest_vertices = sorted(closest_vertices, key=lambda k: (k[3]*-1, k[1]*-1, k[2]*-1))
+                                else:
+                                    closest_vertices = sorted(closest_vertices, key=lambda k: (k[1]*-1, k[2]*-1))
+
+                            if print_debug_flag is True:
+                                print('STEP : ' +  'START_POINT UPDATE GEOMETRY', 'local_feature : ' + str(feature['fid']), 'closest_vertices : ', closest_vertices)
+
+                            for closest_vertex in closest_vertices:
+                                new_polyline = polyline
+                                new_polyline[0] = closest_vertex[0]
+                                new_geom = QgsGeometry.fromPolylineXY(new_polyline)
+                                if not new_geom.isEmpty():
                                     feature.setGeometry(new_geom)
                                     layer.updateFeature(feature)
+                                    break                            
 
 
-                    nnfeatures_closest_vertex = []
-                    nearestids = None
-                    nearestids = spatial_index.nearestNeighbor(geometry_end.asPoint(),3,buffer_extrimity)
-
-                    if feature.id() in nearestids:
-                        nearestids.remove(feature.id())
 
 
-                    if len(nearestids) > 0:
-                        for nearestid in nearestids:
-                            nnfeature = next(ref_layer.getFeatures(QgsFeatureRequest(nearestid)))
-                            nnfeature_closest_vertex = nnfeature.geometry().closestVertex(geometry_end.asPoint())
-                            if nnfeature_closest_vertex[-1] <= buffer_snap and nnfeature_closest_vertex[-1] > 0.0:
-                                nnfeatures_closest_vertex.append([nnfeature, nnfeature_closest_vertex])
-                        if len(nnfeatures_closest_vertex)  > 0:
 
-                            nnfeatures_closest_vertex.sort(key=lambda k:k[1][-1])
-                            nnfeature_closest =  nnfeatures_closest_vertex[0]
+                        break_update_step = False
+                        closest_vertices = []
 
-                            nnfeature_closest_vertex = nnfeature_closest[1]
-                            nnfeature_closest_geom = nnfeature_closest[0].geometry()
+                        geometry_end_buffer = geometry_end.buffer(0.001,1)
+                        list_intersects_boundingBox = spatial_index.intersects(geometry_end_buffer.boundingBox())
+                        if len(list_intersects_boundingBox) >= 1:
+                            for id in list_intersects_boundingBox:
+                                feat = next(ref_layer.getFeatures(QgsFeatureRequest(id)))
+                                feat_polyline = feat.geometry().asPolyline()
 
+                                if geometry_end_buffer.intersects(QgsGeometry.fromPointXY(feat_polyline[0])) or geometry_end_buffer.intersects(QgsGeometry.fromPointXY(feat_polyline[-1])):
+                                    break_update_step = True
+                                    
+                                    if print_debug_flag is True:
+                                        print('STEP : ' + 'END_POINT BREAK_UPDATE_STEP', 'local_feature : ' + str(feature['fid']), 'break_update_step : ' + str(break_update_step))
+                                    break
 
-                            nnfeature_closest_PointXY = QgsPointXY(nnfeature_closest_vertex[0].x(),nnfeature_closest_vertex[0].y())
-                            nnfeature_closest_PointXY_geom = QgsGeometry.fromPointXY(nnfeature_closest_PointXY)
+                        if break_update_step is False:            
+                            nearestids = spatial_index.nearestNeighbor(geometry_end.asPoint(),5,buffer_snap)
 
-                            intersection_buffer = geometry_end.buffer(buffer_snap,5).intersection(nnfeature_closest_PointXY_geom.buffer(buffer_snap,5))
-                            if intersection_buffer.contains(geometry_end) and intersection_buffer.contains(nnfeature_closest_PointXY_geom):
+                            if len(nearestids) > 0:
+                                for nearestid in nearestids:
+                                    try:    
+                                        nnfeature = next(ref_layer.getFeatures(QgsFeatureRequest(nearestid)))
+                                        nnfeature_closest_vertex = nnfeature.geometry().closestVertex(geometry_end.asPoint())
+
+                                        if nnfeature_closest_vertex[2] == -1 or nnfeature_closest_vertex[3] == -1:
+
+                                            if nnfeature_closest_vertex[-1] <= buffer_snap**2:
+                                                
+                                                nnfeature_closest_PointXY = QgsPointXY(nnfeature.geometry().vertexAt(nnfeature_closest_vertex[1]).x(),  nnfeature.geometry().vertexAt(nnfeature_closest_vertex[1]).y())
+                                                nnfeature_closest_PointXY_geom = QgsGeometry.fromPointXY(nnfeature_closest_PointXY)
+
+                                                distance_point_from_geom = geometry_end.distance(nnfeature_closest_PointXY_geom)
+
+                                                if print_debug_flag is True:
+                                                    print('STEP : ' + 'END_POINT DISTANCE TO POINT', 'local_feature : ' + str(feature['fid']), 'distant_feature : ' + str(nnfeature['fid']), 'distance : ' + str(distance_point_from_geom))          
+                                            
+                                                if distance_point_from_geom <= buffer_snap:
+
+                                                    endpoint_type = 1 if nnfeature_closest_vertex[3] == -1 else -1
+
+                                                    distant_segment = [nnfeature_closest_PointXY]
+
+                                                    if endpoint_type == 1:
+                                                        distant_segment.append(QgsPointXY(nnfeature.geometry().vertexAt(nnfeature_closest_vertex[2]).x(),  nnfeature.geometry().vertexAt(nnfeature_closest_vertex[2]).y()))
+                                                    elif endpoint_type == -1:
+                                                        distant_segment.append(QgsPointXY(nnfeature.geometry().vertexAt(nnfeature_closest_vertex[3]).x(),  nnfeature.geometry().vertexAt(nnfeature_closest_vertex[3]).y()))
+
+                                                    distant_segment_geom = QgsGeometry.fromPolylineXY(distant_segment)
+
+                                                    end_segment_angle = math.degrees(end_segment_geometry.interpolateAngle(end_segment_geometry.length())) % 180
+                                                    distant_segment_angle = math.degrees(distant_segment_geom.interpolateAngle(distant_segment_geom.length())) % 180
+                                          
+                                                    angular_variation = abs(end_segment_angle - distant_segment_angle)
+
+                                                    hausdorff_distance = end_segment_geometry.hausdorffDistance(distant_segment_geom)
+
+                                                    if print_debug_flag is True:
+                                                        print('STEP : ' + 'END_POINT ANGULAR_VARIATION & HAUSDORFF_DISTANCE', 'local_feature : ' + str(feature['fid']), 'distant_feature : ' + str(nnfeature['fid']), 'hausdorff_distance : ' + str(hausdorff_distance), 'angular_variation : ' + str(angular_variation), 'nnfeature_closest_vertex : ', nnfeature_closest_vertex)
+
+                                                    if (angular_variation >= min_angular_limit and angular_variation <= max_angular_limit) and hausdorff_distance > hausdorff_distance_limit:
+                                                        closest_vertices.append((nnfeature_closest_PointXY, distance_point_from_geom, angular_variation, endpoint_type))
+                                    except:
+                                        if print_debug_flag is True:
+                                            print('EXCEPTION¨: '  + 'END_POINT LOOP', 'local_feature : ' + str(feature['fid']))
                                 
-                                hausdorff_distance = geometry.hausdorffDistance(nnfeature_closest_geom)
+
+                        if len(closest_vertices) > 0:
+
+                            if prefered_behaviour_end == 'Nearest, Minimum angular variation':
+                                if same_direction_geoms_flag is True:
+                                    closest_vertices = sorted(closest_vertices, key=lambda k: (k[3]*-1, k[1], k[2]))
+                                else:
+                                    closest_vertices = sorted(closest_vertices, key=lambda k: (k[1], k[2]))
+
+                            elif prefered_behaviour_end == 'Farest, Minimum angular variation':
+                                if same_direction_geoms_flag is True:
+                                    closest_vertices = sorted(closest_vertices, key=lambda k: (k[3]*-1, k[1]*-1, k[2]))
+                                else:
+                                    closest_vertices = sorted(closest_vertices, key=lambda k: (k[1]*-1, k[2]))
+
+                            elif prefered_behaviour_end == 'Nearest, Maximum angular variation':
+                                if same_direction_geoms_flag is True:
+                                    closest_vertices = sorted(closest_vertices, key=lambda k: (k[3]*-1, k[1], k[2]*-1))
+                                else:
+                                    closest_vertices = sorted(closest_vertices, key=lambda k: (k[1], k[2]*-1))
+
+                            elif prefered_behaviour_end == 'Farest, Maximum angular variation':
+                                if same_direction_geoms_flag is True:
+                                    closest_vertices = sorted(closest_vertices, key=lambda k: (k[3]*-1, k[1]*-1, k[2]*-1))
+                                else:
+                                    closest_vertices = sorted(closest_vertices, key=lambda k: (k[1]*-1, k[2]*-1))
+
+                            if print_debug_flag is True:
+                                print('STEP : ' +  'END_POINT UPDATE GEOMETRY', 'local_feature : ' + str(feature['fid']), 'closest_vertices : ', closest_vertices)
+
+
                 
-
-                                if hausdorff_distance > hausdorff_distance_limit:
-                                    polyline[-1] = nnfeature_closest_PointXY
-                                    new_geom = QgsGeometry.fromPolylineXY(polyline)
-
+                            for closest_vertex in closest_vertices:
+                                new_polyline = polyline
+                                new_polyline[-1] = closest_vertex[0]
+                                new_geom = QgsGeometry.fromPolylineXY(new_polyline)
+                                if not new_geom.isEmpty():
                                     feature.setGeometry(new_geom)
                                     layer.updateFeature(feature)
+                                    break
+
+                except:
+                    if print_debug_flag is True:
+                        print('EXCEPTION¨: '  + 'FEATURE_LOOP', 'local_feature : ' + str(feature['fid']))                         
 
 
-
-                    feedback.setProgress(int((y /numfeatures) * 100))
-
-        if feedback.isCanceled():
-            return {}
+            feedback.setProgress(int((y /numfeatures) * 100))
+        
+        if explode_and_gather_flag is True:
+            alg_params_dissolve = {
+                'FIELD': entity_identification_fields,
+                'INPUT': layer,
+                'SEPARATE_DISJOINT': False,
+                'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT
+            }
+            outputs['alg_params_dissolve'] = processing.run('qgis:dissolve', alg_params_dissolve, context=context, feedback=feedback)
+            layer = outputs['alg_params_dissolve']['OUTPUT']
+        
+        numfeatures = layer.featureCount()
 
         for y, feature in enumerate(layer.getFeatures()):
             output_feature = QgsFeature(feature)
             sink_output.addFeature(output_feature, QgsFeatureSink.FastInsert)
-            feedback.setProgress(int((y /numfeatures) * 100))
 
         end_timer = datetime.now() - start_timer
 
