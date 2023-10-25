@@ -1189,7 +1189,7 @@ class EndpointsStrimmingExtending(QgsProcessingAlgorithm):
                                                     closest_intersections.append((inter[1], segment_geom, nnfeature_closest_vertex, distance_inter, 1, intersects_segment))
                                     except:
                                         if print_debug_flag is True:
-                                            print('EXCEPTION¨: '  + 'START_POINT BUFFER_EXTEND LOOP', 'local_feature : ' + str(feature['fid']))
+                                            print('EXCEPTION : '  + 'START_POINT BUFFER_EXTEND LOOP', 'local_feature : ' + str(feature['fid']))
                                     
                         if len(closest_intersections) > 0:
                             if break_update_step is False:
@@ -1265,7 +1265,7 @@ class EndpointsStrimmingExtending(QgsProcessingAlgorithm):
                                                 closest_intersections.append((inter[1], segment_geom, nnfeature_closest_vertex, distance_inter, -1, intersects_segment))
                                 except:
                                     if print_debug_flag is True:
-                                        print('EXCEPTION¨: '  + 'END_POINT BUFFER_TRIM LOOP', 'local_feature : ' + str(feature['fid']))
+                                        print('EXCEPTION : '  + 'END_POINT BUFFER_TRIM LOOP', 'local_feature : ' + str(feature['fid']))
 
 
 
@@ -1333,7 +1333,7 @@ class EndpointsStrimmingExtending(QgsProcessingAlgorithm):
                                                     closest_intersections.append((inter[1], segment_geom, nnfeature_closest_vertex, distance_inter, 1, intersects_segment))
                                     except:
                                         if print_debug_flag is True:
-                                            print('EXCEPTION¨: '  + 'END_POINT BUFFER_EXTEND LOOP', 'local_feature : ' + str(feature['fid']))
+                                            print('EXCEPTION : '  + 'END_POINT BUFFER_EXTEND LOOP', 'local_feature : ' + str(feature['fid']))
                                 
 
                     
@@ -1362,7 +1362,7 @@ class EndpointsStrimmingExtending(QgsProcessingAlgorithm):
 
                 except:
                     if print_debug_flag is True:
-                        print('EXCEPTION¨: '  + 'FEATURE_LOOP', 'local_feature : ' + str(feature['fid']))
+                        print('EXCEPTION : '  + 'FEATURE_LOOP', 'local_feature : ' + str(feature['fid']))
 
 
             feedback.setProgress(int((y /numfeatures) * 100))
@@ -1792,46 +1792,46 @@ class EndpointsSnapping(QgsProcessingAlgorithm):
                                                         closest_vertices.append((nnfeature_closest_PointXY, distance_point_from_geom, angular_variation, endpoint_type))
                                     except:
                                         if print_debug_flag is True:
-                                            print('EXCEPTION¨: '  + 'START_POINT LOOP', 'local_feature : ' + str(feature['fid']))
+                                            print('EXCEPTION : '  + 'START_POINT LOOP', 'local_feature : ' + str(feature['fid']))
 
 
                         if len(closest_vertices) > 0:
+                            if break_update_step is False:
+                                if prefered_behaviour_start == 'Nearest, Minimum angular variation':
+                                    if same_direction_geoms_flag is True:
+                                        closest_vertices = sorted(closest_vertices, key=lambda k: (k[3]*-1, k[1], k[2]))
+                                    else:
+                                        closest_vertices = sorted(closest_vertices, key=lambda k: (k[1], k[2]))
 
-                            if prefered_behaviour_start == 'Nearest, Minimum angular variation':
-                                if same_direction_geoms_flag is True:
-                                    closest_vertices = sorted(closest_vertices, key=lambda k: (k[3]*-1, k[1], k[2]))
-                                else:
-                                    closest_vertices = sorted(closest_vertices, key=lambda k: (k[1], k[2]))
+                                elif prefered_behaviour_start == 'Farest, Minimum angular variation':
+                                    if same_direction_geoms_flag is True:
+                                        closest_vertices = sorted(closest_vertices, key=lambda k: (k[3]*-1, k[1]*-1, k[2]))
+                                    else:
+                                        closest_vertices = sorted(closest_vertices, key=lambda k: (k[1]*-1, k[2]))
 
-                            elif prefered_behaviour_start == 'Farest, Minimum angular variation':
-                                if same_direction_geoms_flag is True:
-                                    closest_vertices = sorted(closest_vertices, key=lambda k: (k[3]*-1, k[1]*-1, k[2]))
-                                else:
-                                    closest_vertices = sorted(closest_vertices, key=lambda k: (k[1]*-1, k[2]))
+                                elif prefered_behaviour_start == 'Nearest, Maximum angular variation':
+                                    if same_direction_geoms_flag is True:
+                                        closest_vertices = sorted(closest_vertices, key=lambda k: (k[3]*-1, k[1], k[2]*-1))
+                                    else:
+                                        closest_vertices = sorted(closest_vertices, key=lambda k: (k[1], k[2]*-1))
 
-                            elif prefered_behaviour_start == 'Nearest, Maximum angular variation':
-                                if same_direction_geoms_flag is True:
-                                    closest_vertices = sorted(closest_vertices, key=lambda k: (k[3]*-1, k[1], k[2]*-1))
-                                else:
-                                    closest_vertices = sorted(closest_vertices, key=lambda k: (k[1], k[2]*-1))
+                                elif prefered_behaviour_start == 'Farest, Maximum angular variation':
+                                    if same_direction_geoms_flag is True:
+                                        closest_vertices = sorted(closest_vertices, key=lambda k: (k[3]*-1, k[1]*-1, k[2]*-1))
+                                    else:
+                                        closest_vertices = sorted(closest_vertices, key=lambda k: (k[1]*-1, k[2]*-1))
 
-                            elif prefered_behaviour_start == 'Farest, Maximum angular variation':
-                                if same_direction_geoms_flag is True:
-                                    closest_vertices = sorted(closest_vertices, key=lambda k: (k[3]*-1, k[1]*-1, k[2]*-1))
-                                else:
-                                    closest_vertices = sorted(closest_vertices, key=lambda k: (k[1]*-1, k[2]*-1))
+                                if print_debug_flag is True:
+                                    print('STEP : ' +  'START_POINT UPDATE GEOMETRY', 'local_feature : ' + str(feature['fid']), 'closest_vertices : ', closest_vertices)
 
-                            if print_debug_flag is True:
-                                print('STEP : ' +  'START_POINT UPDATE GEOMETRY', 'local_feature : ' + str(feature['fid']), 'closest_vertices : ', closest_vertices)
-
-                            for closest_vertex in closest_vertices:
-                                new_polyline = polyline
-                                new_polyline[0] = closest_vertex[0]
-                                new_geom = QgsGeometry.fromPolylineXY(new_polyline)
-                                if not new_geom.isEmpty():
-                                    feature.setGeometry(new_geom)
-                                    layer.updateFeature(feature)
-                                    break                            
+                                for closest_vertex in closest_vertices:
+                                    new_polyline = polyline
+                                    new_polyline[0] = closest_vertex[0]
+                                    new_geom = QgsGeometry.fromPolylineXY(new_polyline)
+                                    if not new_geom.isEmpty():
+                                        feature.setGeometry(new_geom)
+                                        layer.updateFeature(feature)
+                                        break                            
 
 
 
@@ -1908,44 +1908,44 @@ class EndpointsSnapping(QgsProcessingAlgorithm):
                                         pass
 
                         if len(closest_vertices) > 0:
+                            if break_update_step is False:
+                                if prefered_behaviour_end == 'Nearest, Minimum angular variation':
+                                    if same_direction_geoms_flag is True:
+                                        closest_vertices = sorted(closest_vertices, key=lambda k: (k[3]*-1, k[1], k[2]))
+                                    else:
+                                        closest_vertices = sorted(closest_vertices, key=lambda k: (k[1], k[2]))
 
-                            if prefered_behaviour_end == 'Nearest, Minimum angular variation':
-                                if same_direction_geoms_flag is True:
-                                    closest_vertices = sorted(closest_vertices, key=lambda k: (k[3]*-1, k[1], k[2]))
-                                else:
-                                    closest_vertices = sorted(closest_vertices, key=lambda k: (k[1], k[2]))
+                                elif prefered_behaviour_end == 'Farest, Minimum angular variation':
+                                    if same_direction_geoms_flag is True:
+                                        closest_vertices = sorted(closest_vertices, key=lambda k: (k[3]*-1, k[1]*-1, k[2]))
+                                    else:
+                                        closest_vertices = sorted(closest_vertices, key=lambda k: (k[1]*-1, k[2]))
 
-                            elif prefered_behaviour_end == 'Farest, Minimum angular variation':
-                                if same_direction_geoms_flag is True:
-                                    closest_vertices = sorted(closest_vertices, key=lambda k: (k[3]*-1, k[1]*-1, k[2]))
-                                else:
-                                    closest_vertices = sorted(closest_vertices, key=lambda k: (k[1]*-1, k[2]))
+                                elif prefered_behaviour_end == 'Nearest, Maximum angular variation':
+                                    if same_direction_geoms_flag is True:
+                                        closest_vertices = sorted(closest_vertices, key=lambda k: (k[3]*-1, k[1], k[2]*-1))
+                                    else:
+                                        closest_vertices = sorted(closest_vertices, key=lambda k: (k[1], k[2]*-1))
 
-                            elif prefered_behaviour_end == 'Nearest, Maximum angular variation':
-                                if same_direction_geoms_flag is True:
-                                    closest_vertices = sorted(closest_vertices, key=lambda k: (k[3]*-1, k[1], k[2]*-1))
-                                else:
-                                    closest_vertices = sorted(closest_vertices, key=lambda k: (k[1], k[2]*-1))
+                                elif prefered_behaviour_end == 'Farest, Maximum angular variation':
+                                    if same_direction_geoms_flag is True:
+                                        closest_vertices = sorted(closest_vertices, key=lambda k: (k[3]*-1, k[1]*-1, k[2]*-1))
+                                    else:
+                                        closest_vertices = sorted(closest_vertices, key=lambda k: (k[1]*-1, k[2]*-1))
 
-                            elif prefered_behaviour_end == 'Farest, Maximum angular variation':
-                                if same_direction_geoms_flag is True:
-                                    closest_vertices = sorted(closest_vertices, key=lambda k: (k[3]*-1, k[1]*-1, k[2]*-1))
-                                else:
-                                    closest_vertices = sorted(closest_vertices, key=lambda k: (k[1]*-1, k[2]*-1))
-
-                            if print_debug_flag is True:
-                                print('STEP : ' +  'END_POINT UPDATE GEOMETRY', 'local_feature : ' + str(feature['fid']), 'closest_vertices : ', closest_vertices)
+                                if print_debug_flag is True:
+                                    print('STEP : ' +  'END_POINT UPDATE GEOMETRY', 'local_feature : ' + str(feature['fid']), 'closest_vertices : ', closest_vertices)
 
 
-                
-                            for closest_vertex in closest_vertices:
-                                new_polyline = polyline
-                                new_polyline[-1] = closest_vertex[0]
-                                new_geom = QgsGeometry.fromPolylineXY(new_polyline)
-                                if not new_geom.isEmpty():
-                                    feature.setGeometry(new_geom)
-                                    layer.updateFeature(feature)
-                                    break
+                    
+                                for closest_vertex in closest_vertices:
+                                    new_polyline = polyline
+                                    new_polyline[-1] = closest_vertex[0]
+                                    new_geom = QgsGeometry.fromPolylineXY(new_polyline)
+                                    if not new_geom.isEmpty():
+                                        feature.setGeometry(new_geom)
+                                        layer.updateFeature(feature)
+                                        break
                 except:
                     pass                           
 
@@ -2655,7 +2655,9 @@ class SnapHubsPointsToLayer(QgsProcessingAlgorithm):
                                             QgsVectorLayerEditUtils(layer).moveVertex(polygon.centroid().asPoint().x(),polygon.centroid().asPoint().y(),nnfeature[3].id(),nnfeature[0][1])
 
                         except:
-                            pass
+                            if print_debug_flag is True:
+                                print('EXCEPTION : '  + 'START_POINT LOOP', 'local_feature : ' + str(feature['fid']))
+
 
 
 
@@ -2697,9 +2699,13 @@ class SnapHubsPointsToLayer(QgsProcessingAlgorithm):
                                             QgsVectorLayerEditUtils(layer).moveVertex(polygon.centroid().asPoint().x(),polygon.centroid().asPoint().y(),nnfeature[3].id(),nnfeature[0][1])
 
                         except:
-                            pass
+                            if print_debug_flag is True:
+                                print('EXCEPTION : '  + 'END_POINT LOOP', 'local_feature : ' + str(feature['fid']))
                 except:
-                    pass
+                    if print_debug_flag is True:
+                        print('EXCEPTION : '  + 'FEATURE_LOOP', 'local_feature : ' + str(feature['fid']))                         
+
+
 
 
             feedback.setProgress(int((y /numfeatures) * 100))
@@ -2814,22 +2820,33 @@ class SnapEndpointsToLayer(QgsProcessingAlgorithm):
         )
 
         self.addParameter(
-            QgsProcessingParameterDistance(
-                self.tr('BUFFER_ENDPOINTS_SNAPPING'),
-                self.tr('BUFFER ENDPOINTS SNAPPING'),
-                5.0,
-                self.INPUT,
+            QgsProcessingParameterEnum(
+                self.tr('PREFERRED_BEHAVIOR_FOR_STARTING_EXTREMITIES'),
+                self.tr('PREFERRED BEHAVIOR FOR STARTING EXTREMITIES'),
+                self.BEHAVIORS,
                 False,
-                0.0
+                0,
+                False
             )
-        )
+        )  
+
+        self.addParameter(
+            QgsProcessingParameterEnum(
+                self.tr('PREFERRED_BEHAVIOR_FOR_ENDING_EXTREMITIES'),
+                self.tr('PREFERRED BEHAVIOR FOR ENDING EXTREMITIES'),
+                self.BEHAVIORS,
+                False,
+                0,
+                False
+            )
+        ) 
 
         self.addParameter(
             QgsProcessingParameterNumber(
                 self.tr('HAUSDORFF_DISTANCE_LIMIT'),
                 self.tr('HAUSDORFF DISTANCE LIMIT'),
                 1,
-                10.0,
+                5.0,
                 True,
                 0.0
             )
@@ -2837,13 +2854,35 @@ class SnapEndpointsToLayer(QgsProcessingAlgorithm):
 
         self.addParameter(
             QgsProcessingParameterNumber(
-                self.tr('ANGULAR_LIMIT_OF_PARALLEL_GEOMETRIES'),
-                self.tr('ANGULAR LIMIT OF PARALLEL GEOMETRIES'),
+                self.tr('MIN_ANGULAR_LIMIT_OF_PARALLEL_GEOMETRIES'),
+                self.tr('MIN ANGULAR LIMIT OF PARALLEL GEOMETRIES'),
                 1,
-                15.0,
+                0.0,
                 True,
                 0.0,
                 180.0
+            )
+        )
+
+
+        self.addParameter(
+            QgsProcessingParameterNumber(
+                self.tr('MAX_ANGULAR_LIMIT_OF_PARALLEL_GEOMETRIES'),
+                self.tr('MAX ANGULAR LIMIT OF PARALLEL GEOMETRIES'),
+                1,
+                180.0,
+                True,
+                0.0,
+                180.0
+            )
+        )
+
+        self.addParameter(
+            QgsProcessingParameterBoolean(
+                self.tr('PREFERS_SAME_GEOMETRY_DIRECTION'),
+                self.tr('PREFERS SAME GEOMETRY DIRECTION'),
+                True,
+                True
             )
         )
 
@@ -2868,6 +2907,7 @@ class SnapEndpointsToLayer(QgsProcessingAlgorithm):
                 True
             )
         )
+
 
         self.addParameter(
             QgsProcessingParameterBoolean(
@@ -2907,15 +2947,27 @@ class SnapEndpointsToLayer(QgsProcessingAlgorithm):
 
         fix_geoms_flag = self.parameterAsBool(parameters, 'FIX_GEOMETRIES_BEFORE_PROCESSING',
                                         context)
-
+        
         buffer_snap = self.parameterAsDouble(parameters, 'BUFFER_ENDPOINTS_SNAPPING',
                                                 context)
-        
+
         hausdorff_distance_limit = self.parameterAsDouble(parameters, 'HAUSDORFF_DISTANCE_LIMIT',
                                                context)
         
-        angular_limit = self.parameterAsDouble(parameters, 'ANGULAR_LIMIT_OF_PARALLEL_GEOMETRIES',
+        min_angular_limit = self.parameterAsDouble(parameters, 'MIN_ANGULAR_LIMIT_OF_PARALLEL_GEOMETRIES',
                                                context)
+        
+        max_angular_limit = self.parameterAsDouble(parameters, 'MAX_ANGULAR_LIMIT_OF_PARALLEL_GEOMETRIES',
+                                               context)
+        
+        prefered_behaviour_start = self.BEHAVIORS[self.parameterAsEnum(parameters, 'PREFERRED_BEHAVIOR_FOR_STARTING_EXTREMITIES',
+                                               context)]
+        
+        prefered_behaviour_end = self.BEHAVIORS[self.parameterAsEnum(parameters, 'PREFERRED_BEHAVIOR_FOR_ENDING_EXTREMITIES',
+                                               context)]
+
+        same_direction_geoms_flag = self.parameterAsBool(parameters, 'PREFERS_SAME_GEOMETRY_DIRECTION',
+                                context)
         
         explode_and_gather_flag = self.parameterAsBool(parameters, 'EXPLODE_AND_GATHER',
                                 context)
@@ -3091,45 +3143,45 @@ class SnapEndpointsToLayer(QgsProcessingAlgorithm):
                                                         closest_vertices.append((nnfeature_closest_PointXY, distance_point_from_geom, angular_variation, endpoint_type))
                                     except:
                                         if print_debug_flag is True:
-                                            print('EXCEPTION¨: '  + 'START_POINT LOOP', 'local_feature : ' + str(feature['fid']))
+                                            print('EXCEPTION : '  + 'START_POINT LOOP', 'local_feature : ' + str(feature['fid']))
 
                         if len(closest_vertices) > 0:
+                            if break_update_step is False:
+                                if prefered_behaviour_start == 'Nearest, Minimum angular variation':
+                                    if same_direction_geoms_flag is True:
+                                        closest_vertices = sorted(closest_vertices, key=lambda k: (k[3]*-1, k[1], k[2]))
+                                    else:
+                                        closest_vertices = sorted(closest_vertices, key=lambda k: (k[1], k[2]))
 
-                            if prefered_behaviour_start == 'Nearest, Minimum angular variation':
-                                if same_direction_geoms_flag is True:
-                                    closest_vertices = sorted(closest_vertices, key=lambda k: (k[3]*-1, k[1], k[2]))
-                                else:
-                                    closest_vertices = sorted(closest_vertices, key=lambda k: (k[1], k[2]))
+                                elif prefered_behaviour_start == 'Farest, Minimum angular variation':
+                                    if same_direction_geoms_flag is True:
+                                        closest_vertices = sorted(closest_vertices, key=lambda k: (k[3]*-1, k[1]*-1, k[2]))
+                                    else:
+                                        closest_vertices = sorted(closest_vertices, key=lambda k: (k[1]*-1, k[2]))
 
-                            elif prefered_behaviour_start == 'Farest, Minimum angular variation':
-                                if same_direction_geoms_flag is True:
-                                    closest_vertices = sorted(closest_vertices, key=lambda k: (k[3]*-1, k[1]*-1, k[2]))
-                                else:
-                                    closest_vertices = sorted(closest_vertices, key=lambda k: (k[1]*-1, k[2]))
+                                elif prefered_behaviour_start == 'Nearest, Maximum angular variation':
+                                    if same_direction_geoms_flag is True:
+                                        closest_vertices = sorted(closest_vertices, key=lambda k: (k[3]*-1, k[1], k[2]*-1))
+                                    else:
+                                        closest_vertices = sorted(closest_vertices, key=lambda k: (k[1], k[2]*-1))
 
-                            elif prefered_behaviour_start == 'Nearest, Maximum angular variation':
-                                if same_direction_geoms_flag is True:
-                                    closest_vertices = sorted(closest_vertices, key=lambda k: (k[3]*-1, k[1], k[2]*-1))
-                                else:
-                                    closest_vertices = sorted(closest_vertices, key=lambda k: (k[1], k[2]*-1))
+                                elif prefered_behaviour_start == 'Farest, Maximum angular variation':
+                                    if same_direction_geoms_flag is True:
+                                        closest_vertices = sorted(closest_vertices, key=lambda k: (k[3]*-1, k[1]*-1, k[2]*-1))
+                                    else:
+                                        closest_vertices = sorted(closest_vertices, key=lambda k: (k[1]*-1, k[2]*-1))
 
-                            elif prefered_behaviour_start == 'Farest, Maximum angular variation':
-                                if same_direction_geoms_flag is True:
-                                    closest_vertices = sorted(closest_vertices, key=lambda k: (k[3]*-1, k[1]*-1, k[2]*-1))
-                                else:
-                                    closest_vertices = sorted(closest_vertices, key=lambda k: (k[1]*-1, k[2]*-1))
+                                if print_debug_flag is True:
+                                    print('STEP : ' +  'START_POINT UPDATE GEOMETRY', 'local_feature : ' + str(feature['fid']), 'closest_vertices : ', closest_vertices)
 
-                            if print_debug_flag is True:
-                                print('STEP : ' +  'START_POINT UPDATE GEOMETRY', 'local_feature : ' + str(feature['fid']), 'closest_vertices : ', closest_vertices)
-
-                            for closest_vertex in closest_vertices:
-                                new_polyline = polyline
-                                new_polyline[0] = closest_vertex[0]
-                                new_geom = QgsGeometry.fromPolylineXY(new_polyline)
-                                if not new_geom.isEmpty():
-                                    feature.setGeometry(new_geom)
-                                    layer.updateFeature(feature)
-                                    break                            
+                                for closest_vertex in closest_vertices:
+                                    new_polyline = polyline
+                                    new_polyline[0] = closest_vertex[0]
+                                    new_geom = QgsGeometry.fromPolylineXY(new_polyline)
+                                    if not new_geom.isEmpty():
+                                        feature.setGeometry(new_geom)
+                                        layer.updateFeature(feature)
+                                        break                            
 
 
 
@@ -3200,52 +3252,52 @@ class SnapEndpointsToLayer(QgsProcessingAlgorithm):
                                                         closest_vertices.append((nnfeature_closest_PointXY, distance_point_from_geom, angular_variation, endpoint_type))
                                     except:
                                         if print_debug_flag is True:
-                                            print('EXCEPTION¨: '  + 'END_POINT LOOP', 'local_feature : ' + str(feature['fid']))
+                                            print('EXCEPTION : '  + 'END_POINT LOOP', 'local_feature : ' + str(feature['fid']))
                                 
 
                         if len(closest_vertices) > 0:
+                            if break_update_step is False:
+                                if prefered_behaviour_end == 'Nearest, Minimum angular variation':
+                                    if same_direction_geoms_flag is True:
+                                        closest_vertices = sorted(closest_vertices, key=lambda k: (k[3]*-1, k[1], k[2]))
+                                    else:
+                                        closest_vertices = sorted(closest_vertices, key=lambda k: (k[1], k[2]))
 
-                            if prefered_behaviour_end == 'Nearest, Minimum angular variation':
-                                if same_direction_geoms_flag is True:
-                                    closest_vertices = sorted(closest_vertices, key=lambda k: (k[3]*-1, k[1], k[2]))
-                                else:
-                                    closest_vertices = sorted(closest_vertices, key=lambda k: (k[1], k[2]))
+                                elif prefered_behaviour_end == 'Farest, Minimum angular variation':
+                                    if same_direction_geoms_flag is True:
+                                        closest_vertices = sorted(closest_vertices, key=lambda k: (k[3]*-1, k[1]*-1, k[2]))
+                                    else:
+                                        closest_vertices = sorted(closest_vertices, key=lambda k: (k[1]*-1, k[2]))
 
-                            elif prefered_behaviour_end == 'Farest, Minimum angular variation':
-                                if same_direction_geoms_flag is True:
-                                    closest_vertices = sorted(closest_vertices, key=lambda k: (k[3]*-1, k[1]*-1, k[2]))
-                                else:
-                                    closest_vertices = sorted(closest_vertices, key=lambda k: (k[1]*-1, k[2]))
+                                elif prefered_behaviour_end == 'Nearest, Maximum angular variation':
+                                    if same_direction_geoms_flag is True:
+                                        closest_vertices = sorted(closest_vertices, key=lambda k: (k[3]*-1, k[1], k[2]*-1))
+                                    else:
+                                        closest_vertices = sorted(closest_vertices, key=lambda k: (k[1], k[2]*-1))
 
-                            elif prefered_behaviour_end == 'Nearest, Maximum angular variation':
-                                if same_direction_geoms_flag is True:
-                                    closest_vertices = sorted(closest_vertices, key=lambda k: (k[3]*-1, k[1], k[2]*-1))
-                                else:
-                                    closest_vertices = sorted(closest_vertices, key=lambda k: (k[1], k[2]*-1))
+                                elif prefered_behaviour_end == 'Farest, Maximum angular variation':
+                                    if same_direction_geoms_flag is True:
+                                        closest_vertices = sorted(closest_vertices, key=lambda k: (k[3]*-1, k[1]*-1, k[2]*-1))
+                                    else:
+                                        closest_vertices = sorted(closest_vertices, key=lambda k: (k[1]*-1, k[2]*-1))
 
-                            elif prefered_behaviour_end == 'Farest, Maximum angular variation':
-                                if same_direction_geoms_flag is True:
-                                    closest_vertices = sorted(closest_vertices, key=lambda k: (k[3]*-1, k[1]*-1, k[2]*-1))
-                                else:
-                                    closest_vertices = sorted(closest_vertices, key=lambda k: (k[1]*-1, k[2]*-1))
-
-                            if print_debug_flag is True:
-                                print('STEP : ' +  'END_POINT UPDATE GEOMETRY', 'local_feature : ' + str(feature['fid']), 'closest_vertices : ', closest_vertices)
+                                if print_debug_flag is True:
+                                    print('STEP : ' +  'END_POINT UPDATE GEOMETRY', 'local_feature : ' + str(feature['fid']), 'closest_vertices : ', closest_vertices)
 
 
-                
-                            for closest_vertex in closest_vertices:
-                                new_polyline = polyline
-                                new_polyline[-1] = closest_vertex[0]
-                                new_geom = QgsGeometry.fromPolylineXY(new_polyline)
-                                if not new_geom.isEmpty():
-                                    feature.setGeometry(new_geom)
-                                    layer.updateFeature(feature)
-                                    break
+                    
+                                for closest_vertex in closest_vertices:
+                                    new_polyline = polyline
+                                    new_polyline[-1] = closest_vertex[0]
+                                    new_geom = QgsGeometry.fromPolylineXY(new_polyline)
+                                    if not new_geom.isEmpty():
+                                        feature.setGeometry(new_geom)
+                                        layer.updateFeature(feature)
+                                        break
 
                 except:
                     if print_debug_flag is True:
-                        print('EXCEPTION¨: '  + 'FEATURE_LOOP', 'local_feature : ' + str(feature['fid']))                         
+                        print('EXCEPTION : '  + 'FEATURE_LOOP', 'local_feature : ' + str(feature['fid']))                         
 
 
             feedback.setProgress(int((y /numfeatures) * 100))
