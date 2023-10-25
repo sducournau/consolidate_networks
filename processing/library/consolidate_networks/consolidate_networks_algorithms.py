@@ -94,7 +94,14 @@ class CalculateDbscan(QgsProcessingAlgorithm):
             )
         )
 
-
+        self.addParameter(
+            QgsProcessingParameterBoolean(
+                self.tr('PRINT_DEBUG'),
+                self.tr('PRINT DEBUG'),
+                False,
+                True
+            )
+        )
 
 
         # We add a feature sink in which to store our processed features (this
@@ -121,13 +128,14 @@ class CalculateDbscan(QgsProcessingAlgorithm):
         fix_geoms_flag = self.parameterAsBool(parameters, 'FIX_GEOMETRIES_BEFORE_PROCESSING',
                                                 context)
 
+        points_dbscan = self.parameterAsDouble(parameters, 'POINTS_DBSCAN_THRESHOLD_DISTANCE',
+                                                context)
+        
         dbscan_ = self.parameterAsBool(parameters, 'DBSCAN*',
                                                 context)
 
-        points_dbscan = self.parameterAsDouble(parameters, 'POINTS_DBSCAN_THRESHOLD_DISTANCE',
-                                                context)
-
-
+        print_debug_flag = self.parameterAsBool(parameters, 'PRINT_DEBUG',
+                                        context)
 
         start_timer = datetime.now()
 
@@ -319,7 +327,14 @@ class ConsolidateWithDbscan(QgsProcessingAlgorithm):
             )
         )
 
-
+        self.addParameter(
+            QgsProcessingParameterBoolean(
+                self.tr('PRINT_DEBUG'),
+                self.tr('PRINT DEBUG'),
+                False,
+                True
+            )
+        )
         # We add a feature sink in which to store our processed features (this
         # usually takes the form of a newly created vector layer when the
         # algorithm is run in QGIS).
@@ -352,6 +367,8 @@ class ConsolidateWithDbscan(QgsProcessingAlgorithm):
         buffer_snap_dbscan   = self.parameterAsDouble(parameters, 'BUFFER_DBSCAN',
                                                 context)
 
+        print_debug_flag = self.parameterAsBool(parameters, 'PRINT_DEBUG',
+                                        context)
         
         start_timer = datetime.now()
 
@@ -566,6 +583,16 @@ class MakeIntersectionsVertexes(QgsProcessingAlgorithm):
                 True
             )
         )
+
+        self.addParameter(
+            QgsProcessingParameterBoolean(
+                self.tr('PRINT_DEBUG'),
+                self.tr('PRINT DEBUG'),
+                False,
+                True
+            )
+        )
+
         # We add a feature sink in which to store our processed features (this
         # usually takes the form of a newly created vector layer when the
         # algorithm is run in QGIS).
@@ -595,10 +622,12 @@ class MakeIntersectionsVertexes(QgsProcessingAlgorithm):
         fix_geoms_flag = self.parameterAsBool(parameters, 'FIX_GEOMETRIES_BEFORE_PROCESSING',
                                         context)
         
-
         entity_identification_fields = self.parameterAsFields(parameters, 'ENTITY_IDENTIFICATION_FIELDS',
                                                 context)
 
+        print_debug_flag = self.parameterAsBool(parameters, 'PRINT_DEBUG',
+                                        context)
+        
         start_timer = datetime.now()
 
 
@@ -2029,7 +2058,7 @@ class HubSnapping(QgsProcessingAlgorithm):
             QgsProcessingParameterDistance(
                 self.tr('BUFFER_HUB_SNAPPING'),
                 self.tr('BUFFER HUB SNAPPING'),
-                1.3,
+                1.5,
                 self.INPUT,
                 False,
                 0.0
@@ -2404,6 +2433,15 @@ class SnapHubsPointsToLayer(QgsProcessingAlgorithm):
 
         self.addParameter(
             QgsProcessingParameterBoolean(
+                self.tr('HUBPOINT_MUST_BE_AN_EXISTING_VERTEX'),
+                self.tr('HUBPOINT MUST BE AN EXISTING VERTEX'),
+                True,
+                True
+            )
+        )
+
+        self.addParameter(
+            QgsProcessingParameterBoolean(
                 self.tr('EXPLODE_AND_GATHER'),
                 self.tr('EXPLODE AND GATHER'),
                 False,
@@ -2467,8 +2505,11 @@ class SnapHubsPointsToLayer(QgsProcessingAlgorithm):
         fix_geoms_flag = self.parameterAsBool(parameters, 'FIX_GEOMETRIES_BEFORE_PROCESSING',
                                         context)
         
-        buffer_region = self.parameterAsDouble(parameters, 'BUFFER_HUB_SNAPPING',
+        buffer_hub_snap = self.parameterAsDouble(parameters, 'BUFFER_HUB_SNAPPING',
                                                 context)
+        
+        hubpoint_is_existing_vertex_flag = self.parameterAsBool(parameters, 'HUBPOINT_MUST_BE_AN_EXISTING_VERTEX',
+                                        context)
         
         explode_and_gather_flag = self.parameterAsBool(parameters, 'EXPLODE_AND_GATHER',
                                 context)

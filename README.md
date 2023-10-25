@@ -50,10 +50,12 @@ cn.calculatedbscan
 ##### Paramètres<br>
 ~~~~
 {
-'INPUT': QgsVectorLayer,    #vector layer source (line or polygon)
-'POINTS_DBSCAN': 0.1,    #a decimal distance in meter between each point, eq to vertices density to do a dbscan (default: 0.1)
-'DBSCAN*': False    #consider border points as noise (default: false)
-'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT    #vector layer computed (same type as input)
+    "INPUT": QgsVectorLayer,                            # vector layer source (TypeVectorLine)
+    "FIX_GEOMETRIES_BEFORE_PROCESSING": true,           # repairs the input layer geometries at the start of processing
+    "POINTS_DBSCAN_THRESHOLD_DISTANCE": 0.1,            # a decimal distance in meter between each point, eq to vertices density to do a dbscan
+    "DBSCAN*": false,                                   # consider border points as noise
+    "PRINT_DEBUG": false,                               # activates debug mode (print readable in the console)
+    "OUTPUT": "TEMPORARY_OUTPUT"                        # vector layer computed (TypeVectorLine)
 }
 ~~~~
 ![alt algorithm cn.calculatedbscan](https://raw.githubusercontent.com/sducournau/consolidate_networks/main/ressources/CalculateDbscan.png?raw=true)
@@ -71,9 +73,11 @@ cn.consolidatewithdbscan
 ##### Paramètres<br>
 ~~~~
 {
-'INPUT': QgsVectorLayer,    #vector layer source (line or polygon)
-'BUFFER_DBSCAN': 5.0,    #a decimal buffer radius (default: 5.0)
-'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT    #vector layer computed (same type as input)
+    "INPUT": QgsVectorLayer,                            # vector layer source (TypeVectorLine)
+    "FIX_GEOMETRIES_BEFORE_PROCESSING": true,           # repairs the input layer geometries at the start of processing
+    "BUFFER_DBSCAN": 5.0,                               # a decimal buffer radius to snap groups between them
+    "PRINT_DEBUG": false,                               # activates debug mode (print readable in the console)
+    "OUTPUT": "TEMPORARY_OUTPUT"                        # vector layer computed (TypeVectorLine)
 }
 ~~~~
 ![alt algorithm cn.consolidatewithdbscan](https://raw.githubusercontent.com/sducournau/consolidate_networks/main/ressources/CalculateDbscan2.png?raw=true)
@@ -91,9 +95,11 @@ cn.makeintersectionsvertexes
 ##### Paramètres<br>
 ~~~~
 {
-'INPUT': QgsVectorLayer,    #vector layer source (line or polygon)
-'BUFFER_REGION': 0.3,   #a decimal buffer radius (default: 0.3)
-'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT    #vector layer computed (same type as input)
+    "INPUT": QgsVectorLayer,                            # vector layer source (TypeVectorLine)
+    "FIX_GEOMETRIES_BEFORE_PROCESSING": true,           # repairs the input layer geometries at the start of processing
+    "ENTITY_IDENTIFICATION_FIELDS": [],                 # vector layer source fields to brings decomposed entities together, by default all fields are selected
+    "PRINT_DEBUG": false,                               # activates debug mode (print readable in the console)
+    "OUTPUT": "TEMPORARY_OUTPUT"                        # vector layer computed (TypeVectorLine)
 }
 ~~~~
 <br>
@@ -112,9 +118,18 @@ cn.endpointstrimmingextending
 ##### Paramètres<br>
 ~~~~
 {
-'INPUT': QgsVectorLayer,    #vector layer source (line or polygon)
-'BUFFER_TRIM_EXTEND': 4.0,    #a decimal buffer radius (default: 4.0)
-'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT    #vector layer computed (same type as input)
+    "INPUT": QgsVectorLayer,                            # vector layer source (TypeVectorLine)
+    "FIX_GEOMETRIES_BEFORE_PROCESSING": true,           # repairs the input layer geometries at the start of processing
+    "BUFFER_TRIM": 3.0,                                 # maximum segment reduction distance
+    "BUFFER_EXTEND": 5.0,                               # maximum segment extension distance
+    "PREFERRED_BEHAVIOR_FOR_STARTING_EXTREMITIES": 1,   # prefered behaviour for startings enpoints : 'Trim','Extend','None'
+    "PREFERRED_BEHAVIOR_FOR_ENDING_EXTREMITIES": 0,     # prefered behaviour for endings enpoints : 'Trim','Extend','None'
+    "HAUSDORFF_DISTANCE_LIMIT": 5.0,                    # hausdorff distance limit to avoid calculations between geometries too similar
+    "ANGULAR_LIMIT_OF_PARALLEL_GEOMETRIES": 15.0,       # angular limit difference between two geometries
+    "EXPLODE_AND_GATHER": false,                        # decomposes each entity into segments composed of two points at the start of processing, then brings them together at the end of processing
+    "ENTITY_IDENTIFICATION_FIELDS": [],                 # vector layer source fields to brings decomposed entities together, by default all fields are selected
+    "PRINT_DEBUG": false,                               # activates debug mode (print readable in the console)
+    "OUTPUT": "TEMPORARY_OUTPUT"                        # vector layer computed (TypeVectorLine)
 }
 ~~~~
 ![alt algorithm cn.endpointstrimmingextending](https://raw.githubusercontent.com/sducournau/consolidate_networks/main/ressources/EndpointsStrimmingExtending.png?raw=true)
@@ -132,9 +147,23 @@ cn.endpointssnapping
 ##### Paramètres<br>
 ~~~~
 {
-'INPUT': QgsVectorLayer,    #vector layer source (line or polygon)
-'BUFFER_SNAPPING': 2.0,    #a decimal buffer radius (default: 2.0)
-'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT    #vector layer computed (same type as input)
+    "INPUT": QgsVectorLayer,                            # vector layer source (TypeVectorLine)
+    "FIX_GEOMETRIES_BEFORE_PROCESSING": true,           # repairs the input layer geometries at the start of processing
+    "BUFFER_ENDPOINTS_SNAPPING": 5.0,                   # maximum snapping distance
+    "PREFERRED_BEHAVIOR_FOR_STARTING_EXTREMITIES": 1,   # prefered behaviour for startings enpoints : 
+                                                        # 'Nearest, Minimum angular variation','Farest, Minimum angular variation',
+                                                        # 'Nearest, Maximum angular variation','Farest, Maximum angular variation'
+    "PREFERRED_BEHAVIOR_FOR_ENDING_EXTREMITIES": 0,     # prefered behaviour for endings enpoints :
+                                                        # 'Nearest, Minimum angular variation','Farest, Minimum angular variation',
+                                                        # 'Nearest, Maximum angular variation','Farest, Maximum angular variation'
+    "HAUSDORFF_DISTANCE_LIMIT": 5.0,                    # hausdorff distance limit to avoid calculations between geometries too similar
+    "MIN_ANGULAR_LIMIT_OF_PARALLEL_GEOMETRIES": 0.0,    # minimum angular limit difference between two geometries
+    "MAX_ANGULAR_LIMIT_OF_PARALLEL_GEOMETRIES": 180.0,  # mximum angular limit difference between two geometries
+    "PREFERS_SAME_GEOMETRY_DIRECTION": true,            # favors entities whose geometry has the same direction
+    "EXPLODE_AND_GATHER": false,                        # decomposes each entity into segments composed of two points at the start of processing, then brings them together at the end of processing
+    "ENTITY_IDENTIFICATION_FIELDS": [],                 # vector layer source fields to brings decomposed entities together, by default all fields are selected
+    "PRINT_DEBUG": false,                               # activates debug mode (print readable in the console)
+    "OUTPUT": "TEMPORARY_OUTPUT"                        # vector layer computed (TypeVectorLine)
 }
 ~~~~
 ![alt algorithm cn.endpointssnapping](https://raw.githubusercontent.com/sducournau/consolidate_networks/main/ressources/EndpointsSnapping.png?raw=true)
@@ -153,9 +182,14 @@ cn.hubsnapping
 ##### Paramètres<br>
 ~~~~
 {
-'INPUT': QgsVectorLayer,    #vector layer source (line or polygon)
-'BUFFER_REGION': 1.0,    #a decimal buffer radius (default: 1.0)
-'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT    #vector layer computed (same type as input)
+    "INPUT": QgsVectorLayer,                            # vector layer source (TypeVectorLine)
+    "FIX_GEOMETRIES_BEFORE_PROCESSING": true,           # repairs the input layer geometries at the start of processing
+    "BUFFER_HUB_SNAPPING": 1.5,                         # maximum hub distance between entities
+    "HUBPOINT_MUST_BE_AN_EXISTING_VERTEX": true,        # the hub snap point is the closest vertex to the barycenter of the resulting polygon, otherwise it is the barycenter
+    "EXPLODE_AND_GATHER": false,                        # decomposes each entity into segments composed of two points at the start of processing, then brings them together at the end of processing
+    "ENTITY_IDENTIFICATION_FIELDS": [],                 # vector layer source fields to brings decomposed entities together, by default all fields are selected
+    "PRINT_DEBUG": false,                               # activates debug mode (print readable in the console)
+    "OUTPUT": "TEMPORARY_OUTPUT"                        # vector layer computed (TypeVectorLine)
 }
 ~~~~
 ![alt algorithm cn.hubsnapping](https://raw.githubusercontent.com/sducournau/consolidate_networks/main/ressources/HubSnapping.png?raw=true)
@@ -177,10 +211,24 @@ cn.snapendpointstoLayer
 ##### Paramètres<br>
 ~~~~
 {
-'INPUT': QgsVectorLayer,    #vector layer source (line or polygon)
-'REF_INPUT': QgsVectorLayer,    #vector layer source (point prefered)
-'BUFFER_SNAPPING': 2.0,    #a decimal buffer radius (default: 2.0)
-'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT    #vector layer computed (same type as input)
+    "INPUT": QgsVectorLayer,                            # vector layer source (TypeVectorLine)
+    "REF_INPUT": QgsVectorLayer,                        # reference vector layer source (TypeVectorLine, TypeVectorPoint)
+    "FIX_GEOMETRIES_BEFORE_PROCESSING": true,           # repairs the input layer geometries at the start of processing
+    "BUFFER_ENDPOINTS_SNAPPING": 5.0,                   # maximum snapping distance
+    "PREFERRED_BEHAVIOR_FOR_STARTING_EXTREMITIES": 1,   # prefered behaviour for startings enpoints : 
+                                                        # 'Nearest, Minimum angular variation','Farest, Minimum angular variation',
+                                                        # 'Nearest, Maximum angular variation','Farest, Maximum angular variation'
+    "PREFERRED_BEHAVIOR_FOR_ENDING_EXTREMITIES": 0,     # prefered behaviour for endings enpoints :
+                                                        # 'Nearest, Minimum angular variation','Farest, Minimum angular variation',
+                                                        # 'Nearest, Maximum angular variation','Farest, Maximum angular variation'
+    "HAUSDORFF_DISTANCE_LIMIT": 5.0,                    # hausdorff distance limit to avoid calculations between geometries too similar
+    "MIN_ANGULAR_LIMIT_OF_PARALLEL_GEOMETRIES": 0.0,    # minimum angular limit difference between two geometries
+    "MAX_ANGULAR_LIMIT_OF_PARALLEL_GEOMETRIES": 180.0,  # mximum angular limit difference between two geometries
+    "PREFERS_SAME_GEOMETRY_DIRECTION": true,            # favors entities whose geometry has the same direction
+    "EXPLODE_AND_GATHER": false,                        # decomposes each entity into segments composed of two points at the start of processing, then brings them together at the end of processing
+    "ENTITY_IDENTIFICATION_FIELDS": [],                 # vector layer source fields to brings decomposed entities together, by default all fields are selected
+    "PRINT_DEBUG": false,                               # activates debug mode (print readable in the console)
+    "OUTPUT": "TEMPORARY_OUTPUT"                        # vector layer computed (TypeVectorLine)
 }
 ~~~~
 <br>
@@ -198,10 +246,15 @@ cn.snaphubspointstolayer
 ##### Paramètres<br>
 ~~~~
 {
-'INPUT': QgsVectorLayer,    #vector layer source (line or polygon)
-'REF_INPUT': QgsVectorLayer,    #vector layer source (point prefered)
-'BUFFER_REGION': 2.0,    #a decimal buffer radius (default: 2.0)
-'OUTPUT': QgsProcessing.TEMPORARY_OUTPUT    #vector layer computed (same type as input)
+    "INPUT": QgsVectorLayer,                            # vector layer source (TypeVectorLine)
+    "REF_INPUT": QgsVectorLayer,                        # reference vector layer source (TypeVectorLine, TypeVectorPoint)
+    "FIX_GEOMETRIES_BEFORE_PROCESSING": true,           # repairs the input layer geometries at the start of processing
+    "BUFFER_HUB_SNAPPING": 1.5,                         # maximum hub distance between entities
+    "HUBPOINT_MUST_BE_AN_EXISTING_VERTEX": true,        # the hub snap point is the closest vertex to the barycenter of the resulting polygon, otherwise it is the barycenter
+    "EXPLODE_AND_GATHER": false,                        # decomposes each entity into segments composed of two points at the start of processing, then brings them together at the end of processing
+    "ENTITY_IDENTIFICATION_FIELDS": [],                 # vector layer source fields to brings decomposed entities together, by default all fields are selected
+    "PRINT_DEBUG": false,                               # activates debug mode (print readable in the console)
+    "OUTPUT": "TEMPORARY_OUTPUT"                        # vector layer computed (TypeVectorLine)
 }
 ~~~~
 <br>
