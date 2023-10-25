@@ -862,7 +862,14 @@ class EndpointsStrimmingExtending(QgsProcessingAlgorithm):
             )
         )
 
-
+        self.addParameter(
+            QgsProcessingParameterBoolean(
+                self.tr('PRINT_DEBUG'),
+                self.tr('PRINT DEBUG'),
+                False,
+                True
+            )
+        )
 
         # We add a feature sink in which to store our processed features (this
         # usually takes the form of a newly created vector layer when the
@@ -912,8 +919,9 @@ class EndpointsStrimmingExtending(QgsProcessingAlgorithm):
         angular_limit = self.parameterAsDouble(parameters, 'ANGULAR_LIMIT_OF_PARALLEL_GEOMETRIES',
                                                context)
 
-        
-        print(prefered_behaviour_start, prefered_behaviour_end)
+        print_debug_flag = self.parameterAsBool(parameters, 'PRINT_DEBUG',
+                                context)
+
 
         start_timer = datetime.now()
 
@@ -996,14 +1004,20 @@ class EndpointsStrimmingExtending(QgsProcessingAlgorithm):
                         start_out_segment_geom.insertVertex(QgsPoint(polyline_start), 1)
                         start_out_segment_geom.deleteVertex(0)
 
-                        #print('start_out_segment_geom', feature['fid'], start_out_segment_geom)
+                        if print_debug_flag is True:
+                            print('init', 'local_feature : ' + str(feature['fid']), 'start_out_segment_geom : ', start_out_segment_geom)          
+
+
 
                         end_out_segment =  [polyline_end_near_vertex, polyline_end]
                         end_out_segment_geom = QgsGeometry.fromPolylineXY(end_out_segment).extendLine(0, buffer_extend/2)
                         end_out_segment_geom.insertVertex(QgsPoint(polyline_end), 1)
                         end_out_segment_geom.deleteVertex(0)
 
-                        #print('end_out_segment_geom', feature['fid'], end_out_segment_geom)
+                        if print_debug_flag is True:
+                            print('init', 'local_feature : ' + str(feature['fid']), 'end_out_segment_geom : ', end_out_segment_geom) 
+
+
 
                         if QgsGeometry.fromPolylineXY([polyline_start, polyline_start_near_vertex]).length() >= buffer_trim/2:
                             start_in_segment =  [polyline_start, QgsGeometry.fromPolylineXY([polyline_start, polyline_start_near_vertex]).interpolate(buffer_trim/2).asPoint()]
@@ -1012,7 +1026,10 @@ class EndpointsStrimmingExtending(QgsProcessingAlgorithm):
 
                         start_in_segment_geom = QgsGeometry.fromPolylineXY(start_in_segment)
 
-                        #print('start_in_segment_geom', feature['fid'], start_in_segment_geom)
+                        if print_debug_flag is True:
+                            print('init', 'local_feature : ' + str(feature['fid']), 'start_in_segment_geom : ', start_in_segment_geom) 
+
+
 
                         if QgsGeometry.fromPolylineXY([polyline_end, polyline_end_near_vertex]).length() >= buffer_trim/2:
                             end_in_segment =  [polyline_end, QgsGeometry.fromPolylineXY([polyline_end, polyline_end_near_vertex]).interpolate(buffer_trim/2).asPoint()]
@@ -1021,8 +1038,10 @@ class EndpointsStrimmingExtending(QgsProcessingAlgorithm):
 
                         end_in_segment_geom = QgsGeometry.fromPolylineXY(end_in_segment)
 
+                        if print_debug_flag is True:
+                            print('init', 'local_feature : ' + str(feature['fid']), 'end_in_segment_geom : ', end_in_segment_geom) 
 
-                        #print('end_in_segment_geom', feature['fid'], end_in_segment_geom)
+
 
                         distance = [polyline_start.x() - polyline_start_near_vertex.x(), polyline_start.y() - polyline_start_near_vertex.y()]
                         norm = math.sqrt(distance[0] ** 2 + distance[1] ** 2)
@@ -1080,7 +1099,9 @@ class EndpointsStrimmingExtending(QgsProcessingAlgorithm):
 
                                             intersects_segment = start_in_segment_geom.intersects(segment_geom)
 
-                                            #print('start buffer_trim', feature['fid'], nnfeature['fid'], inter, distance_inter)
+                                            if print_debug_flag is True:
+                                                print('start_point buffer_trim', 'local_feature : ' + str(feature['fid']), 'distant_feature : ' + str(nnfeature['fid']), 'distance : ' + str(distance_inter))          
+
 
                                             if inter[0] and distance_inter <= buffer_trim/2:
                                                 closest_intersections.append((inter[1], segment_geom, nnfeature_closest_vertex, distance_inter, -1, intersects_segment))
@@ -1099,6 +1120,9 @@ class EndpointsStrimmingExtending(QgsProcessingAlgorithm):
 
                                 if geometry_start_buffer.intersects(QgsGeometry.fromPointXY(feat_polyline[0])) or geometry_start_buffer.intersects(QgsGeometry.fromPointXY(feat_polyline[-1])):
                                     break_update_step = True
+
+                                    if print_debug_flag is True:
+                                        print('start_point', 'local_feature : ' + str(feature['fid']), 'break_update_step : ' + str(break_update_step))
                                     break
 
                         if break_update_step is False:             
@@ -1141,7 +1165,8 @@ class EndpointsStrimmingExtending(QgsProcessingAlgorithm):
 
                                                 intersects_segment = start_out_segment_geom.intersects(segment_geom)
 
-                                                #print('start buffer_extend', feature['fid'], nnfeature['fid'], inter, distance_inter)
+                                                if print_debug_flag is True:
+                                                    print('start_point buffer_extend', 'local_feature : ' + str(feature['fid']), 'distant_feature : ' + str(nnfeature['fid']), 'distance : ' + str(distance_inter))          
 
                                                 if inter[0] and distance_inter <= buffer_extend/2:
                                                     closest_intersections.append((inter[1], segment_geom, nnfeature_closest_vertex, distance_inter, 1, intersects_segment))
@@ -1157,11 +1182,10 @@ class EndpointsStrimmingExtending(QgsProcessingAlgorithm):
                                 elif prefered_behaviour_start == 'None':
                                     closest_intersections = sorted(closest_intersections, key=lambda k: (not k[5], k[3]))
 
+                                if print_debug_flag is True:
+                                    print('start_point', 'local_feature : ' + str(feature['fid']), 'closest_intersections : ', closest_intersections)
+
                                 for closest_intersection in closest_intersections:
-                                    # if QgsGeometry.fromPointXY(polyline[0]).equals(QgsGeometry.fromPointXY(QgsPointXY(closest_intersection[0]))):
-                                    #     polyline[0] = closest_intersection[2][1]
-                                    # else:
-                                    #     polyline[0] = QgsPointXY(closest_intersection[0])
                                     new_polyline = polyline
                                     new_polyline[0] = QgsPointXY(closest_intersection[0])
                                     new_geom = QgsGeometry.fromPolylineXY(new_polyline)
@@ -1216,7 +1240,8 @@ class EndpointsStrimmingExtending(QgsProcessingAlgorithm):
 
                                             intersects_segment = end_in_segment_geom.intersects(segment_geom)
 
-                                            #print('end buffer_trim', feature['fid'], nnfeature['fid'], inter, distance_inter)
+                                            if print_debug_flag is True:
+                                                print('end_point buffer_trim', 'local_feature : ' + str(feature['fid']), 'distant_feature : ' + str(nnfeature['fid']), 'distance : ' + str(distance_inter))          
 
                                             if inter[0] and distance_inter <= buffer_trim/2:
                                                 closest_intersections.append((inter[1], segment_geom, nnfeature_closest_vertex, distance_inter, -1, intersects_segment))
@@ -1236,6 +1261,9 @@ class EndpointsStrimmingExtending(QgsProcessingAlgorithm):
 
                                 if geometry_end_buffer.intersects(QgsGeometry.fromPointXY(feat_polyline[0])) or geometry_end_buffer.intersects(QgsGeometry.fromPointXY(feat_polyline[-1])):
                                     break_update_step = True
+
+                                    if print_debug_flag is True:
+                                        print('end_point', 'local_feature : ' + str(feature['fid']), 'break_update_step : ' + str(break_update_step))
                                     break
 
                         if break_update_step is False: 
@@ -1279,7 +1307,8 @@ class EndpointsStrimmingExtending(QgsProcessingAlgorithm):
 
                                                 intersects_segment = end_out_segment_geom.intersects(segment_geom)
 
-                                                #print('end buffer_extend', feature['fid'], nnfeature['fid'], inter, distance_inter)
+                                                if print_debug_flag is True:
+                                                    print('end_point buffer_extend', 'local_feature : ' + str(feature['fid']), 'distant_feature : ' + str(nnfeature['fid']), 'distance : ' + str(distance_inter))          
 
                                                 if inter[0] and distance_inter <= buffer_extend/2:
                                                     closest_intersections.append((inter[1], segment_geom, nnfeature_closest_vertex, distance_inter, 1, intersects_segment))
@@ -1298,12 +1327,10 @@ class EndpointsStrimmingExtending(QgsProcessingAlgorithm):
                                 elif prefered_behaviour_end == 'None':
                                     closest_intersections = sorted(closest_intersections, key=lambda k: (not k[5], k[3]))
 
+                                if print_debug_flag is True:
+                                    print('end_point', 'local_feature : ' + str(feature['fid']), 'closest_intersections : ', closest_intersections)
 
                                 for closest_intersection in closest_intersections:
-                                    # if QgsGeometry.fromPointXY(polyline[-1]).equals(QgsGeometry.fromPointXY(QgsPointXY(closest_intersection[0]))):
-                                    #     polyline[-1] = closest_intersection[2][1]
-                                    # else:
-                                    #     polyline[-1] = QgsPointXY(closest_intersection[0])
                                     new_polyline = polyline
                                     new_polyline[-1] = QgsPointXY(closest_intersection[0])
                                     new_geom = QgsGeometry.fromPolylineXY(new_polyline)
@@ -1492,6 +1519,15 @@ class EndpointsSnapping(QgsProcessingAlgorithm):
                 True
             )
         )
+
+        self.addParameter(
+            QgsProcessingParameterBoolean(
+                self.tr('PRINT_DEBUG'),
+                self.tr('PRINT DEBUG'),
+                False,
+                True
+            )
+        )
         # We add a feature sink in which to store our processed features (this
         # usually takes the form of a newly created vector layer when the
         # algorithm is run in QGIS).
@@ -1541,6 +1577,9 @@ class EndpointsSnapping(QgsProcessingAlgorithm):
                                                context)]
 
         same_direction_geoms_flag = self.parameterAsBool(parameters, 'PREFERS_SAME_GEOMETRY_DIRECTION',
+                                context)
+
+        print_debug_flag = self.parameterAsBool(parameters, 'PRINT_DEBUG',
                                 context)
 
         print(prefered_behaviour_start, prefered_behaviour_end)
@@ -1615,6 +1654,10 @@ class EndpointsSnapping(QgsProcessingAlgorithm):
                         geometry_start = QgsGeometry.fromPointXY(polyline_start)
                         geometry_end = QgsGeometry.fromPointXY(polyline_end)
 
+                        start_segment_geometry = QgsGeometry.fromPolylineXY([polyline_start, polyline_start_near_vertex])
+
+                        end_segment_geometry = QgsGeometry.fromPolylineXY([polyline_end_near_vertex, polyline_end])
+                                                                            
                         break_update_step = False
                         closest_vertices = []
 
@@ -1645,31 +1688,21 @@ class EndpointsSnapping(QgsProcessingAlgorithm):
 
                                         if nnfeature_closest_vertex[2] == -1 or nnfeature_closest_vertex[3] == -1:
 
-                                            hausdorff_distance = geometry.hausdorffDistance(nnfeature.geometry())
-
-                                            print('start', feature['fid'], nnfeature['fid'], hausdorff_distance, nnfeature_closest_vertex)
-
-                                            if nnfeature_closest_vertex[-1] <= (buffer_snap/2)**2 and hausdorff_distance > hausdorff_distance_limit:
-
+                                            if nnfeature_closest_vertex[-1] <= buffer_snap**2:
+                                                
                                                 nnfeature_closest_PointXY = QgsPointXY(nnfeature.geometry().vertexAt(nnfeature_closest_vertex[1]).x(),  nnfeature.geometry().vertexAt(nnfeature_closest_vertex[1]).y())
-
                                                 nnfeature_closest_PointXY_geom = QgsGeometry.fromPointXY(nnfeature_closest_PointXY)
 
-                                                    
-                                                   
                                                 distance_point_from_geom = geometry_start.distance(nnfeature_closest_PointXY_geom)
 
-                                                print('start', feature['fid'], nnfeature['fid'], distance_point_from_geom)            
+                                                if print_debug_flag is True:
+                                                    print('start_point', 'local_feature : ' + str(feature['fid']), 'distant_feature : ' + str(nnfeature['fid']), 'distance : ' + str(distance_point_from_geom))
                                             
                                                 if distance_point_from_geom <= buffer_snap:
 
-                                            
-
-                                                    calculated_segment = QgsGeometry.fromPolylineXY([geometry_start.asPoint(), polyline_start_near_vertex])
-
                                                     endpoint_type = 1 if nnfeature_closest_vertex[3] == -1 else -1
-                                                    distant_segment = []
-                                                    distant_segment.append(nnfeature_closest_PointXY)
+
+                                                    distant_segment = [nnfeature_closest_PointXY]
 
                                                     if endpoint_type == 1:
                                                         distant_segment.append(QgsPointXY(nnfeature.geometry().vertexAt(nnfeature_closest_vertex[2]).x(),  nnfeature.geometry().vertexAt(nnfeature_closest_vertex[2]).y()))
@@ -1678,19 +1711,17 @@ class EndpointsSnapping(QgsProcessingAlgorithm):
 
                                                     distant_segment_geom = QgsGeometry.fromPolylineXY(distant_segment)
 
-                                                    calculated_segment_angle = math.degrees(calculated_segment.interpolateAngle(calculated_segment.length())) % 180
+                                                    start_segment_angle = math.degrees(start_segment_geometry.interpolateAngle(start_segment_geometry.length())) % 180
                                                     distant_segment_angle = math.degrees(distant_segment_geom.interpolateAngle(distant_segment_geom.length())) % 180
                                           
-                                                    angular_variation = abs(calculated_segment_angle - distant_segment_angle)
-                                     
+                                                    angular_variation = abs(start_segment_angle - distant_segment_angle)
 
-                                                    print('start', feature['fid'], nnfeature['fid'], angular_variation)
+                                                    hausdorff_distance = start_segment_geometry.hausdorffDistance(distant_segment_geom)
 
+                                                    if print_debug_flag is True:
+                                                        print('start_point', 'local_feature : ' + str(feature['fid']), 'distant_feature : ' + str(nnfeature['fid']), 'hausdorff_distance : ' + str(hausdorff_distance), 'angular_variation : ' + str(angular_variation), 'nnfeature_closest_vertex : ', nnfeature_closest_vertex)
 
-                                                    if angular_variation >= min_angular_limit and angular_variation <= max_angular_limit:
-
-                                                        
-
+                                                    if (angular_variation >= min_angular_limit and angular_variation <= max_angular_limit) and hausdorff_distance > hausdorff_distance_limit:
                                                         closest_vertices.append((nnfeature_closest_PointXY, distance_point_from_geom, angular_variation, endpoint_type))
                                     except:
                                         pass
@@ -1721,7 +1752,8 @@ class EndpointsSnapping(QgsProcessingAlgorithm):
                                 else:
                                     closest_vertices = sorted(closest_vertices, key=lambda k: (k[1]*-1, k[2]*-1))
 
-                            print('start', feature['fid'], closest_vertices)
+                            if print_debug_flag is True:
+                                print('start_point', 'local_feature : ' + str(feature['fid']), 'closest_vertices : ', closest_vertices)
 
                             for closest_vertex in closest_vertices:
                                 new_polyline = polyline
@@ -1765,42 +1797,40 @@ class EndpointsSnapping(QgsProcessingAlgorithm):
 
                                         if nnfeature_closest_vertex[2] == -1 or nnfeature_closest_vertex[3] == -1:
 
-                                            hausdorff_distance = geometry.hausdorffDistance(nnfeature.geometry())
-
-                                            print('end', feature['fid'], nnfeature['fid'], hausdorff_distance, nnfeature_closest_vertex)
-
-                                            if nnfeature_closest_vertex[-1] <= (buffer_snap/2)**2 and hausdorff_distance > hausdorff_distance_limit:
-
+                                            if nnfeature_closest_vertex[-1] <= buffer_snap**2:
+                                                
                                                 nnfeature_closest_PointXY = QgsPointXY(nnfeature.geometry().vertexAt(nnfeature_closest_vertex[1]).x(),  nnfeature.geometry().vertexAt(nnfeature_closest_vertex[1]).y())
-
                                                 nnfeature_closest_PointXY_geom = QgsGeometry.fromPointXY(nnfeature_closest_PointXY)
 
-                
                                                 distance_point_from_geom = geometry_end.distance(nnfeature_closest_PointXY_geom)
-                       
+
+                                                if print_debug_flag is True:
+                                                    print('end_point', 'local_feature : ' + str(feature['fid']), 'distant_feature : ' + str(nnfeature['fid']), 'distance : ' + str(distance_point_from_geom))          
                                             
                                                 if distance_point_from_geom <= buffer_snap:
 
-                                                    calculated_segment = QgsGeometry.fromPolylineXY([polyline_end_near_vertex, geometry_end.asPoint()])
+                                                    endpoint_type = 1 if nnfeature_closest_vertex[3] == -1 else -1
 
-                                                    endpoint_type = 1 if nnfeature_closest_vertex[2] == -1 else -1
-                                                    distant_segment = []
-                                                    distant_segment.append(nnfeature_closest_PointXY)
+                                                    distant_segment = [nnfeature_closest_PointXY]
 
                                                     if endpoint_type == 1:
-                                                        distant_segment.append(QgsPointXY(nnfeature.geometry().vertexAt(nnfeature_closest_vertex[3]).x(),  nnfeature.geometry().vertexAt(nnfeature_closest_vertex[3]).y()))
-                                                    elif endpoint_type == -1:
                                                         distant_segment.append(QgsPointXY(nnfeature.geometry().vertexAt(nnfeature_closest_vertex[2]).x(),  nnfeature.geometry().vertexAt(nnfeature_closest_vertex[2]).y()))
+                                                    elif endpoint_type == -1:
+                                                        distant_segment.append(QgsPointXY(nnfeature.geometry().vertexAt(nnfeature_closest_vertex[3]).x(),  nnfeature.geometry().vertexAt(nnfeature_closest_vertex[3]).y()))
 
                                                     distant_segment_geom = QgsGeometry.fromPolylineXY(distant_segment)
 
-                                                    calculated_segment_angle = math.degrees(calculated_segment.interpolateAngle(calculated_segment.length())) % 180
+                                                    end_segment_angle = math.degrees(end_segment_geometry.interpolateAngle(end_segment_geometry.length())) % 180
                                                     distant_segment_angle = math.degrees(distant_segment_geom.interpolateAngle(distant_segment_geom.length())) % 180
-                                         
-                                                    angular_variation = abs(calculated_segment_angle - distant_segment_angle)
-   
+                                          
+                                                    angular_variation = abs(end_segment_angle - distant_segment_angle)
 
-                                                    if angular_variation >= min_angular_limit and angular_variation <= max_angular_limit: 
+                                                    hausdorff_distance = end_segment_geometry.hausdorffDistance(distant_segment_geom)
+
+                                                    if print_debug_flag is True:
+                                                        print('end_point', 'local_feature : ' + str(feature['fid']), 'distant_feature : ' + str(nnfeature['fid']), 'hausdorff_distance : ' + str(hausdorff_distance), 'angular_variation : ' + str(angular_variation), 'nnfeature_closest_vertex : ', nnfeature_closest_vertex)
+
+                                                    if (angular_variation >= min_angular_limit and angular_variation <= max_angular_limit) and hausdorff_distance > hausdorff_distance_limit:
                                                         closest_vertices.append((nnfeature_closest_PointXY, distance_point_from_geom, angular_variation, endpoint_type))
                                     except:
                                         pass
@@ -1831,7 +1861,10 @@ class EndpointsSnapping(QgsProcessingAlgorithm):
                                 else:
                                     closest_vertices = sorted(closest_vertices, key=lambda k: (k[1]*-1, k[2]*-1))
 
-                            print('end', feature['fid'], closest_vertices)        
+                            if print_debug_flag is True:
+                                print('end_point', 'local_feature : ' + str(feature['fid']), 'closest_vertices : ', closest_vertices)
+
+
                 
                             for closest_vertex in closest_vertices:
                                 new_polyline = polyline
@@ -1960,6 +1993,16 @@ class HubSnapping(QgsProcessingAlgorithm):
                 True
             )
         )
+
+
+        self.addParameter(
+            QgsProcessingParameterBoolean(
+                self.tr('PRINT_DEBUG'),
+                self.tr('PRINT DEBUG'),
+                False,
+                True
+            )
+        )
         # We add a feature sink in which to store our processed features (this
         # usually takes the form of a newly created vector layer when the
         # algorithm is run in QGIS).
@@ -1993,6 +2036,9 @@ class HubSnapping(QgsProcessingAlgorithm):
         
 
         hubpoint_is_existing_vertex_flag = self.parameterAsBool(parameters, 'HUBPOINT_MUST_BE_AN_EXISTING_VERTEX',
+                                        context)
+        
+        print_debug_flag = self.parameterAsBool(parameters, 'PRINT_DEBUG',
                                         context)
         
         start_timer = datetime.now()
