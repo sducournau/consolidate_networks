@@ -2268,7 +2268,7 @@ class HubSnapping(QgsProcessingAlgorithm):
 
                             nearest_nnfeatures_points.sort(key=lambda x:x[2]) 
 
-                            if maximize_endpoints_flag is True and len([nnfeature for nnfeature in nearest_nnfeatures_points if nnfeature[4] == True]) < endpoints_threshold and len(nearest_nnfeatures_points) < 3:
+                            if maximize_endpoints_flag is True and len([nnfeature for nnfeature in nearest_nnfeatures_points if nnfeature[4] == True]) + 1 < endpoints_threshold and len(nearest_nnfeatures_points) < 3:
                                 raise Exception("Not enough points")
                             elif maximize_endpoints_flag is False and len(nearest_nnfeatures_points) < 3:
                                 raise Exception("Not enough points")
@@ -2313,7 +2313,7 @@ class HubSnapping(QgsProcessingAlgorithm):
 
                             nearest_nnfeatures_points.sort(key=lambda x:x[2])
 
-                            if maximize_endpoints_flag is True and len([nnfeature for nnfeature in nearest_nnfeatures_points if nnfeature[4] == True]) < endpoints_threshold and len(nearest_nnfeatures_points) < 3:
+                            if maximize_endpoints_flag is True and len([nnfeature for nnfeature in nearest_nnfeatures_points if nnfeature[4] == True]) + 1 < endpoints_threshold and len(nearest_nnfeatures_points) < 3:
                                 raise Exception("Not enough points")
                             elif maximize_endpoints_flag is False and len(nearest_nnfeatures_points) < 3:
                                 raise Exception("Not enough points")
@@ -2697,7 +2697,7 @@ class SnapHubsPointsToLayer(QgsProcessingAlgorithm):
 
                             nearest_nnfeatures_points.sort(key=lambda x:x[2]) 
 
-                            if maximize_endpoints_flag is True and len([nnfeature for nnfeature in nearest_nnfeatures_points if nnfeature[4] == True]) < endpoints_threshold and len(nearest_nnfeatures_points) < 3:
+                            if maximize_endpoints_flag is True and len([nnfeature for nnfeature in nearest_nnfeatures_points if nnfeature[4] == True]) + 1 < endpoints_threshold and len(nearest_nnfeatures_points) < 3:
                                 raise Exception("Not enough points")
                             elif maximize_endpoints_flag is False and len(nearest_nnfeatures_points) < 3:
                                 raise Exception("Not enough points")
@@ -2744,7 +2744,7 @@ class SnapHubsPointsToLayer(QgsProcessingAlgorithm):
 
                             nearest_nnfeatures_points.sort(key=lambda x:x[2]) 
 
-                            if maximize_endpoints_flag is True and len([nnfeature for nnfeature in nearest_nnfeatures_points if nnfeature[4] == True]) < endpoints_threshold and len(nearest_nnfeatures_points) < 3:
+                            if maximize_endpoints_flag is True and len([nnfeature for nnfeature in nearest_nnfeatures_points if nnfeature[4] == True]) + 1 < endpoints_threshold and len(nearest_nnfeatures_points) < 3:
                                 raise Exception("Not enough points")
                             elif maximize_endpoints_flag is False and len(nearest_nnfeatures_points) < 3:
                                 raise Exception("Not enough points")
