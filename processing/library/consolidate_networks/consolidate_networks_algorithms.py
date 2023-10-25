@@ -1387,6 +1387,7 @@ class EndpointsSnapping(QgsProcessingAlgorithm):
     # calling from the QGIS console.
     OUTPUT = 'OUTPUT'
     INPUT = 'INPUT'
+    BEHAVIORS = ['Nearest, Minimum angular variation','Farest, Minimum angular variation','Nearest, Maximum angular variation','Farest, Maximum angular variation']
 
 
     def initAlgorithm(self, config):
