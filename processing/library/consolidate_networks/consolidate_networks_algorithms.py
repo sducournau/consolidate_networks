@@ -2070,10 +2070,21 @@ class HubSnapping(QgsProcessingAlgorithm):
 
         self.addParameter(
             QgsProcessingParameterBoolean(
-                self.tr('ONLY_ENDPOINTS'),
-                self.tr('ONLY ENDPOINTS'),
+                self.tr('MAXIMIZE_ENDPOINTS'),
+                self.tr('MAXIMIZE ENDPOINTS'),
                 True,
-                False
+                True
+            )
+        )
+
+        self.addParameter(
+            QgsProcessingParameterNumber(
+                self.tr('ENDPOINTS_THRESHOLD'),
+                self.tr('ENDPOINTS THRESHOLD'),
+                QgsProcessingParameterNumber.Integer,
+                2,
+                True,
+                1
             )
         )
 
@@ -2147,7 +2158,10 @@ class HubSnapping(QgsProcessingAlgorithm):
         buffer_hub_snap = self.parameterAsDouble(parameters, 'BUFFER_HUB_SNAPPING',
                                                 context)
         
-        only_endpoints_flag = self.parameterAsBool(parameters, 'ONLY_ENDPOINTS',
+        maximize_endpoints_flag = self.parameterAsBool(parameters, 'MAXIMIZE_ENDPOINTS',
+                                        context)
+        
+        endpoints_threshold = self.parameterAsInt(parameters, 'ENDPOINTS_THRESHOLD',
                                         context)
         
         hubpoint_is_existing_vertex_flag = self.parameterAsBool(parameters, 'HUBPOINT_MUST_BE_AN_EXISTING_VERTEX',
@@ -2235,7 +2249,7 @@ class HubSnapping(QgsProcessingAlgorithm):
                         geometry_end = QgsGeometry.fromPointXY(polyline_end)
 
 
-                        try:
+                        try: 
                             nearest_nnfeatures_points = []
                 
                             for nnfeature in layer.getFeatures(QgsFeatureRequest().setFilterRect(geometry_start.buffer(buffer_hub_snap,5).boundingBox())):
@@ -2247,42 +2261,40 @@ class HubSnapping(QgsProcessingAlgorithm):
                                     distance_from_nnfeature_nearest_vertex = geometry_start.distance(nnfeature_nearest_vertex_geom)
                                     
                                     if distance_from_nnfeature_nearest_vertex <= buffer_hub_snap:
-                                        if only_endpoints_flag:
-                                            if nnfeature_closest_vertex[2] == -1 or nnfeature_closest_vertex[3] == -1:
-                                                nearest_nnfeatures_points.append((nnfeature_closest_vertex, nnfeature_nearest_vertex_geom, distance_from_nnfeature_nearest_vertex, nnfeature))
+                                        if nnfeature_closest_vertex[2] == -1 or nnfeature_closest_vertex[3] == -1:
+                                            nearest_nnfeatures_points.append((nnfeature_closest_vertex, nnfeature_nearest_vertex_geom, distance_from_nnfeature_nearest_vertex, nnfeature, True))
                                         else:
-                                            nearest_nnfeatures_points.append((nnfeature_closest_vertex, nnfeature_nearest_vertex_geom, distance_from_nnfeature_nearest_vertex, nnfeature))
+                                            nearest_nnfeatures_points.append((nnfeature_closest_vertex, nnfeature_nearest_vertex_geom, distance_from_nnfeature_nearest_vertex, nnfeature, False))
 
-                            nearest_nnfeatures_points.sort(key=lambda x:x[2])
-                            if len(nearest_nnfeatures_points) > 2:
+                            nearest_nnfeatures_points.sort(key=lambda x:x[2]) 
 
-                                polygon = QgsGeometry.fromPolygonXY( [[ QgsPointXY( pair[0][0][0], pair[0][0][1] ) for pair in nearest_nnfeatures_points ]] )
+                            if maximize_endpoints_flag is True and len([nnfeature for nnfeature in nearest_nnfeatures_points if nnfeature[4] == True]) < endpoints_threshold and len(nearest_nnfeatures_points) < 3:
+                                raise Exception("Not enough points")
+                            elif maximize_endpoints_flag is False and len(nearest_nnfeatures_points) < 3:
+                                raise Exception("Not enough points")
 
+                            polygon = QgsGeometry.fromPolygonXY([[ nnfeature[1].asPoint() for nnfeature in nearest_nnfeatures_points ]])
 
+                            if not polygon.isEmpty():
+
+                                nearest_nnfeatures_points = [nnfeature + (nnfeature[1].distance(polygon.centroid()),) for nnfeature in nearest_nnfeatures_points]
+                                nearest_nnfeatures_points = sorted(nearest_nnfeatures_points, key=lambda k: k[-1])
+
+                                if hubpoint_is_existing_vertex_flag is True:
                                     
+                                    for nnfeature in nearest_nnfeatures_points:
+                                        QgsVectorLayerEditUtils(layer).moveVertex(nearest_nnfeatures_points[0][1].asPoint().x(),nearest_nnfeatures_points[0][1].asPoint().y(),nnfeature[3].id(),nnfeature[0][1])
 
-                                if not polygon.isEmpty():
-
-                                    
-                                    nearest_nnfeatures_points = [nnfeature + (nnfeature[1].distance(polygon.centroid()),) for nnfeature in nearest_nnfeatures_points]
-                                    nearest_nnfeatures_points = sorted(nearest_nnfeatures_points, key=lambda k: k[-1])
-
-                                    if hubpoint_is_existing_vertex_flag is True:
-                                        
-                                        for nnfeature in nearest_nnfeatures_points:
-                                            QgsVectorLayerEditUtils(layer).moveVertex(nearest_nnfeatures_points[0][1].asPoint().x(),nearest_nnfeatures_points[0][1].asPoint().y(),nnfeature[3].id(),nnfeature[0][1])
-
-                                    else:
-                                        for nnfeature in nearest_nnfeatures_points:
-                                            QgsVectorLayerEditUtils(layer).moveVertex(polygon.centroid().asPoint().x(),polygon.centroid().asPoint().y(),nnfeature[3].id(),nnfeature[0][1])
+                                else:
+                                    for nnfeature in nearest_nnfeatures_points:
+                                        QgsVectorLayerEditUtils(layer).moveVertex(polygon.centroid().asPoint().x(),polygon.centroid().asPoint().y(),nnfeature[3].id(),nnfeature[0][1])
 
                         except:
                             if print_debug_flag is True:
                                 print('EXCEPTION : '  + 'START_POINT LOOP', 'local_feature : ' + str(feature['fid']))
 
 
-
-                        try:                
+                        try:            
                             nearest_nnfeatures_points = []
                 
                             for nnfeature in layer.getFeatures(QgsFeatureRequest().setFilterRect(geometry_end.buffer(buffer_hub_snap,5).boundingBox())):
@@ -2294,42 +2306,40 @@ class HubSnapping(QgsProcessingAlgorithm):
                                     distance_from_nnfeature_nearest_vertex = geometry_end.distance(nnfeature_nearest_vertex_geom)
                                     
                                     if distance_from_nnfeature_nearest_vertex <= buffer_hub_snap:
-                                        if only_endpoints_flag:
-                                            if nnfeature_closest_vertex[2] == -1 or nnfeature_closest_vertex[3] == -1:
-                                                nearest_nnfeatures_points.append((nnfeature_closest_vertex, nnfeature_nearest_vertex_geom, distance_from_nnfeature_nearest_vertex, nnfeature))
+                                        if nnfeature_closest_vertex[2] == -1 or nnfeature_closest_vertex[3] == -1:
+                                            nearest_nnfeatures_points.append((nnfeature_closest_vertex, nnfeature_nearest_vertex_geom, distance_from_nnfeature_nearest_vertex, nnfeature, True))
                                         else:
-                                            nearest_nnfeatures_points.append((nnfeature_closest_vertex, nnfeature_nearest_vertex_geom, distance_from_nnfeature_nearest_vertex, nnfeature))
+                                            nearest_nnfeatures_points.append((nnfeature_closest_vertex, nnfeature_nearest_vertex_geom, distance_from_nnfeature_nearest_vertex, nnfeature, False))
 
                             nearest_nnfeatures_points.sort(key=lambda x:x[2])
-                            if len(nearest_nnfeatures_points) > 2:
 
-                                polygon = QgsGeometry.fromPolygonXY( [[ QgsPointXY( pair[0][0][0], pair[0][0][1] ) for pair in nearest_nnfeatures_points ]] )
+                            if maximize_endpoints_flag is True and len([nnfeature for nnfeature in nearest_nnfeatures_points if nnfeature[4] == True]) < endpoints_threshold and len(nearest_nnfeatures_points) < 3:
+                                raise Exception("Not enough points")
+                            elif maximize_endpoints_flag is False and len(nearest_nnfeatures_points) < 3:
+                                raise Exception("Not enough points")
 
+                            polygon = QgsGeometry.fromPolygonXY([[ nnfeature[1].asPoint() for nnfeature in nearest_nnfeatures_points ]])
 
+                            if not polygon.isEmpty():
+                                
+                                nearest_nnfeatures_points = [nnfeature + (nnfeature[1].distance(polygon.centroid()),) for nnfeature in nearest_nnfeatures_points]
+                                nearest_nnfeatures_points = sorted(nearest_nnfeatures_points, key=lambda k: k[-1])
+
+                                if hubpoint_is_existing_vertex_flag is True:
                                     
+                                    for nnfeature in nearest_nnfeatures_points:
+                                        QgsVectorLayerEditUtils(layer).moveVertex(nearest_nnfeatures_points[0][1].asPoint().x(),nearest_nnfeatures_points[0][1].asPoint().y(),nnfeature[3].id(),nnfeature[0][1])
 
-                                if not polygon.isEmpty():
-
-                                    
-                                    nearest_nnfeatures_points = [nnfeature + (nnfeature[1].distance(polygon.centroid()),) for nnfeature in nearest_nnfeatures_points]
-                                    nearest_nnfeatures_points = sorted(nearest_nnfeatures_points, key=lambda k: k[-1])
-
-                                    if hubpoint_is_existing_vertex_flag is True:
-                                        
-                                        for nnfeature in nearest_nnfeatures_points:
-                                            QgsVectorLayerEditUtils(layer).moveVertex(nearest_nnfeatures_points[0][1].asPoint().x(),nearest_nnfeatures_points[0][1].asPoint().y(),nnfeature[3].id(),nnfeature[0][1])
-
-                                    else:
-                                        for nnfeature in nearest_nnfeatures_points:
-                                            QgsVectorLayerEditUtils(layer).moveVertex(polygon.centroid().asPoint().x(),polygon.centroid().asPoint().y(),nnfeature[3].id(),nnfeature[0][1])
+                                else:
+                                    for nnfeature in nearest_nnfeatures_points:
+                                        QgsVectorLayerEditUtils(layer).moveVertex(polygon.centroid().asPoint().x(),polygon.centroid().asPoint().y(),nnfeature[3].id(),nnfeature[0][1])
 
                         except:
                             if print_debug_flag is True:
                                 print('EXCEPTION : '  + 'END_POINT LOOP', 'local_feature : ' + str(feature['fid']))
-
                 except:
                     if print_debug_flag is True:
-                        print('EXCEPTION : '  + 'FEATURE_LOOP', 'local_feature : ' + str(feature['fid']))  
+                        print('EXCEPTION : '  + 'FEATURE_LOOP', 'local_feature : ' + str(feature['fid']))                         
 
 
             feedback.setProgress(int((y /numfeatures) * 100))
@@ -2458,10 +2468,21 @@ class SnapHubsPointsToLayer(QgsProcessingAlgorithm):
 
         self.addParameter(
             QgsProcessingParameterBoolean(
-                self.tr('ONLY_ENDPOINTS'),
-                self.tr('ONLY ENDPOINTS'),
+                self.tr('MAXIMIZE_ENDPOINTS'),
+                self.tr('MAXIMIZE ENDPOINTS'),
                 True,
                 False
+            )
+        )
+
+        self.addParameter(
+            QgsProcessingParameterNumber(
+                self.tr('ENDPOINTS_THRESHOLD'),
+                self.tr('ENDPOINTS THRESHOLD'),
+                QgsProcessingParameterNumber.Integer,
+                2,
+                True,
+                1
             )
         )
 
@@ -2542,7 +2563,10 @@ class SnapHubsPointsToLayer(QgsProcessingAlgorithm):
         buffer_hub_snap = self.parameterAsDouble(parameters, 'BUFFER_HUB_SNAPPING',
                                                 context)
         
-        only_endpoints_flag = self.parameterAsBool(parameters, 'ONLY_ENDPOINTS',
+        maximize_endpoints_flag = self.parameterAsBool(parameters, 'MAXIMIZE_ENDPOINTS',
+                                        context)
+        
+        endpoints_threshold = self.parameterAsInt(parameters, 'ENDPOINTS_THRESHOLD',
                                         context)
         
         hubpoint_is_existing_vertex_flag = self.parameterAsBool(parameters, 'HUBPOINT_MUST_BE_AN_EXISTING_VERTEX',
@@ -2666,34 +2690,33 @@ class SnapHubsPointsToLayer(QgsProcessingAlgorithm):
                                     distance_from_nnfeature_nearest_vertex = geometry_start.distance(nnfeature_nearest_vertex_geom)
                                     
                                     if distance_from_nnfeature_nearest_vertex <= buffer_hub_snap:
-                                        if only_endpoints_flag:
-                                            if nnfeature_closest_vertex[2] == -1 or nnfeature_closest_vertex[3] == -1:
-                                                nearest_nnfeatures_points.append((nnfeature_closest_vertex, nnfeature_nearest_vertex_geom, distance_from_nnfeature_nearest_vertex, nnfeature))
+                                        if nnfeature_closest_vertex[2] == -1 or nnfeature_closest_vertex[3] == -1:
+                                            nearest_nnfeatures_points.append((nnfeature_closest_vertex, nnfeature_nearest_vertex_geom, distance_from_nnfeature_nearest_vertex, nnfeature, True))
                                         else:
-                                            nearest_nnfeatures_points.append((nnfeature_closest_vertex, nnfeature_nearest_vertex_geom, distance_from_nnfeature_nearest_vertex, nnfeature))
+                                            nearest_nnfeatures_points.append((nnfeature_closest_vertex, nnfeature_nearest_vertex_geom, distance_from_nnfeature_nearest_vertex, nnfeature, False))
 
-                            nearest_nnfeatures_points.sort(key=lambda x:x[2])
-                            if len(nearest_nnfeatures_points) > 2:
+                            nearest_nnfeatures_points.sort(key=lambda x:x[2]) 
 
-                                polygon = QgsGeometry.fromPolygonXY( [[ QgsPointXY( pair[0][0][0], pair[0][0][1] ) for pair in nearest_nnfeatures_points ]] )
+                            if maximize_endpoints_flag is True and len([nnfeature for nnfeature in nearest_nnfeatures_points if nnfeature[4] == True]) < endpoints_threshold and len(nearest_nnfeatures_points) < 3:
+                                raise Exception("Not enough points")
+                            elif maximize_endpoints_flag is False and len(nearest_nnfeatures_points) < 3:
+                                raise Exception("Not enough points")
+                            
+                            polygon = QgsGeometry.fromPolygonXY([[ nnfeature[1].asPoint() for nnfeature in nearest_nnfeatures_points ]])
 
+                            if not polygon.isEmpty():
 
+                                nearest_nnfeatures_points = [nnfeature + (nnfeature[1].distance(polygon.centroid()),) for nnfeature in nearest_nnfeatures_points]
+                                nearest_nnfeatures_points = sorted(nearest_nnfeatures_points, key=lambda k: k[-1])
+
+                                if hubpoint_is_existing_vertex_flag is True:
                                     
+                                    for nnfeature in nearest_nnfeatures_points:
+                                        QgsVectorLayerEditUtils(layer).moveVertex(nearest_nnfeatures_points[0][1].asPoint().x(),nearest_nnfeatures_points[0][1].asPoint().y(),nnfeature[3].id(),nnfeature[0][1])
 
-                                if not polygon.isEmpty():
-
-                                    
-                                    nearest_nnfeatures_points = [nnfeature + (nnfeature[1].distance(polygon.centroid()),) for nnfeature in nearest_nnfeatures_points]
-                                    nearest_nnfeatures_points = sorted(nearest_nnfeatures_points, key=lambda k: k[-1])
-
-                                    if hubpoint_is_existing_vertex_flag is True:
-                                        
-                                        for nnfeature in nearest_nnfeatures_points:
-                                            QgsVectorLayerEditUtils(layer).moveVertex(nearest_nnfeatures_points[0][1].asPoint().x(),nearest_nnfeatures_points[0][1].asPoint().y(),nnfeature[3].id(),nnfeature[0][1])
-
-                                    else:
-                                        for nnfeature in nearest_nnfeatures_points:
-                                            QgsVectorLayerEditUtils(layer).moveVertex(polygon.centroid().asPoint().x(),polygon.centroid().asPoint().y(),nnfeature[3].id(),nnfeature[0][1])
+                                else:
+                                    for nnfeature in nearest_nnfeatures_points:
+                                        QgsVectorLayerEditUtils(layer).moveVertex(polygon.centroid().asPoint().x(),polygon.centroid().asPoint().y(),nnfeature[3].id(),nnfeature[0][1])
 
                         except:
                             if print_debug_flag is True:
@@ -2714,34 +2737,33 @@ class SnapHubsPointsToLayer(QgsProcessingAlgorithm):
                                     distance_from_nnfeature_nearest_vertex = geometry_end.distance(nnfeature_nearest_vertex_geom)
                                     
                                     if distance_from_nnfeature_nearest_vertex <= buffer_hub_snap:
-                                        if only_endpoints_flag:
-                                            if nnfeature_closest_vertex[2] == -1 or nnfeature_closest_vertex[3] == -1:
-                                                nearest_nnfeatures_points.append((nnfeature_closest_vertex, nnfeature_nearest_vertex_geom, distance_from_nnfeature_nearest_vertex, nnfeature))
+                                        if nnfeature_closest_vertex[2] == -1 or nnfeature_closest_vertex[3] == -1:
+                                            nearest_nnfeatures_points.append((nnfeature_closest_vertex, nnfeature_nearest_vertex_geom, distance_from_nnfeature_nearest_vertex, nnfeature, True))
                                         else:
-                                            nearest_nnfeatures_points.append((nnfeature_closest_vertex, nnfeature_nearest_vertex_geom, distance_from_nnfeature_nearest_vertex, nnfeature))
-                                            
-                            nearest_nnfeatures_points.sort(key=lambda x:x[2])
-                            if len(nearest_nnfeatures_points) > 2:
+                                            nearest_nnfeatures_points.append((nnfeature_closest_vertex, nnfeature_nearest_vertex_geom, distance_from_nnfeature_nearest_vertex, nnfeature, False))
 
-                                polygon = QgsGeometry.fromPolygonXY( [[ QgsPointXY( pair[0][0][0], pair[0][0][1] ) for pair in nearest_nnfeatures_points ]] )
+                            nearest_nnfeatures_points.sort(key=lambda x:x[2]) 
 
+                            if maximize_endpoints_flag is True and len([nnfeature for nnfeature in nearest_nnfeatures_points if nnfeature[4] == True]) < endpoints_threshold and len(nearest_nnfeatures_points) < 3:
+                                raise Exception("Not enough points")
+                            elif maximize_endpoints_flag is False and len(nearest_nnfeatures_points) < 3:
+                                raise Exception("Not enough points")
 
+                            polygon = QgsGeometry.fromPolygonXY([[ nnfeature[1].asPoint() for nnfeature in nearest_nnfeatures_points ]])
+
+                            if not polygon.isEmpty():
+
+                                nearest_nnfeatures_points = [nnfeature + (nnfeature[1].distance(polygon.centroid()),) for nnfeature in nearest_nnfeatures_points]
+                                nearest_nnfeatures_points = sorted(nearest_nnfeatures_points, key=lambda k: k[-1])
+
+                                if hubpoint_is_existing_vertex_flag is True:
                                     
+                                    for nnfeature in nearest_nnfeatures_points:
+                                        QgsVectorLayerEditUtils(layer).moveVertex(nearest_nnfeatures_points[0][1].asPoint().x(),nearest_nnfeatures_points[0][1].asPoint().y(),nnfeature[3].id(),nnfeature[0][1])
 
-                                if not polygon.isEmpty():
-
-                                    
-                                    nearest_nnfeatures_points = [nnfeature + (nnfeature[1].distance(polygon.centroid()),) for nnfeature in nearest_nnfeatures_points]
-                                    nearest_nnfeatures_points = sorted(nearest_nnfeatures_points, key=lambda k: k[-1])
-
-                                    if hubpoint_is_existing_vertex_flag is True:
-                                        
-                                        for nnfeature in nearest_nnfeatures_points:
-                                            QgsVectorLayerEditUtils(layer).moveVertex(nearest_nnfeatures_points[0][1].asPoint().x(),nearest_nnfeatures_points[0][1].asPoint().y(),nnfeature[3].id(),nnfeature[0][1])
-
-                                    else:
-                                        for nnfeature in nearest_nnfeatures_points:
-                                            QgsVectorLayerEditUtils(layer).moveVertex(polygon.centroid().asPoint().x(),polygon.centroid().asPoint().y(),nnfeature[3].id(),nnfeature[0][1])
+                                else:
+                                    for nnfeature in nearest_nnfeatures_points:
+                                        QgsVectorLayerEditUtils(layer).moveVertex(polygon.centroid().asPoint().x(),polygon.centroid().asPoint().y(),nnfeature[3].id(),nnfeature[0][1])
 
                         except:
                             if print_debug_flag is True:
@@ -2749,8 +2771,6 @@ class SnapHubsPointsToLayer(QgsProcessingAlgorithm):
                 except:
                     if print_debug_flag is True:
                         print('EXCEPTION : '  + 'FEATURE_LOOP', 'local_feature : ' + str(feature['fid']))                         
-
-
 
 
             feedback.setProgress(int((y /numfeatures) * 100))
