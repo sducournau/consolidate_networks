@@ -2786,6 +2786,7 @@ class SnapEndpointsToLayer(QgsProcessingAlgorithm):
     OUTPUT = 'OUTPUT'
     INPUT = 'INPUT'
     REF_INPUT = 'REF_INPUT'
+    BEHAVIORS = ['Nearest, Minimum angular variation','Farest, Minimum angular variation','Nearest, Maximum angular variation','Farest, Maximum angular variation']
 
     def initAlgorithm(self, config):
         """
