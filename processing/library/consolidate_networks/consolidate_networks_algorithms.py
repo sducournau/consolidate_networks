@@ -798,7 +798,7 @@ class EndpointsStrimmingExtending(QgsProcessingAlgorithm):
             QgsProcessingParameterDistance(
                 self.tr('BUFFER_TRIM'),
                 self.tr('BUFFER_TRIM'),
-                2.0,
+                3.0,
                 self.INPUT,
                 False,
                 0.0
@@ -822,7 +822,7 @@ class EndpointsStrimmingExtending(QgsProcessingAlgorithm):
                 self.tr('PREFERRED BEHAVIOR FOR STARTING EXTREMITIES'),
                 self.BEHAVIORS,
                 False,
-                0,
+                1,
                 False
             )
         )  
@@ -912,7 +912,7 @@ class EndpointsStrimmingExtending(QgsProcessingAlgorithm):
         angular_limit = self.parameterAsDouble(parameters, 'ANGULAR_LIMIT_OF_PARALLEL_GEOMETRIES',
                                                context)
 
-
+        
         print(prefered_behaviour_start, prefered_behaviour_end)
 
         start_timer = datetime.now()
@@ -1035,33 +1035,6 @@ class EndpointsStrimmingExtending(QgsProcessingAlgorithm):
                         direction = [distance[0] / norm, distance[1] / norm]
                         end_vector = QgsVector(direction[0] * math.sqrt(2), direction[1] * math.sqrt(2))
 
-                        
-                        # vector_polyline = start_out_segment_geom.asPolyline()
-                        # distance = [vector_polyline[0].x() - vector_polyline[-1].x(), vector_polyline[0].y() - vector_polyline[-1].y()]
-                        # norm = math.sqrt(distance[0] ** 2 + distance[1] ** 2)
-                        # direction = [distance[0] / norm, distance[1] / norm]
-                        # start_vector_extend = QgsVector(direction[0] * math.sqrt(2), direction[1] * math.sqrt(2))
-
-
-                        # vector_polyline = start_in_segment_geom.asPolyline()
-                        # distance = [vector_polyline[0].x() - vector_polyline[-1].x(), vector_polyline[0].y() - vector_polyline[-1].y()]
-                        # norm = math.sqrt(distance[0] ** 2 + distance[1] ** 2)
-                        # direction = [distance[0] / norm, distance[1] / norm]
-                        # start_vector_trim = QgsVector(direction[0] * math.sqrt(2), direction[1] * math.sqrt(2))
-
-
-                        # vector_polyline = end_out_segment_geom.asPolyline()
-                        # distance = [vector_polyline[0].x() - vector_polyline[-1].x(), vector_polyline[0].y() - vector_polyline[-1].y()]
-                        # norm = math.sqrt(distance[0] ** 2 + distance[1] ** 2)
-                        # direction = [distance[0] / norm, distance[1] / norm]
-                        # end_vector_extend = QgsVector(direction[0] * math.sqrt(2), direction[1] * math.sqrt(2))
-                    
-
-                        # vector_polyline = end_in_segment_geom.asPolyline()
-                        # distance = [vector_polyline[0].x() - vector_polyline[-1].x(), vector_polyline[0].y() - vector_polyline[-1].y()]
-                        # norm = math.sqrt(distance[0] ** 2 + distance[1] ** 2)
-                        # direction = [distance[0] / norm, distance[1] / norm]
-                        # end_vector_trim = QgsVector(direction[0] * math.sqrt(2), direction[1] * math.sqrt(2))
 
 
                         break_update_step = False
@@ -1115,7 +1088,7 @@ class EndpointsStrimmingExtending(QgsProcessingAlgorithm):
                                     pass
 
 
-                        geometry_start_buffer = geometry_start.buffer(0.001,1)                   
+                        geometry_start_buffer = geometry_start.buffer(0.001,1)
                         list_intersects_boundingBox = spatial_index.intersects(geometry_start_buffer.boundingBox())
                         if feature.id() in list_intersects_boundingBox:
                             list_intersects_boundingBox.remove(feature.id())
@@ -1189,9 +1162,9 @@ class EndpointsStrimmingExtending(QgsProcessingAlgorithm):
                                     #     polyline[0] = closest_intersection[2][1]
                                     # else:
                                     #     polyline[0] = QgsPointXY(closest_intersection[0])
-
-                                    polyline[0] = QgsPointXY(closest_intersection[0])
-                                    new_geom = QgsGeometry.fromPolylineXY(polyline)
+                                    new_polyline = polyline
+                                    new_polyline[0] = QgsPointXY(closest_intersection[0])
+                                    new_geom = QgsGeometry.fromPolylineXY(new_polyline)
                                     if not new_geom.isEmpty():
                                         if (closest_intersection[4] == 1 and new_geom.length() >= geometry.length()) or (closest_intersection[4] == -1 and geometry.length() >= new_geom.length()):
                                             feature.setGeometry(new_geom)
@@ -1331,9 +1304,9 @@ class EndpointsStrimmingExtending(QgsProcessingAlgorithm):
                                     #     polyline[-1] = closest_intersection[2][1]
                                     # else:
                                     #     polyline[-1] = QgsPointXY(closest_intersection[0])
-
-                                    polyline[-1] = QgsPointXY(closest_intersection[0])
-                                    new_geom = QgsGeometry.fromPolylineXY(polyline)
+                                    new_polyline = polyline
+                                    new_polyline[-1] = QgsPointXY(closest_intersection[0])
+                                    new_geom = QgsGeometry.fromPolylineXY(new_polyline)
                                     if not new_geom.isEmpty():
                                         if (closest_intersection[4] == 1 and new_geom.length() >= geometry.length()) or (closest_intersection[4] == -1 and geometry.length() >= new_geom.length()):
                                             feature.setGeometry(new_geom)
@@ -1414,7 +1387,6 @@ class EndpointsSnapping(QgsProcessingAlgorithm):
     # calling from the QGIS console.
     OUTPUT = 'OUTPUT'
     INPUT = 'INPUT'
-    BEHAVIORS = ['Original geometry nearest','Original geometry farest','Extended geometry nearest','Extended geometry farest']
 
 
     def initAlgorithm(self, config):
@@ -1459,7 +1431,7 @@ class EndpointsSnapping(QgsProcessingAlgorithm):
                 self.tr('PREFERRED BEHAVIOR FOR STARTING EXTREMITIES'),
                 self.BEHAVIORS,
                 False,
-                2,
+                0,
                 False
             )
         )  
@@ -1470,7 +1442,7 @@ class EndpointsSnapping(QgsProcessingAlgorithm):
                 self.tr('PREFERRED BEHAVIOR FOR ENDING EXTREMITIES'),
                 self.BEHAVIORS,
                 False,
-                2,
+                0,
                 False
             )
         ) 
@@ -1504,13 +1476,21 @@ class EndpointsSnapping(QgsProcessingAlgorithm):
                 self.tr('MAX_ANGULAR_LIMIT_OF_PARALLEL_GEOMETRIES'),
                 self.tr('MAX ANGULAR LIMIT OF PARALLEL GEOMETRIES'),
                 1,
-                50.0,
+                180.0,
                 True,
                 0.0,
                 180.0
             )
         )
 
+        self.addParameter(
+            QgsProcessingParameterBoolean(
+                self.tr('PREFERS_SAME_GEOMETRY_DIRECTION'),
+                self.tr('PREFERS SAME GEOMETRY DIRECTION'),
+                True,
+                True
+            )
+        )
         # We add a feature sink in which to store our processed features (this
         # usually takes the form of a newly created vector layer when the
         # algorithm is run in QGIS).
@@ -1558,6 +1538,9 @@ class EndpointsSnapping(QgsProcessingAlgorithm):
         
         prefered_behaviour_end = self.BEHAVIORS[self.parameterAsEnum(parameters, 'PREFERRED_BEHAVIOR_FOR_ENDING_EXTREMITIES',
                                                context)]
+
+        same_direction_geoms_flag = self.parameterAsBool(parameters, 'PREFERS_SAME_GEOMETRY_DIRECTION',
+                                context)
 
         print(prefered_behaviour_start, prefered_behaviour_end)
 
@@ -1628,88 +1611,121 @@ class EndpointsSnapping(QgsProcessingAlgorithm):
                         polyline_end = polyline[-1]
                         polyline_end_near_vertex = polyline[-2]
 
+                        geometry_start = QgsGeometry.fromPointXY(polyline_start)
+                        geometry_end = QgsGeometry.fromPointXY(polyline_end)
 
-                        start_out_segment =  [polyline_start_near_vertex, polyline_start]
-                        start_out_segment_geom = QgsGeometry.fromPolylineXY(start_out_segment).extendLine(0, buffer_snap/2)
-                        start_out_segment_geom.insertVertex(QgsPoint(polyline_start), 1)
-                        start_out_segment_geom.deleteVertex(0)
-
-                        print('start_out_segment_geom', feature['fid'], start_out_segment_geom)
-
-                        end_out_segment =  [polyline_end_near_vertex, polyline_end]
-                        end_out_segment_geom = QgsGeometry.fromPolylineXY(end_out_segment).extendLine(0, buffer_snap/2)
-                        end_out_segment_geom.insertVertex(QgsPoint(polyline_end), 1)
-                        end_out_segment_geom.deleteVertex(0)
-
-                        print('end_out_segment_geom', feature['fid'], end_out_segment_geom)
-
-
-
+                        break_update_step = False
                         closest_vertices = []
 
-                        nearestids = spatial_index.nearestNeighbor(start_out_segment_geom.asPolyline()[-1],5,buffer_snap/2)
-                        if feature.id() in nearestids:
-                            nearestids.remove(feature.id())
+                        geometry_start_buffer = geometry_start.buffer(0.001,1)
+                        list_intersects_boundingBox = spatial_index.intersects(geometry_start_buffer.boundingBox())
+                        if feature.id() in list_intersects_boundingBox:
+                            list_intersects_boundingBox.remove(feature.id())
+                        if len(list_intersects_boundingBox) >= 1:
+                            for id in list_intersects_boundingBox:
+                                feat = next(layer.getFeatures(QgsFeatureRequest(id)))
+                                feat_polyline = feat.geometry().asPolyline()
 
-                        if len(nearestids) > 0:
-                            for nearestid in nearestids:
-                                try:    
-                                    nnfeature = next(layer.getFeatures(QgsFeatureRequest(nearestid)))
-                                    nnfeature_closest_vertex = nnfeature.geometry().closestSegmentWithContext(start_out_segment_geom.asPolyline()[-1],buffer_snap/2)
+                                if geometry_start_buffer.intersects(QgsGeometry.fromPointXY(feat_polyline[0])) or geometry_start_buffer.intersects(QgsGeometry.fromPointXY(feat_polyline[-1])):
+                                    break_update_step = True
+                                    break
 
-                                    segment = []
-                                    segment.append(QgsPointXY(nnfeature.geometry().vertexAt(nnfeature_closest_vertex[2]-1).x(),  nnfeature.geometry().vertexAt(nnfeature_closest_vertex[2]-1).y()))
-                                    segment.append(QgsPointXY(nnfeature.geometry().vertexAt(nnfeature_closest_vertex[2]).x(),  nnfeature.geometry().vertexAt(nnfeature_closest_vertex[2]).y()))
-                                    segment_geom = QgsGeometry.fromPolylineXY(segment)
 
-                                    hausdorff_distance = start_out_segment_geom.hausdorffDistance(segment_geom)
+                        if break_update_step is False:                
+                            nearestids = spatial_index.nearestNeighbor(geometry_start.asPoint(),5,buffer_snap)
+                            if feature.id() in nearestids:
+                                nearestids.remove(feature.id())
 
-                                    feature_segment_angle = math.degrees(start_out_segment_geom.interpolateAngle(start_out_segment_geom.length())) % 180
-                                    nnfeature_segment_angle = math.degrees(segment_geom.interpolateAngle(segment_geom.length())) % 180
+                            if len(nearestids) > 0:
+                                for nearestid in nearestids:
+                                    try:
+                                        nnfeature = next(layer.getFeatures(QgsFeatureRequest(nearestid)))
+                                        nnfeature_closest_vertex = nnfeature.geometry().closestVertex(geometry_start.asPoint())
 
-                                    if (abs(feature_segment_angle - nnfeature_segment_angle) >= min_angular_limit and abs(feature_segment_angle - nnfeature_segment_angle) <= max_angular_limit) and hausdorff_distance > hausdorff_distance_limit: 
-                                        if nnfeature_closest_vertex[0] <= (buffer_snap/2)**2:
+                                        if nnfeature_closest_vertex[2] == -1 or nnfeature_closest_vertex[3] == -1:
 
-                                            segment_polyline = segment_geom.asPolyline()
+                                            hausdorff_distance = geometry.hausdorffDistance(nnfeature.geometry())
 
-                                            segment_polyline_startpoint = segment_polyline[0]
-                                            segment_polyline_endpoint = segment_polyline[-1]
+                                            print('start', feature['fid'], nnfeature['fid'], hausdorff_distance, nnfeature_closest_vertex)
 
-                                            intersection_buffer = start_out_segment_geom.buffer(buffer_snap/2,5)
+                                            if nnfeature_closest_vertex[-1] <= (buffer_snap/2)**2 and hausdorff_distance > hausdorff_distance_limit:
 
-                                            if intersection_buffer.contains(QgsGeometry.fromPointXY(segment_polyline_startpoint)):
-                                                
-                                                segment_polyline_point = segment_polyline_startpoint
-                                                distance_point_from_geom = QgsGeometry.fromPointXY(start_out_segment_geom.asPolyline()[0]).distance(QgsGeometry.fromPointXY(segment_polyline_point))
-                                                distance_point_from_extended_geom = QgsGeometry.fromPointXY(start_out_segment_geom.asPolyline()[-1]).distance(QgsGeometry.fromPointXY(segment_polyline_point))
+                                                nnfeature_closest_PointXY = QgsPointXY(nnfeature.geometry().vertexAt(nnfeature_closest_vertex[1]).x(),  nnfeature.geometry().vertexAt(nnfeature_closest_vertex[1]).y())
 
-                                            elif intersection_buffer.contains(QgsGeometry.fromPointXY(segment_polyline_endpoint)):    
+                                                nnfeature_closest_PointXY_geom = QgsGeometry.fromPointXY(nnfeature_closest_PointXY)
 
-                                                segment_polyline_point = segment_polyline_endpoint    
-                                                distance_point_from_geom = QgsGeometry.fromPointXY(start_out_segment_geom.asPolyline()[0]).distance(QgsGeometry.fromPointXY(segment_polyline_point))
-                                                distance_point_from_extended_geom = QgsGeometry.fromPointXY(start_out_segment_geom.asPolyline()[-1]).distance(QgsGeometry.fromPointXY(segment_polyline_point))
+                                                    
+                                                   
+                                                distance_point_from_geom = geometry_start.distance(nnfeature_closest_PointXY_geom)
+
+                                                print('start', feature['fid'], nnfeature['fid'], distance_point_from_geom)            
                                             
-                                            if distance_point_from_geom <= buffer_snap:
-                                                closest_vertices.append((segment_polyline_point, distance_point_from_geom, distance_point_from_extended_geom))
-                                except:
-                                    pass
+                                                if distance_point_from_geom <= buffer_snap:
+
+                                            
+
+                                                    calculated_segment = QgsGeometry.fromPolylineXY([geometry_start.asPoint(), polyline_start_near_vertex])
+
+                                                    endpoint_type = 1 if nnfeature_closest_vertex[3] == -1 else -1
+                                                    distant_segment = []
+                                                    distant_segment.append(nnfeature_closest_PointXY)
+
+                                                    if endpoint_type == 1:
+                                                        distant_segment.append(QgsPointXY(nnfeature.geometry().vertexAt(nnfeature_closest_vertex[2]).x(),  nnfeature.geometry().vertexAt(nnfeature_closest_vertex[2]).y()))
+                                                    elif endpoint_type == -1:
+                                                        distant_segment.append(QgsPointXY(nnfeature.geometry().vertexAt(nnfeature_closest_vertex[3]).x(),  nnfeature.geometry().vertexAt(nnfeature_closest_vertex[3]).y()))
+
+                                                    distant_segment_geom = QgsGeometry.fromPolylineXY(distant_segment)
+
+                                                    calculated_segment_angle = math.degrees(calculated_segment.interpolateAngle(calculated_segment.length())) % 180
+                                                    distant_segment_angle = math.degrees(distant_segment_geom.interpolateAngle(distant_segment_geom.length())) % 180
+                                          
+                                                    angular_variation = abs(calculated_segment_angle - distant_segment_angle)
+                                     
+
+                                                    print('start', feature['fid'], nnfeature['fid'], angular_variation)
+
+
+                                                    if angular_variation >= min_angular_limit and angular_variation <= max_angular_limit:
+
+                                                        
+
+                                                        closest_vertices.append((nnfeature_closest_PointXY, distance_point_from_geom, angular_variation, endpoint_type))
+                                    except:
+                                        pass
 
                         if len(closest_vertices) > 0:
 
-                            if prefered_behaviour_start == 'Original geometry nearest':
-                                closest_vertices = sorted(closest_vertices, key=lambda k: k[1])
-                            elif prefered_behaviour_start == 'Original geometry farest':
-                                closest_vertices = sorted(closest_vertices, key=lambda k: k[1], reverse=True)
-                            elif prefered_behaviour_start == 'Extended geometry nearest':
-                                closest_vertices = sorted(closest_vertices, key=lambda k: k[2])
-                            elif prefered_behaviour_start == 'Extended geometry farest':
-                                closest_vertices = sorted(closest_vertices, key=lambda k: k[2], reverse=True)    
+                            if prefered_behaviour_start == 'Nearest, Minimum angular variation':
+                                if same_direction_geoms_flag is True:
+                                    closest_vertices = sorted(closest_vertices, key=lambda k: (k[3]*-1, k[1], k[2]))
+                                else:
+                                    closest_vertices = sorted(closest_vertices, key=lambda k: (k[1], k[2]))
+
+                            elif prefered_behaviour_start == 'Farest, Minimum angular variation':
+                                if same_direction_geoms_flag is True:
+                                    closest_vertices = sorted(closest_vertices, key=lambda k: (k[3]*-1, k[1]*-1, k[2]))
+                                else:
+                                    closest_vertices = sorted(closest_vertices, key=lambda k: (k[1]*-1, k[2]))
+
+                            elif prefered_behaviour_start == 'Nearest, Maximum angular variation':
+                                if same_direction_geoms_flag is True:
+                                    closest_vertices = sorted(closest_vertices, key=lambda k: (k[3]*-1, k[1], k[2]*-1))
+                                else:
+                                    closest_vertices = sorted(closest_vertices, key=lambda k: (k[1], k[2]*-1))
+
+                            elif prefered_behaviour_start == 'Farest, Maximum angular variation':
+                                if same_direction_geoms_flag is True:
+                                    closest_vertices = sorted(closest_vertices, key=lambda k: (k[3]*-1, k[1]*-1, k[2]*-1))
+                                else:
+                                    closest_vertices = sorted(closest_vertices, key=lambda k: (k[1]*-1, k[2]*-1))
 
                             print('start', feature['fid'], closest_vertices)
 
                             for closest_vertex in closest_vertices:
-                                polyline[0] = QgsPointXY(closest_vertex[0])
-                                new_geom = QgsGeometry.fromPolylineXY(polyline)
+                                new_polyline = polyline
+                                new_polyline[0] = closest_vertex[0]
+                                new_geom = QgsGeometry.fromPolylineXY(new_polyline)
                                 if not new_geom.isEmpty():
                                     feature.setGeometry(new_geom)
                                     layer.updateFeature(feature)
@@ -1719,71 +1735,107 @@ class EndpointsSnapping(QgsProcessingAlgorithm):
 
 
 
+                        break_update_step = False
                         closest_vertices = []
 
-                        nearestids = spatial_index.nearestNeighbor(end_out_segment_geom.asPolyline()[-1],5,buffer_snap/2)
-                        if feature.id() in nearestids:
-                            nearestids.remove(feature.id())
+                        geometry_end_buffer = geometry_end.buffer(0.001,1)
+                        list_intersects_boundingBox = spatial_index.intersects(geometry_end_buffer.boundingBox())
+                        if feature.id() in list_intersects_boundingBox:
+                            list_intersects_boundingBox.remove(feature.id())
+                        if len(list_intersects_boundingBox) >= 1:
+                            for id in list_intersects_boundingBox:
+                                feat = next(layer.getFeatures(QgsFeatureRequest(id)))
+                                feat_polyline = feat.geometry().asPolyline()
 
-                        if len(nearestids) > 0:
-                            for nearestid in nearestids:
-                                try:    
-                                    nnfeature = next(layer.getFeatures(QgsFeatureRequest(nearestid)))
-                                    nnfeature_closest_vertex = nnfeature.geometry().closestSegmentWithContext(end_out_segment_geom.asPolyline()[-1],buffer_snap/2)
+                                if geometry_end_buffer.intersects(QgsGeometry.fromPointXY(feat_polyline[0])) or geometry_end_buffer.intersects(QgsGeometry.fromPointXY(feat_polyline[-1])):
+                                    break_update_step = True
+                                    break
 
-                                    segment = []
-                                    segment.append(QgsPointXY(nnfeature.geometry().vertexAt(nnfeature_closest_vertex[2]-1).x(),  nnfeature.geometry().vertexAt(nnfeature_closest_vertex[2]-1).y()))
-                                    segment.append(QgsPointXY(nnfeature.geometry().vertexAt(nnfeature_closest_vertex[2]).x(),  nnfeature.geometry().vertexAt(nnfeature_closest_vertex[2]).y()))
-                                    segment_geom = QgsGeometry.fromPolylineXY(segment)
+                        if break_update_step is False:            
+                            nearestids = spatial_index.nearestNeighbor(geometry_end.asPoint(),5,buffer_snap)
+                            if feature.id() in nearestids:
+                                nearestids.remove(feature.id())
 
-                                    hausdorff_distance = end_out_segment_geom.hausdorffDistance(segment_geom)
+                            if len(nearestids) > 0:
+                                for nearestid in nearestids:
+                                    try:    
+                                        nnfeature = next(layer.getFeatures(QgsFeatureRequest(nearestid)))
+                                        nnfeature_closest_vertex = nnfeature.geometry().closestVertex(geometry_end.asPoint())
 
-                                    feature_segment_angle = math.degrees(end_out_segment_geom.interpolateAngle(end_out_segment_geom.length())) % 180
-                                    nnfeature_segment_angle = math.degrees(segment_geom.interpolateAngle(segment_geom.length())) % 180
+                                        if nnfeature_closest_vertex[2] == -1 or nnfeature_closest_vertex[3] == -1:
 
-                                    if (abs(feature_segment_angle - nnfeature_segment_angle) >= min_angular_limit and abs(feature_segment_angle - nnfeature_segment_angle) <= max_angular_limit) and hausdorff_distance > hausdorff_distance_limit: 
-                                        if nnfeature_closest_vertex[0] <= (buffer_snap/2)**2:
+                                            hausdorff_distance = geometry.hausdorffDistance(nnfeature.geometry())
 
-                                            segment_polyline = segment_geom.asPolyline()
+                                            print('end', feature['fid'], nnfeature['fid'], hausdorff_distance, nnfeature_closest_vertex)
 
-                                            segment_polyline_startpoint = segment_polyline[0]
-                                            segment_polyline_endpoint = segment_polyline[-1]
+                                            if nnfeature_closest_vertex[-1] <= (buffer_snap/2)**2 and hausdorff_distance > hausdorff_distance_limit:
 
-                                            intersection_buffer = end_out_segment_geom.buffer(buffer_snap/2,5)
+                                                nnfeature_closest_PointXY = QgsPointXY(nnfeature.geometry().vertexAt(nnfeature_closest_vertex[1]).x(),  nnfeature.geometry().vertexAt(nnfeature_closest_vertex[1]).y())
 
-                                            if intersection_buffer.contains(QgsGeometry.fromPointXY(segment_polyline_startpoint)):
-                                                
-                                                segment_polyline_point = segment_polyline_startpoint
-                                                distance_point_from_geom = QgsGeometry.fromPointXY(start_out_segment_geom.asPolyline()[0]).distance(QgsGeometry.fromPointXY(segment_polyline_point))
-                                                distance_point_from_extended_geom = QgsGeometry.fromPointXY(start_out_segment_geom.asPolyline()[-1]).distance(QgsGeometry.fromPointXY(segment_polyline_point))
+                                                nnfeature_closest_PointXY_geom = QgsGeometry.fromPointXY(nnfeature_closest_PointXY)
 
-                                            elif intersection_buffer.contains(QgsGeometry.fromPointXY(segment_polyline_endpoint)):    
-
-                                                segment_polyline_point = segment_polyline_endpoint    
-                                                distance_point_from_geom = QgsGeometry.fromPointXY(start_out_segment_geom.asPolyline()[0]).distance(QgsGeometry.fromPointXY(segment_polyline_point))
-                                                distance_point_from_extended_geom = QgsGeometry.fromPointXY(start_out_segment_geom.asPolyline()[-1]).distance(QgsGeometry.fromPointXY(segment_polyline_point))
+                
+                                                distance_point_from_geom = geometry_end.distance(nnfeature_closest_PointXY_geom)
+                       
                                             
-                                            if distance_point_from_geom <= buffer_snap:
-                                                closest_vertices.append((segment_polyline_point, distance_point_from_geom, distance_point_from_extended_geom))
-                                except:
-                                    pass
+                                                if distance_point_from_geom <= buffer_snap:
+
+                                                    calculated_segment = QgsGeometry.fromPolylineXY([polyline_end_near_vertex, geometry_end.asPoint()])
+
+                                                    endpoint_type = 1 if nnfeature_closest_vertex[2] == -1 else -1
+                                                    distant_segment = []
+                                                    distant_segment.append(nnfeature_closest_PointXY)
+
+                                                    if endpoint_type == 1:
+                                                        distant_segment.append(QgsPointXY(nnfeature.geometry().vertexAt(nnfeature_closest_vertex[3]).x(),  nnfeature.geometry().vertexAt(nnfeature_closest_vertex[3]).y()))
+                                                    elif endpoint_type == -1:
+                                                        distant_segment.append(QgsPointXY(nnfeature.geometry().vertexAt(nnfeature_closest_vertex[2]).x(),  nnfeature.geometry().vertexAt(nnfeature_closest_vertex[2]).y()))
+
+                                                    distant_segment_geom = QgsGeometry.fromPolylineXY(distant_segment)
+
+                                                    calculated_segment_angle = math.degrees(calculated_segment.interpolateAngle(calculated_segment.length())) % 180
+                                                    distant_segment_angle = math.degrees(distant_segment_geom.interpolateAngle(distant_segment_geom.length())) % 180
+                                         
+                                                    angular_variation = abs(calculated_segment_angle - distant_segment_angle)
+   
+
+                                                    if angular_variation >= min_angular_limit and angular_variation <= max_angular_limit: 
+                                                        closest_vertices.append((nnfeature_closest_PointXY, distance_point_from_geom, angular_variation, endpoint_type))
+                                    except:
+                                        pass
 
                         if len(closest_vertices) > 0:
 
-                            if prefered_behaviour_end == 'Original geometry nearest':
-                                closest_vertices = sorted(closest_vertices, key=lambda k: k[1])
-                            elif prefered_behaviour_end == 'Original geometry farest':
-                                closest_vertices = sorted(closest_vertices, key=lambda k: k[1], reverse=True)
-                            elif prefered_behaviour_end == 'Extended geometry nearest':
-                                closest_vertices = sorted(closest_vertices, key=lambda k: k[2])
-                            elif prefered_behaviour_end == 'Extended geometry farest':
-                                closest_vertices = sorted(closest_vertices, key=lambda k: k[2], reverse=True)   
+                            if prefered_behaviour_end == 'Nearest, Minimum angular variation':
+                                if same_direction_geoms_flag is True:
+                                    closest_vertices = sorted(closest_vertices, key=lambda k: (k[3]*-1, k[1], k[2]))
+                                else:
+                                    closest_vertices = sorted(closest_vertices, key=lambda k: (k[1], k[2]))
+
+                            elif prefered_behaviour_end == 'Farest, Minimum angular variation':
+                                if same_direction_geoms_flag is True:
+                                    closest_vertices = sorted(closest_vertices, key=lambda k: (k[3]*-1, k[1]*-1, k[2]))
+                                else:
+                                    closest_vertices = sorted(closest_vertices, key=lambda k: (k[1]*-1, k[2]))
+
+                            elif prefered_behaviour_end == 'Nearest, Maximum angular variation':
+                                if same_direction_geoms_flag is True:
+                                    closest_vertices = sorted(closest_vertices, key=lambda k: (k[3]*-1, k[1], k[2]*-1))
+                                else:
+                                    closest_vertices = sorted(closest_vertices, key=lambda k: (k[1], k[2]*-1))
+
+                            elif prefered_behaviour_end == 'Farest, Maximum angular variation':
+                                if same_direction_geoms_flag is True:
+                                    closest_vertices = sorted(closest_vertices, key=lambda k: (k[3]*-1, k[1]*-1, k[2]*-1))
+                                else:
+                                    closest_vertices = sorted(closest_vertices, key=lambda k: (k[1]*-1, k[2]*-1))
 
                             print('end', feature['fid'], closest_vertices)        
-
+                
                             for closest_vertex in closest_vertices:
-                                polyline[-1] = QgsPointXY(closest_vertex[0])
-                                new_geom = QgsGeometry.fromPolylineXY(polyline)
+                                new_polyline = polyline
+                                new_polyline[-1] = closest_vertex[0]
+                                new_geom = QgsGeometry.fromPolylineXY(new_polyline)
                                 if not new_geom.isEmpty():
                                     feature.setGeometry(new_geom)
                                     layer.updateFeature(feature)
@@ -1898,6 +1950,15 @@ class HubSnapping(QgsProcessingAlgorithm):
             )
         )
 
+
+        self.addParameter(
+            QgsProcessingParameterBoolean(
+                self.tr('HUBPOINT_MUST_BE_AN_EXISTING_VERTEX'),
+                self.tr('HUBPOINT MUST BE AN EXISTING VERTEX'),
+                True,
+                True
+            )
+        )
         # We add a feature sink in which to store our processed features (this
         # usually takes the form of a newly created vector layer when the
         # algorithm is run in QGIS).
@@ -1926,9 +1987,13 @@ class HubSnapping(QgsProcessingAlgorithm):
         fix_geoms_flag = self.parameterAsBool(parameters, 'FIX_GEOMETRIES_BEFORE_PROCESSING',
                                         context)
         
-        buffer_region = self.parameterAsDouble(parameters, 'BUFFER_HUB_SNAPPING',
+        buffer_hub_snap = self.parameterAsDouble(parameters, 'BUFFER_HUB_SNAPPING',
                                                 context)
+        
 
+        hubpoint_is_existing_vertex_flag = self.parameterAsBool(parameters, 'HUBPOINT_MUST_BE_AN_EXISTING_VERTEX',
+                                        context)
+        
         start_timer = datetime.now()
 
 
@@ -1978,79 +2043,110 @@ class HubSnapping(QgsProcessingAlgorithm):
             if feedback.isCanceled():
                 return {}
             if not feature.geometry().isEmpty():
-
-                with edit(layer):
-
-                    #layer.select(feature.id())
-                    #layer.invertSelection()
-                    spatial_index = QgsSpatialIndex(layer.getFeatures())
-                    #layer.removeSelection()
-                    geometry = feature.geometry()
-                    polyline = geometry.asPolyline()
-                    seg_start = polyline[0]
-           
-
-                    seg_end = polyline[-1]
-             
-
-                    geometry_start = QgsGeometry.fromPointXY(QgsPointXY(seg_start.x(),seg_start.y()))
-                    geometry_end = QgsGeometry.fromPointXY(QgsPointXY(seg_end.x(),seg_end.y()))
-
-                    lastvert = len(polyline)-1
+                try:
+                    with edit(layer):
 
 
+                        geometry = feature.geometry()
+
+                        spatial_index = QgsSpatialIndex(layer.getFeatures())
 
 
+                        polyline = geometry.asPolyline()
 
-                    try:
-                        nearest_feats_points = []
-                        #print('start', feature.id())
-                        for feat in layer.getFeatures(QgsFeatureRequest().setFilterRect(geometry_start.buffer(buffer_region,5).boundingBox())):
-                            if feat.geometry().closestVertex(geometry_start.asPoint())[-1] <= buffer_region:
-                                nearest_feats_points.append((feat.geometry().closestVertex(geometry_start.asPoint()),feat))
+                        polyline_start = polyline[0]
+                        polyline_end = polyline[-1]
 
-                        nearest_feats_points.sort(key=lambda x:x[0][-1])
-                        if len(nearest_feats_points) > 2:
-
-                            polygon = QgsGeometry.fromPolygonXY( [[ QgsPointXY( pair[0][0][0], pair[0][0][1] ) for pair in nearest_feats_points ]] )
-
-                            if not polygon.isEmpty():
-                                
-                                for feat in nearest_feats_points:
-                                    QgsVectorLayerEditUtils(layer).moveVertex(polygon.centroid().asPoint().x(),polygon.centroid().asPoint().y(),feat[1].id(),feat[0][1])
+                        geometry_start = QgsGeometry.fromPointXY(polyline_start)
+                        geometry_end = QgsGeometry.fromPointXY(polyline_end)
 
 
-                    except:
-                        #print("bug_centroid_start", nearest_feats_points)
-                        pass
+                        try:
+                            nearest_nnfeatures_points = []
+                
+                            for nnfeature in layer.getFeatures(QgsFeatureRequest().setFilterRect(geometry_start.buffer(buffer_hub_snap,5).boundingBox())):
+                                nnfeature_closest_vertex = nnfeature.geometry().closestVertex(geometry_start.asPoint())
+
+                                if nnfeature_closest_vertex[-1] <= buffer_hub_snap**2:
+                                    nnfeature_closest_PointXY = QgsPointXY(nnfeature.geometry().vertexAt(nnfeature_closest_vertex[1]).x(),  nnfeature.geometry().vertexAt(nnfeature_closest_vertex[1]).y())
+                                    nnfeature_nearest_vertex_geom = QgsGeometry.fromPointXY(nnfeature_closest_PointXY)
+                                    distance_from_nnfeature_nearest_vertex = geometry_start.distance(nnfeature_nearest_vertex_geom)
+                                    
+                                    if distance_from_nnfeature_nearest_vertex <= buffer_hub_snap:
+                                        nearest_nnfeatures_points.append((nnfeature_closest_vertex, nnfeature_nearest_vertex_geom, distance_from_nnfeature_nearest_vertex, nnfeature))
+
+                            nearest_nnfeatures_points.sort(key=lambda x:x[2])
+                            if len(nearest_nnfeatures_points) > 2:
+
+                                polygon = QgsGeometry.fromPolygonXY( [[ QgsPointXY( pair[0][0][0], pair[0][0][1] ) for pair in nearest_nnfeatures_points ]] )
 
 
-                    try:
-                        nearest_feats_points = []
+                                    
 
-                        #print('end', feature.id())
-                        for feat in layer.getFeatures(QgsFeatureRequest().setFilterRect(geometry_end.buffer(buffer_region,5).boundingBox())):
-                            if feat.geometry().closestVertex(geometry_end.asPoint())[-1] <= buffer_region:
-                                nearest_feats_points.append((feat.geometry().closestVertex(geometry_end.asPoint()),feat))
+                                if not polygon.isEmpty():
 
-                        nearest_feats_points.sort(key=lambda x:x[0][-1])
-                        if len(nearest_feats_points) > 2:
-                            polygon = QgsGeometry.fromPolygonXY( [[ QgsPointXY( pair[0][0][0], pair[0][0][1] ) for pair in nearest_feats_points ]] )
+                                    
+                                    nearest_nnfeatures_points = [nnfeature + (nnfeature[1].distance(polygon.centroid()),) for nnfeature in nearest_nnfeatures_points]
+                                    nearest_nnfeatures_points = sorted(nearest_nnfeatures_points, key=lambda k: k[-1])
 
-                            if not polygon.isEmpty():
-                                
-                                for feat in nearest_feats_points:
-                                    QgsVectorLayerEditUtils(layer).moveVertex(polygon.centroid().asPoint().x(),polygon.centroid().asPoint().y(),feat[1].id(),feat[0][1])
-                                    #edit_vertex_buffer_region(layer, feat[1], feat[1], polygon.centroid().asPoint(),lastvert)
+                                    if hubpoint_is_existing_vertex_flag is True:
+                                        
+                                        for nnfeature in nearest_nnfeatures_points:
+                                            QgsVectorLayerEditUtils(layer).moveVertex(nearest_nnfeatures_points[0][1].asPoint().x(),nearest_nnfeatures_points[0][1].asPoint().y(),nnfeature[3].id(),nnfeature[0][1])
 
+                                    else:
+                                        for nnfeature in nearest_nnfeatures_points:
+                                            QgsVectorLayerEditUtils(layer).moveVertex(polygon.centroid().asPoint().x(),polygon.centroid().asPoint().y(),nnfeature[3].id(),nnfeature[0][1])
 
-                    except:
-                        #print("bug_centroid_end", nearest_feats_points)
-                        pass
+                        except:
+                            pass
 
 
 
-                    feedback.setProgress(int((y /numfeatures) * 100))
+                        try:                
+                            nearest_nnfeatures_points = []
+                
+                            for nnfeature in layer.getFeatures(QgsFeatureRequest().setFilterRect(geometry_end.buffer(buffer_hub_snap,5).boundingBox())):
+                                nnfeature_closest_vertex = nnfeature.geometry().closestVertex(geometry_end.asPoint())
+
+                                if nnfeature_closest_vertex[-1] <= buffer_hub_snap**2:
+                                    nnfeature_closest_PointXY = QgsPointXY(nnfeature.geometry().vertexAt(nnfeature_closest_vertex[1]).x(),  nnfeature.geometry().vertexAt(nnfeature_closest_vertex[1]).y())
+                                    nnfeature_nearest_vertex_geom = QgsGeometry.fromPointXY(nnfeature_closest_PointXY)
+                                    distance_from_nnfeature_nearest_vertex = geometry_end.distance(nnfeature_nearest_vertex_geom)
+                                    
+                                    if distance_from_nnfeature_nearest_vertex <= buffer_hub_snap:
+                                        nearest_nnfeatures_points.append((nnfeature_closest_vertex, nnfeature_nearest_vertex_geom, distance_from_nnfeature_nearest_vertex, nnfeature))
+
+                            nearest_nnfeatures_points.sort(key=lambda x:x[2])
+                            if len(nearest_nnfeatures_points) > 2:
+
+                                polygon = QgsGeometry.fromPolygonXY( [[ QgsPointXY( pair[0][0][0], pair[0][0][1] ) for pair in nearest_nnfeatures_points ]] )
+
+
+                                    
+
+                                if not polygon.isEmpty():
+
+                                    
+                                    nearest_nnfeatures_points = [nnfeature + (nnfeature[1].distance(polygon.centroid()),) for nnfeature in nearest_nnfeatures_points]
+                                    nearest_nnfeatures_points = sorted(nearest_nnfeatures_points, key=lambda k: k[-1])
+
+                                    if hubpoint_is_existing_vertex_flag is True:
+                                        
+                                        for nnfeature in nearest_nnfeatures_points:
+                                            QgsVectorLayerEditUtils(layer).moveVertex(nearest_nnfeatures_points[0][1].asPoint().x(),nearest_nnfeatures_points[0][1].asPoint().y(),nnfeature[3].id(),nnfeature[0][1])
+
+                                    else:
+                                        for nnfeature in nearest_nnfeatures_points:
+                                            QgsVectorLayerEditUtils(layer).moveVertex(polygon.centroid().asPoint().x(),polygon.centroid().asPoint().y(),nnfeature[3].id(),nnfeature[0][1])
+
+                        except:
+                            pass
+                except:
+                    pass
+
+
+                feedback.setProgress(int((y /numfeatures) * 100))
 
         if feedback.isCanceled():
             return {}
