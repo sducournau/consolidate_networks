@@ -1765,7 +1765,7 @@ class EndpointsSnapping(QgsProcessingAlgorithm):
                                                 if print_debug_flag is True:
                                                     print('STEP : ' + 'START_POINT DISTANCE TO POINT', 'local_feature : ' + str(feature['fid']), 'distant_feature : ' + str(nnfeature['fid']), 'distance : ' + str(distance_point_from_geom))
                                             
-                                                if distance_point_from_geom <= buffer_snap:
+                                                if distance_point_from_geom <= buffer_snap and geometry.length() > distance_point_from_geom:
 
                                                     endpoint_type = 1 if nnfeature_closest_vertex[3] == -1 else -1
 
@@ -1828,7 +1828,7 @@ class EndpointsSnapping(QgsProcessingAlgorithm):
                                     new_polyline = polyline
                                     new_polyline[0] = closest_vertex[0]
                                     new_geom = QgsGeometry.fromPolylineXY(new_polyline)
-                                    if not new_geom.isEmpty():
+                                    if not new_geom.isEmpty() and new_geom.length() >= closest_vertex[1]:
                                         feature.setGeometry(new_geom)
                                         layer.updateFeature(feature)
                                         break                            
@@ -1879,7 +1879,7 @@ class EndpointsSnapping(QgsProcessingAlgorithm):
                                                 if print_debug_flag is True:
                                                     print('STEP : ' + 'END_POINT DISTANCE TO POINT', 'local_feature : ' + str(feature['fid']), 'distant_feature : ' + str(nnfeature['fid']), 'distance : ' + str(distance_point_from_geom))          
                                             
-                                                if distance_point_from_geom <= buffer_snap:
+                                                if distance_point_from_geom <= buffer_snap and geometry.length() > distance_point_from_geom:
 
                                                     endpoint_type = 1 if nnfeature_closest_vertex[3] == -1 else -1
 
@@ -1942,7 +1942,7 @@ class EndpointsSnapping(QgsProcessingAlgorithm):
                                     new_polyline = polyline
                                     new_polyline[-1] = closest_vertex[0]
                                     new_geom = QgsGeometry.fromPolylineXY(new_polyline)
-                                    if not new_geom.isEmpty():
+                                    if not new_geom.isEmpty() and new_geom.length() >= closest_vertex[1]:
                                         feature.setGeometry(new_geom)
                                         layer.updateFeature(feature)
                                         break
@@ -3098,7 +3098,7 @@ class SnapEndpointsToLayer(QgsProcessingAlgorithm):
 
                         if break_update_step is False:                
                             nearestids = spatial_index.nearestNeighbor(geometry_start.asPoint(),5,buffer_snap)
-
+                            
                             if len(nearestids) > 0:
                                 for nearestid in nearestids:
                                     try:
@@ -3117,7 +3117,7 @@ class SnapEndpointsToLayer(QgsProcessingAlgorithm):
                                                 if print_debug_flag is True:
                                                     print('STEP : ' + 'START_POINT DISTANCE TO POINT', 'local_feature : ' + str(feature['fid']), 'distant_feature : ' + str(nnfeature['fid']), 'distance : ' + str(distance_point_from_geom))
                                             
-                                                if distance_point_from_geom <= buffer_snap:
+                                                if distance_point_from_geom <= buffer_snap and geometry.length() > distance_point_from_geom:
 
                                                     endpoint_type = 1 if nnfeature_closest_vertex[3] == -1 else -1
 
@@ -3179,7 +3179,7 @@ class SnapEndpointsToLayer(QgsProcessingAlgorithm):
                                     new_polyline = polyline
                                     new_polyline[0] = closest_vertex[0]
                                     new_geom = QgsGeometry.fromPolylineXY(new_polyline)
-                                    if not new_geom.isEmpty():
+                                    if not new_geom.isEmpty() and new_geom.length() >= closest_vertex[1]:
                                         feature.setGeometry(new_geom)
                                         layer.updateFeature(feature)
                                         break                            
@@ -3226,7 +3226,7 @@ class SnapEndpointsToLayer(QgsProcessingAlgorithm):
                                                 if print_debug_flag is True:
                                                     print('STEP : ' + 'END_POINT DISTANCE TO POINT', 'local_feature : ' + str(feature['fid']), 'distant_feature : ' + str(nnfeature['fid']), 'distance : ' + str(distance_point_from_geom))          
                                             
-                                                if distance_point_from_geom <= buffer_snap:
+                                                if distance_point_from_geom <= buffer_snap and geometry.length() > distance_point_from_geom:
 
                                                     endpoint_type = 1 if nnfeature_closest_vertex[3] == -1 else -1
 
@@ -3291,7 +3291,7 @@ class SnapEndpointsToLayer(QgsProcessingAlgorithm):
                                     new_polyline = polyline
                                     new_polyline[-1] = closest_vertex[0]
                                     new_geom = QgsGeometry.fromPolylineXY(new_polyline)
-                                    if not new_geom.isEmpty():
+                                    if not new_geom.isEmpty() and new_geom.length() >= closest_vertex[1]:
                                         feature.setGeometry(new_geom)
                                         layer.updateFeature(feature)
                                         break
