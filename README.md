@@ -139,7 +139,7 @@ cn.endpointstrimmingextending
 #### <ins>**EndpointsSnapping()**</ins>
 `Snap lines endpoints' to each other's from a layer source.`<br>
 ##### Processing algorithm :<br>
-~~~~LIST OF CN PROVIDER ALGORITHMSModels
+~~~~
 cn.endpointssnapping
 ~~~~
 ##### Paramètres<br>
